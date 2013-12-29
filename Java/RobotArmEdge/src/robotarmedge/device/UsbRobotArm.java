@@ -1,10 +1,13 @@
 package robotarmedge.device;
 
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.usb.UsbConst;
 import javax.usb.UsbControlIrp;
 import javax.usb.UsbDevice;
+import javax.usb.UsbDeviceDescriptor;
 import javax.usb.UsbDisconnectedException;
 import javax.usb.UsbException;
 import javax.usb.UsbHostManager;
@@ -14,6 +17,10 @@ import javax.usb.event.UsbDeviceDataEvent;
 import javax.usb.event.UsbDeviceErrorEvent;
 import javax.usb.event.UsbDeviceEvent;
 import javax.usb.event.UsbDeviceListener;
+import javax.usb.event.UsbServicesEvent;
+import javax.usb.event.UsbServicesListener;
+import robotarmedge.event.RobotArmChangedEvent;
+import robotarmedge.event.RobotArmChangeListener;
 import robotarmedge.utilities.ByteCommand;
 import robotarmedge.utilities.DeviceManager;
 
@@ -22,19 +29,24 @@ import robotarmedge.utilities.DeviceManager;
  * 
  * @author Joshua Michael Daly
  */
-public class UsbRobotArm implements UsbDeviceListener
+public class UsbRobotArm implements UsbDeviceListener, UsbServicesListener
 {
     public static final int VENDOR_ID = 0x1267;
     public static final int PRODUCT_ID = 0x0;
     
+    private final LinkedList changeListeners = new LinkedList<>();
+    
+    private UsbServices usbServices;
     private UsbDevice robotArmDevice;
     private UsbControlIrp irp;
     
     private byte[] commands;
     
-    /************************************************************
+    /*
+     * ************************************************************************* 
      * Public Getters and Setters
-     ***********************************************************/
+     * *************************************************************************
+     */
    
     /**
      * 
@@ -56,17 +68,21 @@ public class UsbRobotArm implements UsbDeviceListener
         return this.robotArmDevice != null;
     }
     
-    /************************************************************
+    /*
+     * ************************************************************************* 
      * Public Constructors
-     ***********************************************************/
+     * *************************************************************************
+     */
     
     public UsbRobotArm()
     {
         try
         {
             // Get a list of the attached USB devices.
-            UsbServices services = UsbHostManager.getUsbServices();
-            UsbHub rootHub = services.getRootUsbHub();
+            this.usbServices = UsbHostManager.getUsbServices();
+            this.usbServices.addUsbServicesListener(this);
+            
+            UsbHub rootHub = this.usbServices.getRootUsbHub();
             DeviceManager.dump(rootHub);
             
             // Look for the robot arm in that list.
@@ -100,9 +116,31 @@ public class UsbRobotArm implements UsbDeviceListener
         }
     }
     
-    /************************************************************
+    /*
+     * ************************************************************************* 
      * Public Methods
-     ***********************************************************/
+     * *************************************************************************
+     */
+    
+    /**
+     * 
+     * 
+     * @param listener 
+     */
+    public void addRobotArmChangeListener(RobotArmChangeListener listener)
+    {
+       this.changeListeners.add(listener); 
+    }
+    
+    /**
+     * 
+     * 
+     * @param listener 
+     */
+    public void removeRobotArmChangeListener(RobotArmChangeListener listener)
+    {
+       this.changeListeners.remove(listener); 
+    } 
     
     /**
      * 
@@ -213,9 +251,47 @@ public class UsbRobotArm implements UsbDeviceListener
         this.sendCommands();
     }
     
-    /************************************************************
+    /*
+     * ************************************************************************* 
      * Public Implemented Methods
-     ***********************************************************/
+     * *************************************************************************
+     */
+    
+    /**
+     * 
+     * 
+     * @param use 
+     */
+    @Override
+    public void usbDeviceAttached(UsbServicesEvent use)
+    {
+        // If we are not already attached see if the device was the robot arm.
+        if (this.robotArmDevice == null)
+        {
+            UsbDeviceDescriptor descriptor = use.getUsbDevice().
+                                                    getUsbDeviceDescriptor();
+            
+            if (descriptor.idVendor() == VENDOR_ID)
+            {
+                if (descriptor.idProduct() == PRODUCT_ID)
+                {
+                    // It is the robot arm, connect it.
+                    this.robotArmDevice = use.getUsbDevice();
+                    this.robotArmDevice.addUsbDeviceListener(this);
+                    this.fireRobotArmAttached();
+                    
+                    Logger.getLogger(UsbRobotArm.class.getName()).log(Level.INFO, 
+                    "Robotic Arm attached.", use);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void usbDeviceDetached(UsbServicesEvent use)
+    {
+        // Ignore this, don't care about other devices being detached.
+    }
     
     /**
      * 
@@ -225,9 +301,10 @@ public class UsbRobotArm implements UsbDeviceListener
     public void usbDeviceDetached(UsbDeviceEvent ude)
     {
         Logger.getLogger(UsbRobotArm.class.getName()).log(Level.WARNING, 
-                    ude.getUsbDevice().toString(), ude);
+                    ude.getUsbDevice().toString() + "\n", ude);
         
         this.robotArmDevice = null;
+        this.fireRobotArmDetached();
     }
 
     @Override
@@ -242,15 +319,17 @@ public class UsbRobotArm implements UsbDeviceListener
     {
         String data = "Byte 0: " + udde.getData()[0] + " " +
                       "Byte 1: " + udde.getData()[1] + " " +
-                      "Byte 2: " + udde.getData()[2];
+                      "Byte 2: " + udde.getData()[2] + "\n";
         
         Logger.getLogger(UsbRobotArm.class.getName()).log(Level.INFO, 
                     data, udde);
     }
     
-    /************************************************************
+    /*
+     * ************************************************************************* 
      * Private Methods
-     ***********************************************************/
+     * *************************************************************************
+     */
     
     private void sendCommands()
     {
@@ -264,6 +343,38 @@ public class UsbRobotArm implements UsbDeviceListener
         {
             Logger.getLogger(UsbRobotArm.class.getName()).log
                 (Level.SEVERE, null, ex);
+        }
+    }
+    
+    private void fireRobotArmAttached()
+    {
+        RobotArmChangedEvent event = null;
+        Iterator iterator = this.changeListeners.iterator();
+
+        while (iterator.hasNext()) 
+        {
+            if (event == null) 
+            {
+                event = new RobotArmChangedEvent(this);
+            }
+            
+            ((RobotArmChangeListener)iterator.next()).robotArmAttached(event);
+        }
+    }
+    
+    private void fireRobotArmDetached()
+    {
+        RobotArmChangedEvent event = null;
+        Iterator iterator = this.changeListeners.iterator();
+
+        while (iterator.hasNext()) 
+        {
+            if (event == null) 
+            {
+                event = new RobotArmChangedEvent(this);
+            }
+            
+            ((RobotArmChangeListener)iterator.next()).robotArmDetached(event);
         }
     }
 }

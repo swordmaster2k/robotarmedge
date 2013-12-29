@@ -6,19 +6,24 @@ import javax.usb.event.UsbDeviceErrorEvent;
 import javax.usb.event.UsbDeviceEvent;
 import javax.usb.event.UsbDeviceListener;
 import robotarmedge.device.UsbRobotArm;
+import robotarmedge.event.RobotArmChangedEvent;
+import robotarmedge.event.RobotArmChangeListener;
 
 /**
  * 
  * 
  * @author Joshua Michael Daly
  */
-public class BasicMode extends javax.swing.JFrame implements UsbDeviceListener
+public class BasicMode extends javax.swing.JFrame implements UsbDeviceListener,
+        RobotArmChangeListener
 {
     private UsbRobotArm usbRobotArm;
     
-    /************************************************************
+    /*
+     * ************************************************************************* 
      * Public Constructors
-     ***********************************************************/
+     * *************************************************************************
+     */
     
     /**
      * Creates new form BasicMode
@@ -37,6 +42,7 @@ public class BasicMode extends javax.swing.JFrame implements UsbDeviceListener
     {
         initComponents();
         this.usbRobotArm = robotArm;
+        this.usbRobotArm.addRobotArmChangeListener(this);
         
         if (this.usbRobotArm.isAttached())
         {
@@ -44,10 +50,17 @@ public class BasicMode extends javax.swing.JFrame implements UsbDeviceListener
         }
     }
     
-    /************************************************************
+    /*
+     * ************************************************************************* 
      * Public Methods
-     ***********************************************************/
+     * *************************************************************************
+     */
 
+    /**
+     * 
+     * 
+     * @param ude 
+     */
     @Override
     public void usbDeviceDetached(UsbDeviceEvent ude)
     {
@@ -64,6 +77,18 @@ public class BasicMode extends javax.swing.JFrame implements UsbDeviceListener
     public void dataEventOccurred(UsbDeviceDataEvent udde)
     {
         throw new UnsupportedOperationException("Not supported yet."); 
+    }
+    
+    @Override
+    public void robotArmAttached(RobotArmChangedEvent race)
+    {
+        this.armStatusLabel.setText("Connected");
+    }
+    
+    @Override
+    public void robotArmDetached(RobotArmChangedEvent race)
+    {
+        this.armStatusLabel.setText("Not Connected");
     }
     
     /**
@@ -477,9 +502,11 @@ public class BasicMode extends javax.swing.JFrame implements UsbDeviceListener
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /************************************************************
-     * Event Handlers
-     ***********************************************************/
+    /*
+     * ************************************************************************* 
+     * Private Event Handlers
+     * *************************************************************************
+     */
     
     private void toggleModeButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_toggleModeButtonActionPerformed
     {//GEN-HEADEREND:event_toggleModeButtonActionPerformed
