@@ -17,6 +17,10 @@
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
     <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
   </SyntheticProperties>
+  <Events>
+    <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="componentKeyPressed"/>
+    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="componentKeyReleased"/>
+  </Events>
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
     <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
@@ -33,67 +37,64 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="armImagePanel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="separate" max="32767" attributes="0"/>
-                  </Group>
-                  <Group type="102" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="basicModeLabel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
-                      <Component id="toggleModeButton" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
-                      <Component id="jSeparator6" min="-2" pref="6" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="closeGripperButton" alignment="1" min="-2" max="-2" attributes="0"/>
-                          <Component id="openGripperButton" alignment="1" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jSeparator1" min="-2" pref="6" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="wristDownButton" alignment="1" min="-2" max="-2" attributes="0"/>
-                          <Component id="wristUpButton" alignment="1" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jSeparator2" min="-2" pref="6" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="elbowDownButton" alignment="1" min="-2" max="-2" attributes="0"/>
-                          <Component id="elbowUpButton" alignment="1" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jSeparator3" min="-2" pref="6" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="shoulderDownButton" alignment="1" min="-2" max="-2" attributes="0"/>
-                          <Component id="shoulderUpButton" alignment="1" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jSeparator4" min="-2" pref="6" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="baseAntiClockwiseButton" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="baseClockwiseButton" alignment="0" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jSeparator5" min="-2" pref="6" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="lightToggleButton" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="63" max="-2" attributes="0"/>
-                  </Group>
-              </Group>
-              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                  <Component id="closeButton" max="32767" attributes="0"/>
-                  <Component id="armStatusLabel" max="32767" attributes="0"/>
-              </Group>
               <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Group type="102" attributes="0">
+                              <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
+                              <Component id="toggleModeButton" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="jSeparator6" min="-2" pref="6" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="closeGripperButton" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="openGripperButton" alignment="1" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="jSeparator1" min="-2" pref="6" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="1" attributes="0">
+                                  <Component id="wristDownButton" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="wristUpButton" alignment="1" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="jSeparator2" min="-2" pref="6" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="1" attributes="0">
+                                  <Component id="elbowDownButton" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="elbowUpButton" alignment="1" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="jSeparator3" min="-2" pref="6" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="1" attributes="0">
+                                  <Component id="shoulderDownButton" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="shoulderUpButton" alignment="1" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="jSeparator4" min="-2" pref="6" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="baseAntiClockwiseButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="baseClockwiseButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="jSeparator5" min="-2" pref="6" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="lightToggleButton" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Component id="armImagePanel" pref="613" max="32767" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Component id="armStatusLabel" min="-2" max="-2" attributes="0"/>
+                          <Component id="backButton" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <Component id="basicModeLabel" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="0" pref="16" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -102,63 +103,61 @@
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Component id="basicModeLabel" min="-2" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <EmptySpace pref="337" max="32767" attributes="0"/>
-                      <Component id="closeButton" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="armImagePanel" max="32767" attributes="0"/>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                  </Group>
-              </Group>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="103" alignment="1" groupAlignment="1" attributes="0">
-                          <Component id="baseAntiClockwiseButton" min="-2" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="103" groupAlignment="1" attributes="0">
-                                  <Group type="102" attributes="0">
-                                      <Component id="elbowUpButton" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Component id="elbowDownButton" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" attributes="0">
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="wristUpButton" alignment="1" min="-2" max="-2" attributes="0"/>
-                                          <Component id="closeGripperButton" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                      <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="wristDownButton" alignment="1" min="-2" max="-2" attributes="0"/>
-                                          <Component id="openGripperButton" alignment="1" min="-2" max="-2" attributes="0"/>
-                                          <Component id="toggleModeButton" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                  </Group>
-                              </Group>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="shoulderUpButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="baseClockwiseButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="armStatusLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Component id="shoulderDownButton" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
-                          <Component id="jSeparator1" min="-2" pref="118" max="-2" attributes="0"/>
-                          <Component id="jSeparator3" alignment="0" min="-2" pref="118" max="-2" attributes="0"/>
-                          <Component id="jSeparator4" alignment="0" min="-2" pref="118" max="-2" attributes="0"/>
-                      </Group>
-                      <Component id="jSeparator2" alignment="1" min="-2" pref="118" max="-2" attributes="0"/>
-                      <Component id="jSeparator5" alignment="1" min="-2" pref="118" max="-2" attributes="0"/>
-                      <Component id="jSeparator6" alignment="1" min="-2" pref="118" max="-2" attributes="0"/>
-                  </Group>
-                  <Component id="lightToggleButton" min="-2" pref="50" max="-2" attributes="0"/>
-              </Group>
               <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="1" attributes="0">
+                  <Component id="armImagePanel" min="-2" max="-2" attributes="0"/>
+                  <Component id="backButton" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace pref="27" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="103" alignment="1" groupAlignment="0" attributes="0">
+                      <Group type="103" alignment="0" groupAlignment="0" attributes="0">
+                          <Group type="103" alignment="1" groupAlignment="1" attributes="0">
+                              <Component id="baseAntiClockwiseButton" min="-2" max="-2" attributes="0"/>
+                              <Group type="103" alignment="1" groupAlignment="0" attributes="0">
+                                  <Group type="103" alignment="0" groupAlignment="1" attributes="0">
+                                      <Group type="102" alignment="1" attributes="0">
+                                          <Component id="elbowUpButton" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                                          <Component id="elbowDownButton" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                      <Group type="102" alignment="1" attributes="0">
+                                          <Group type="103" groupAlignment="0" attributes="0">
+                                              <Component id="wristUpButton" alignment="1" min="-2" max="-2" attributes="0"/>
+                                              <Component id="closeGripperButton" alignment="1" min="-2" max="-2" attributes="0"/>
+                                          </Group>
+                                          <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+                                          <Group type="103" groupAlignment="0" attributes="0">
+                                              <Component id="wristDownButton" alignment="1" min="-2" max="-2" attributes="0"/>
+                                              <Component id="openGripperButton" alignment="1" min="-2" max="-2" attributes="0"/>
+                                          </Group>
+                                      </Group>
+                                  </Group>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Group type="103" groupAlignment="3" attributes="0">
+                                          <Component id="shoulderUpButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                                          <Component id="baseClockwiseButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                                      <Component id="shoulderDownButton" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <Component id="jSeparator1" min="-2" pref="118" max="-2" attributes="0"/>
+                              <Component id="jSeparator3" alignment="0" min="-2" pref="118" max="-2" attributes="0"/>
+                              <Component id="jSeparator4" alignment="0" min="-2" pref="118" max="-2" attributes="0"/>
+                          </Group>
+                          <Component id="jSeparator2" alignment="1" min="-2" pref="118" max="-2" attributes="0"/>
+                          <Component id="jSeparator5" alignment="1" min="-2" pref="118" max="-2" attributes="0"/>
+                          <Component id="jSeparator6" alignment="1" min="-2" pref="118" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                          <Component id="lightToggleButton" alignment="3" min="-2" pref="50" max="-2" attributes="0"/>
+                          <Component id="armStatusLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <Component id="toggleModeButton" alignment="1" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -184,6 +183,8 @@
       <Events>
         <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="closeGripperButtonMousePressed"/>
         <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="closeGripperButtonMouseReleased"/>
+        <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="componentKeyPressed"/>
+        <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="componentKeyReleased"/>
       </Events>
     </Component>
     <Component class="javax.swing.JButton" name="openGripperButton">
@@ -206,6 +207,8 @@
       <Events>
         <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="openGripperButtonMousePressed"/>
         <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="openGripperButtonMouseReleased"/>
+        <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="componentKeyPressed"/>
+        <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="componentKeyReleased"/>
       </Events>
     </Component>
     <Component class="javax.swing.JButton" name="wristDownButton">
@@ -228,6 +231,8 @@
       <Events>
         <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="wristDownButtonMousePressed"/>
         <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="wristDownButtonMouseReleased"/>
+        <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="componentKeyPressed"/>
+        <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="componentKeyReleased"/>
       </Events>
     </Component>
     <Component class="javax.swing.JButton" name="wristUpButton">
@@ -250,6 +255,8 @@
       <Events>
         <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="wristUpButtonMousePressed"/>
         <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="wristUpButtonMouseReleased"/>
+        <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="componentKeyPressed"/>
+        <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="componentKeyReleased"/>
       </Events>
     </Component>
     <Component class="javax.swing.JButton" name="elbowUpButton">
@@ -272,6 +279,8 @@
       <Events>
         <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="elbowUpButtonMousePressed"/>
         <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="elbowUpButtonMouseReleased"/>
+        <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="componentKeyPressed"/>
+        <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="componentKeyReleased"/>
       </Events>
     </Component>
     <Component class="javax.swing.JButton" name="elbowDownButton">
@@ -294,6 +303,8 @@
       <Events>
         <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="elbowDownButtonMousePressed"/>
         <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="elbowDownButtonMouseReleased"/>
+        <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="componentKeyPressed"/>
+        <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="componentKeyReleased"/>
       </Events>
     </Component>
     <Component class="javax.swing.JButton" name="shoulderDownButton">
@@ -316,6 +327,8 @@
       <Events>
         <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="shoulderDownButtonMousePressed"/>
         <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="shoulderDownButtonMouseReleased"/>
+        <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="componentKeyPressed"/>
+        <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="componentKeyReleased"/>
       </Events>
     </Component>
     <Component class="javax.swing.JButton" name="shoulderUpButton">
@@ -338,6 +351,8 @@
       <Events>
         <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="shoulderUpButtonMousePressed"/>
         <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="shoulderUpButtonMouseReleased"/>
+        <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="componentKeyPressed"/>
+        <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="componentKeyReleased"/>
       </Events>
     </Component>
     <Component class="javax.swing.JButton" name="baseAntiClockwiseButton">
@@ -360,6 +375,8 @@
       <Events>
         <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="baseAntiClockwiseButtonMousePressed"/>
         <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="baseAntiClockwiseButtonMouseReleased"/>
+        <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="componentKeyPressed"/>
+        <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="componentKeyReleased"/>
       </Events>
     </Component>
     <Component class="javax.swing.JButton" name="baseClockwiseButton">
@@ -382,6 +399,8 @@
       <Events>
         <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="baseClockwiseButtonMousePressed"/>
         <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="baseClockwiseButtonMouseReleased"/>
+        <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="componentKeyPressed"/>
+        <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="componentKeyReleased"/>
       </Events>
     </Component>
     <Component class="javax.swing.JButton" name="toggleModeButton">
@@ -391,33 +410,15 @@
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="toggleModeButtonActionPerformed"/>
-      </Events>
-    </Component>
-    <Component class="javax.swing.JButton" name="closeButton">
-      <Properties>
-        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/robotarmedge/resources/cross.png"/>
-        </Property>
-        <Property name="text" type="java.lang.String" value="CLOSE"/>
-        <Property name="toolTipText" type="java.lang.String" value="Close"/>
-        <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-          <Dimension value="[70, 50]"/>
-        </Property>
-        <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-          <Dimension value="[70, 50]"/>
-        </Property>
-        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-          <Dimension value="[70, 50]"/>
-        </Property>
-      </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="closeButtonActionPerformed"/>
+        <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="componentKeyPressed"/>
+        <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="componentKeyReleased"/>
       </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="basicModeLabel">
       <Properties>
         <Property name="text" type="java.lang.String" value="BASIC MODE"/>
         <Property name="toolTipText" type="java.lang.String" value="Basic Mode"/>
+        <Property name="focusable" type="boolean" value="false"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JSeparator" name="jSeparator1">
@@ -452,9 +453,6 @@
     </Component>
     <Container class="javax.swing.JPanel" name="armImagePanel">
       <Properties>
-        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-          <Color blue="0" green="80" red="ff" type="rgb"/>
-        </Property>
         <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
           <Dimension value="[647, 42]"/>
         </Property>
@@ -466,8 +464,8 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="1" attributes="0">
-                  <EmptySpace pref="198" max="32767" attributes="0"/>
+              <Group type="102" attributes="0">
+                  <EmptySpace max="32767" attributes="0"/>
                   <Component id="outputLabel" min="-2" pref="249" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="200" max="-2" attributes="0"/>
               </Group>
@@ -478,7 +476,7 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" pref="146" max="-2" attributes="0"/>
                   <Component id="outputLabel" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace pref="202" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -487,6 +485,7 @@
         <Component class="javax.swing.JLabel" name="outputLabel">
           <Properties>
             <Property name="text" type="java.lang.String" value="jLabel1"/>
+            <Property name="focusable" type="boolean" value="false"/>
           </Properties>
         </Component>
       </SubComponents>
@@ -494,6 +493,7 @@
     <Component class="javax.swing.JLabel" name="armStatusLabel">
       <Properties>
         <Property name="text" type="java.lang.String" value="Not Connected"/>
+        <Property name="focusable" type="boolean" value="false"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JToggleButton" name="lightToggleButton">
@@ -519,7 +519,14 @@
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="lightToggleButtonActionPerformed"/>
+        <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="componentKeyPressed"/>
+        <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="componentKeyReleased"/>
       </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="backButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Back"/>
+      </Properties>
     </Component>
   </SubComponents>
 </Form>

@@ -15,6 +15,12 @@ public class RobotArmChangedEvent extends EventObject
      * Public Constructors
      * *************************************************************************
      */
+
+    /**
+     *
+     * @param robotArm
+     */
+    
     
     public RobotArmChangedEvent(UsbRobotArm robotArm)
     {

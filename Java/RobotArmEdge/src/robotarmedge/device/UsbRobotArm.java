@@ -31,7 +31,17 @@ import robotarmedge.utilities.DeviceManager;
  */
 public class UsbRobotArm implements UsbDeviceListener, UsbServicesListener
 {
+    // Singleton.
+    private static final UsbRobotArm usbRobotArm = new UsbRobotArm();
+    
+    /**
+     *
+     */
     public static final int VENDOR_ID = 0x1267;
+
+    /**
+     *
+     */
     public static final int PRODUCT_ID = 0x0;
     
     private final LinkedList changeListeners = new LinkedList<>();
@@ -40,7 +50,12 @@ public class UsbRobotArm implements UsbDeviceListener, UsbServicesListener
     private UsbDevice robotArmDevice;
     private UsbControlIrp irp;
     
-    private byte[] commands;
+    private byte lightState;
+    private byte gripperState;
+    private byte wristState;
+    private byte elbowState;
+    private byte shoulderState;
+    private byte baseState;
     
     /*
      * ************************************************************************* 
@@ -48,6 +63,16 @@ public class UsbRobotArm implements UsbDeviceListener, UsbServicesListener
      * *************************************************************************
      */
    
+    /**
+     * Get an instance of the UsbRobotArm singleton.
+     * 
+     * @return the robot arm device
+     */
+    public static UsbRobotArm getInstance()
+    {
+        return usbRobotArm;
+    }
+    
     /**
      * 
      * 
@@ -70,11 +95,15 @@ public class UsbRobotArm implements UsbDeviceListener, UsbServicesListener
     
     /*
      * ************************************************************************* 
-     * Public Constructors
+     * Private Constructors
      * *************************************************************************
      */
-    
-    public UsbRobotArm()
+
+    /**
+     * Creates a new UsbRobotArm, if no device is attached an exception is 
+     * thrown. This is a singleton constructor.
+     */
+    private UsbRobotArm()
     {
         try
         {
@@ -97,16 +126,7 @@ public class UsbRobotArm implements UsbDeviceListener, UsbServicesListener
             }
             else 
             {
-                this.robotArmDevice.addUsbDeviceListener(this);
-                this.commands = new byte[3];
-                
-                // Set up the control pipe.
-                this.irp = robotArmDevice.createUsbControlIrp(
-                    (byte) UsbConst.CONFIGURATION_SELF_POWERED,
-                    (byte) UsbConst.REQUEST_GET_DESCRIPTOR,
-                    (short) 0x100,
-                    (short) 0
-                    );
+                init();
             }
         }
         catch (UsbException | SecurityException ex)
@@ -144,6 +164,15 @@ public class UsbRobotArm implements UsbDeviceListener, UsbServicesListener
     
     /**
      * 
+     */
+    public void stop()
+    {
+        this.resetStates();
+        this.sendCommands();
+    }
+    
+    /**
+     * 
      * 
      * @param on 
      */
@@ -151,104 +180,169 @@ public class UsbRobotArm implements UsbDeviceListener, UsbServicesListener
     {          
         if (on)
         {
-            this.commands[2] = ByteCommand.LIGHT_ON;
+            this.lightState = ByteCommand.LIGHT_ON;
         }
         else
         {
-            this.commands[2] = ByteCommand.LIGHT_OFF;
+            this.lightState = ByteCommand.LIGHT_OFF;
         }
         
         this.sendCommands();
     }
     
+    /**
+     *
+     */
     public void stopGripper()
     {
-        this.commands[0] = ByteCommand.GRIPPER_STOP;
+        this.gripperState = ByteCommand.GRIPPER_STOP;
         this.sendCommands();
     }
     
+    /**
+     *
+     */
     public void closeGripper()
     {
-        this.commands[0] = ByteCommand.GRIPPER_CLOSE;
+        this.gripperState = ByteCommand.GRIPPER_CLOSE;
         this.sendCommands();
     }
     
+    /**
+     *
+     */
     public void openGripper()
     {
-        this.commands[0] = ByteCommand.GRIPPER_OPEN;
+        this.gripperState = ByteCommand.GRIPPER_OPEN;
         this.sendCommands();
     }
     
+    /**
+     *
+     */
     public void stopWrist()
     {
-        this.commands[0] = ByteCommand.WRIST_STOP;
+        this.wristState = ByteCommand.WRIST_STOP;
         this.sendCommands();
     }
             
+    /**
+     *
+     */
     public void moveWristUp()
     {
-        this.commands[0] = ByteCommand.WRIST_UP;
+        this.wristState = ByteCommand.WRIST_UP;
         this.sendCommands();
     }
     
+    /**
+     *
+     */
     public void moveWristDown()
     {
-        this.commands[0] = ByteCommand.WRIST_DOWN;
+        this.wristState = ByteCommand.WRIST_DOWN;
         this.sendCommands();
     }
     
+    /**
+     *
+     */
     public void stopElbow()
     {
-        this.commands[0] = ByteCommand.ELBOW_STOP;
+        this.elbowState = ByteCommand.ELBOW_STOP;
         this.sendCommands();
     }
     
+    /**
+     *
+     */
     public void moveElbowUp()
     {
-        this.commands[0] = ByteCommand.ELBOW_UP;
+        this.elbowState = ByteCommand.ELBOW_UP;
         this.sendCommands();
     }
     
+    /**
+     *
+     */
     public void moveElbowDown()
     {
-        this.commands[0] = ByteCommand.ELBOW_DOWN;
+        this.elbowState = ByteCommand.ELBOW_DOWN;
         this.sendCommands();
     }
     
+    /**
+     *
+     */
     public void stopShoulder()
     {
-        this.commands[0] = ByteCommand.SHOULDER_STOP;
+        this.shoulderState = ByteCommand.SHOULDER_STOP;
         this.sendCommands();
     }
     
+    /**
+     *
+     */
     public void moveShoulderUp()
     {
-        this.commands[0] = ByteCommand.SHOULDER_UP;
+        this.shoulderState = ByteCommand.SHOULDER_UP;
         this.sendCommands();
     }
     
+    /**
+     *
+     */
     public void moveShoulderDown()
     {
-        this.commands[0] = ByteCommand.SHOULDER_DOWN;
+        this.shoulderState = ByteCommand.SHOULDER_DOWN;
         this.sendCommands();
     }
     
+    /**
+     *
+     */
     public void stopBase()
     {
-        this.commands[1] = ByteCommand.BASE_STOP;
+        this.baseState = ByteCommand.BASE_STOP;
         this.sendCommands();
     }
     
+    /**
+     *
+     */
     public void rotateBaseClockwise()
     {
-        this.commands[1] = ByteCommand.BASE_CLOCKWISE;
+        this.baseState = ByteCommand.BASE_CLOCKWISE;
         this.sendCommands();
     }
     
+    /**
+     *
+     */
     public void rotateBaseAntiClockwise()
     {
-        this.commands[1] = ByteCommand.BASE_ANTI_CLOCKWISE;
+        this.baseState = ByteCommand.BASE_ANTI_CLOCKWISE;
         this.sendCommands();
+    }
+    
+    public void sendBytes(byte[] commands)
+    {
+        try
+        {
+            byte[] data = new byte[3];
+            data[0] = commands[0];
+            data[1] = commands[1];
+            data[2] = this.lightState;
+            
+            this.irp.setData(data);
+            this.robotArmDevice.syncSubmit(this.irp);
+        }
+        catch (UsbException | IllegalArgumentException | 
+                UsbDisconnectedException ex)
+        {
+            Logger.getLogger(UsbRobotArm.class.getName()).log
+                (Level.SEVERE, null, ex);
+        }
     }
     
     /*
@@ -277,7 +371,8 @@ public class UsbRobotArm implements UsbDeviceListener, UsbServicesListener
                 {
                     // It is the robot arm, connect it.
                     this.robotArmDevice = use.getUsbDevice();
-                    this.robotArmDevice.addUsbDeviceListener(this);
+                    this.init();
+                    
                     this.fireRobotArmAttached();
                     
                     Logger.getLogger(UsbRobotArm.class.getName()).log(Level.INFO, 
@@ -287,6 +382,10 @@ public class UsbRobotArm implements UsbDeviceListener, UsbServicesListener
         }
     }
 
+    /**
+     *
+     * @param use
+     */
     @Override
     public void usbDeviceDetached(UsbServicesEvent use)
     {
@@ -303,10 +402,15 @@ public class UsbRobotArm implements UsbDeviceListener, UsbServicesListener
         Logger.getLogger(UsbRobotArm.class.getName()).log(Level.WARNING, 
                     ude.getUsbDevice().toString() + "\n", ude);
         
+        this.resetStates();
         this.robotArmDevice = null;
         this.fireRobotArmDetached();
     }
 
+    /**
+     *
+     * @param udee
+     */
     @Override
     public void errorEventOccurred(UsbDeviceErrorEvent udee)
     {
@@ -314,6 +418,10 @@ public class UsbRobotArm implements UsbDeviceListener, UsbServicesListener
                     udee.getUsbException().toString(), udee); 
     }
 
+    /**
+     *
+     * @param udde
+     */
     @Override
     public void dataEventOccurred(UsbDeviceDataEvent udde)
     {
@@ -331,11 +439,42 @@ public class UsbRobotArm implements UsbDeviceListener, UsbServicesListener
      * *************************************************************************
      */
     
+    private void init()
+    {
+        this.robotArmDevice.addUsbDeviceListener(this);
+        
+        this.resetStates();
+        
+        // Set up the control pipe.
+        this.irp = robotArmDevice.createUsbControlIrp(
+                (byte) UsbConst.CONFIGURATION_SELF_POWERED,
+                (byte) UsbConst.REQUEST_GET_DESCRIPTOR,
+                (short) 0x100,
+                (short) 0
+        );
+    }
+    
+    private void resetStates()
+    {
+        this.lightState = 0x00;
+        this.gripperState = 0x00;
+        this.wristState = 0x00;
+        this.elbowState = 0x00;
+        this.shoulderState = 0x00;
+        this.baseState = 0x00;
+    }
+    
     private void sendCommands()
     {
         try
         {
-            this.irp.setData(this.commands);
+            byte[] data = new byte[3];
+            data[0] = (byte)(this.gripperState + this.wristState + 
+                        this.elbowState + this.shoulderState);
+            data[1] = this.baseState;
+            data[2] = this.lightState;
+            
+            this.irp.setData(data);
             this.robotArmDevice.syncSubmit(this.irp);
         }
         catch (UsbException | IllegalArgumentException | 

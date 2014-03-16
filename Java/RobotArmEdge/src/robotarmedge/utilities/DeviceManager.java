@@ -40,10 +40,20 @@ public abstract class DeviceManager
         }
     }
     
+    /**
+     *
+     * @param hub
+     * @param vendorId
+     * @param productId
+     * @return
+     */
     public static UsbDevice findDevice(UsbHub hub, int vendorId, int productId)
     {
         for (UsbDevice device : (List<UsbDevice>) hub.getAttachedUsbDevices())
         {
+            if (device == null)
+                continue;
+            
             UsbDeviceDescriptor descriptor;
             
             descriptor = device.getUsbDeviceDescriptor();

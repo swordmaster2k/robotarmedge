@@ -9,7 +9,16 @@ import java.util.EventListener;
  */
 public interface RobotArmChangeListener extends EventListener
 {
+
+    /**
+     *
+     * @param race
+     */
     public void robotArmAttached(RobotArmChangedEvent race);
     
+    /**
+     *
+     * @param race
+     */
     public void robotArmDetached(RobotArmChangedEvent race);
 }

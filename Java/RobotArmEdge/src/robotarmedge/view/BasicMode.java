@@ -1,10 +1,7 @@
 package robotarmedge.view;
 
+import java.awt.Component;
 import javax.swing.JToggleButton;
-import javax.usb.event.UsbDeviceDataEvent;
-import javax.usb.event.UsbDeviceErrorEvent;
-import javax.usb.event.UsbDeviceEvent;
-import javax.usb.event.UsbDeviceListener;
 import robotarmedge.device.UsbRobotArm;
 import robotarmedge.event.RobotArmChangedEvent;
 import robotarmedge.event.RobotArmChangeListener;
@@ -14,11 +11,13 @@ import robotarmedge.event.RobotArmChangeListener;
  * 
  * @author Joshua Michael Daly
  */
-public class BasicMode extends javax.swing.JFrame implements UsbDeviceListener,
+public class BasicMode extends javax.swing.JFrame implements
         RobotArmChangeListener
 {
     private UsbRobotArm usbRobotArm;
     
+    private Mode currentMode;
+
     /*
      * ************************************************************************* 
      * Public Constructors
@@ -32,10 +31,10 @@ public class BasicMode extends javax.swing.JFrame implements UsbDeviceListener,
     {
         initComponents();
     }
-    
+
     /**
      * Creates new form BasicMode
-     * 
+     *
      * @param robotArm
      */
     public BasicMode(UsbRobotArm robotArm)
@@ -43,54 +42,61 @@ public class BasicMode extends javax.swing.JFrame implements UsbDeviceListener,
         initComponents();
         this.usbRobotArm = robotArm;
         this.usbRobotArm.addRobotArmChangeListener(this);
-        
+
         if (this.usbRobotArm.isAttached())
         {
             this.armStatusLabel.setText("Connected");
         }
+
+        this.currentMode = Mode.Mouse;
     }
-    
+
     /*
      * ************************************************************************* 
      * Public Methods
      * *************************************************************************
      */
-
-    /**
-     * 
-     * 
-     * @param ude 
-     */
-    @Override
-    public void usbDeviceDetached(UsbDeviceEvent ude)
-    {
-        throw new UnsupportedOperationException("Not supported yet."); 
-    }
-
-    @Override
-    public void errorEventOccurred(UsbDeviceErrorEvent udee)
-    {
-        throw new UnsupportedOperationException("Not supported yet."); 
-    }
-
-    @Override
-    public void dataEventOccurred(UsbDeviceDataEvent udde)
-    {
-        throw new UnsupportedOperationException("Not supported yet."); 
-    }
     
     @Override
     public void robotArmAttached(RobotArmChangedEvent race)
     {
         this.armStatusLabel.setText("Connected");
     }
-    
+
     @Override
     public void robotArmDetached(RobotArmChangedEvent race)
     {
         this.armStatusLabel.setText("Not Connected");
     }
+
+    /*
+     * ************************************************************************* 
+     * Private Methods
+     * *************************************************************************
+     */
     
+    private void changeMode()
+    {
+        boolean buttonState = true;
+
+        if (Mode.Keyboard == this.currentMode)
+        {
+            buttonState = false;
+        }
+
+        this.closeGripperButton.setEnabled(buttonState);
+        this.openGripperButton.setEnabled(buttonState);
+        this.wristUpButton.setEnabled(buttonState);
+        this.wristDownButton.setEnabled(buttonState);
+        this.elbowUpButton.setEnabled(buttonState);
+        this.elbowDownButton.setEnabled(buttonState);
+        this.shoulderUpButton.setEnabled(buttonState);
+        this.shoulderDownButton.setEnabled(buttonState);
+        this.baseClockwiseButton.setEnabled(buttonState);
+        this.baseAntiClockwiseButton.setEnabled(buttonState);
+        this.lightToggleButton.setEnabled(buttonState);
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -112,7 +118,6 @@ public class BasicMode extends javax.swing.JFrame implements UsbDeviceListener,
         baseAntiClockwiseButton = new javax.swing.JButton();
         baseClockwiseButton = new javax.swing.JButton();
         toggleModeButton = new javax.swing.JButton();
-        closeButton = new javax.swing.JButton();
         basicModeLabel = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         jSeparator2 = new javax.swing.JSeparator();
@@ -124,6 +129,7 @@ public class BasicMode extends javax.swing.JFrame implements UsbDeviceListener,
         outputLabel = new javax.swing.JLabel();
         armStatusLabel = new javax.swing.JLabel();
         lightToggleButton = new javax.swing.JToggleButton();
+        backButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Basic Mode");
@@ -131,6 +137,17 @@ public class BasicMode extends javax.swing.JFrame implements UsbDeviceListener,
         setMinimumSize(new java.awt.Dimension(790, 565));
         setName("BasicModeFrame"); // NOI18N
         setResizable(false);
+        addKeyListener(new java.awt.event.KeyAdapter()
+        {
+            public void keyPressed(java.awt.event.KeyEvent evt)
+            {
+                componentKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt)
+            {
+                componentKeyReleased(evt);
+            }
+        });
 
         closeGripperButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/arrow-curve-090.png"))); // NOI18N
         closeGripperButton.setText("W");
@@ -147,6 +164,17 @@ public class BasicMode extends javax.swing.JFrame implements UsbDeviceListener,
             public void mouseReleased(java.awt.event.MouseEvent evt)
             {
                 closeGripperButtonMouseReleased(evt);
+            }
+        });
+        closeGripperButton.addKeyListener(new java.awt.event.KeyAdapter()
+        {
+            public void keyPressed(java.awt.event.KeyEvent evt)
+            {
+                componentKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt)
+            {
+                componentKeyReleased(evt);
             }
         });
 
@@ -167,6 +195,17 @@ public class BasicMode extends javax.swing.JFrame implements UsbDeviceListener,
                 openGripperButtonMouseReleased(evt);
             }
         });
+        openGripperButton.addKeyListener(new java.awt.event.KeyAdapter()
+        {
+            public void keyPressed(java.awt.event.KeyEvent evt)
+            {
+                componentKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt)
+            {
+                componentKeyReleased(evt);
+            }
+        });
 
         wristDownButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/arrow-curve-270.png"))); // NOI18N
         wristDownButton.setText("D");
@@ -183,6 +222,17 @@ public class BasicMode extends javax.swing.JFrame implements UsbDeviceListener,
             public void mouseReleased(java.awt.event.MouseEvent evt)
             {
                 wristDownButtonMouseReleased(evt);
+            }
+        });
+        wristDownButton.addKeyListener(new java.awt.event.KeyAdapter()
+        {
+            public void keyPressed(java.awt.event.KeyEvent evt)
+            {
+                componentKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt)
+            {
+                componentKeyReleased(evt);
             }
         });
 
@@ -203,6 +253,17 @@ public class BasicMode extends javax.swing.JFrame implements UsbDeviceListener,
                 wristUpButtonMouseReleased(evt);
             }
         });
+        wristUpButton.addKeyListener(new java.awt.event.KeyAdapter()
+        {
+            public void keyPressed(java.awt.event.KeyEvent evt)
+            {
+                componentKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt)
+            {
+                componentKeyReleased(evt);
+            }
+        });
 
         elbowUpButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/arrow-curve-090.png"))); // NOI18N
         elbowUpButton.setText("R");
@@ -219,6 +280,17 @@ public class BasicMode extends javax.swing.JFrame implements UsbDeviceListener,
             public void mouseReleased(java.awt.event.MouseEvent evt)
             {
                 elbowUpButtonMouseReleased(evt);
+            }
+        });
+        elbowUpButton.addKeyListener(new java.awt.event.KeyAdapter()
+        {
+            public void keyPressed(java.awt.event.KeyEvent evt)
+            {
+                componentKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt)
+            {
+                componentKeyReleased(evt);
             }
         });
 
@@ -239,6 +311,17 @@ public class BasicMode extends javax.swing.JFrame implements UsbDeviceListener,
                 elbowDownButtonMouseReleased(evt);
             }
         });
+        elbowDownButton.addKeyListener(new java.awt.event.KeyAdapter()
+        {
+            public void keyPressed(java.awt.event.KeyEvent evt)
+            {
+                componentKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt)
+            {
+                componentKeyReleased(evt);
+            }
+        });
 
         shoulderDownButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/arrow-curve-270.png"))); // NOI18N
         shoulderDownButton.setText("J");
@@ -255,6 +338,17 @@ public class BasicMode extends javax.swing.JFrame implements UsbDeviceListener,
             public void mouseReleased(java.awt.event.MouseEvent evt)
             {
                 shoulderDownButtonMouseReleased(evt);
+            }
+        });
+        shoulderDownButton.addKeyListener(new java.awt.event.KeyAdapter()
+        {
+            public void keyPressed(java.awt.event.KeyEvent evt)
+            {
+                componentKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt)
+            {
+                componentKeyReleased(evt);
             }
         });
 
@@ -275,6 +369,17 @@ public class BasicMode extends javax.swing.JFrame implements UsbDeviceListener,
                 shoulderUpButtonMouseReleased(evt);
             }
         });
+        shoulderUpButton.addKeyListener(new java.awt.event.KeyAdapter()
+        {
+            public void keyPressed(java.awt.event.KeyEvent evt)
+            {
+                componentKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt)
+            {
+                componentKeyReleased(evt);
+            }
+        });
 
         baseAntiClockwiseButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/arrow-circle-anticlockwise.png"))); // NOI18N
         baseAntiClockwiseButton.setText("K");
@@ -291,6 +396,17 @@ public class BasicMode extends javax.swing.JFrame implements UsbDeviceListener,
             public void mouseReleased(java.awt.event.MouseEvent evt)
             {
                 baseAntiClockwiseButtonMouseReleased(evt);
+            }
+        });
+        baseAntiClockwiseButton.addKeyListener(new java.awt.event.KeyAdapter()
+        {
+            public void keyPressed(java.awt.event.KeyEvent evt)
+            {
+                componentKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt)
+            {
+                componentKeyReleased(evt);
             }
         });
 
@@ -311,6 +427,17 @@ public class BasicMode extends javax.swing.JFrame implements UsbDeviceListener,
                 baseClockwiseButtonMouseReleased(evt);
             }
         });
+        baseClockwiseButton.addKeyListener(new java.awt.event.KeyAdapter()
+        {
+            public void keyPressed(java.awt.event.KeyEvent evt)
+            {
+                componentKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt)
+            {
+                componentKeyReleased(evt);
+            }
+        });
 
         toggleModeButton.setText("MODE");
         toggleModeButton.setToolTipText("Toggle Mode");
@@ -321,23 +448,21 @@ public class BasicMode extends javax.swing.JFrame implements UsbDeviceListener,
                 toggleModeButtonActionPerformed(evt);
             }
         });
-
-        closeButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/cross.png"))); // NOI18N
-        closeButton.setText("CLOSE");
-        closeButton.setToolTipText("Close");
-        closeButton.setMaximumSize(new java.awt.Dimension(70, 50));
-        closeButton.setMinimumSize(new java.awt.Dimension(70, 50));
-        closeButton.setPreferredSize(new java.awt.Dimension(70, 50));
-        closeButton.addActionListener(new java.awt.event.ActionListener()
+        toggleModeButton.addKeyListener(new java.awt.event.KeyAdapter()
         {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
+            public void keyPressed(java.awt.event.KeyEvent evt)
             {
-                closeButtonActionPerformed(evt);
+                componentKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt)
+            {
+                componentKeyReleased(evt);
             }
         });
 
         basicModeLabel.setText("BASIC MODE");
         basicModeLabel.setToolTipText("Basic Mode");
+        basicModeLabel.setFocusable(false);
 
         jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
@@ -351,18 +476,18 @@ public class BasicMode extends javax.swing.JFrame implements UsbDeviceListener,
 
         jSeparator6.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
-        armImagePanel.setBackground(new java.awt.Color(255, 128, 0));
         armImagePanel.setMaximumSize(new java.awt.Dimension(647, 42));
         armImagePanel.setMinimumSize(new java.awt.Dimension(647, 42));
 
         outputLabel.setText("jLabel1");
+        outputLabel.setFocusable(false);
 
         javax.swing.GroupLayout armImagePanelLayout = new javax.swing.GroupLayout(armImagePanel);
         armImagePanel.setLayout(armImagePanelLayout);
         armImagePanelLayout.setHorizontalGroup(
             armImagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, armImagePanelLayout.createSequentialGroup()
-                .addContainerGap(198, Short.MAX_VALUE)
+            .addGroup(armImagePanelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(outputLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(200, 200, 200))
         );
@@ -371,10 +496,11 @@ public class BasicMode extends javax.swing.JFrame implements UsbDeviceListener,
             .addGroup(armImagePanelLayout.createSequentialGroup()
                 .addGap(146, 146, 146)
                 .addComponent(outputLabel)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(202, Short.MAX_VALUE))
         );
 
         armStatusLabel.setText("Not Connected");
+        armStatusLabel.setFocusable(false);
 
         lightToggleButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/light-bulb-off.png"))); // NOI18N
         lightToggleButton.setText("L");
@@ -391,111 +517,119 @@ public class BasicMode extends javax.swing.JFrame implements UsbDeviceListener,
                 lightToggleButtonActionPerformed(evt);
             }
         });
+        lightToggleButton.addKeyListener(new java.awt.event.KeyAdapter()
+        {
+            public void keyPressed(java.awt.event.KeyEvent evt)
+            {
+                componentKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt)
+            {
+                componentKeyReleased(evt);
+            }
+        });
+
+        backButton.setText("Back");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(armImagePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(basicModeLabel)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(28, 28, 28)
-                        .addComponent(toggleModeButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jSeparator6, javax.swing.GroupLayout.PREFERRED_SIZE, 6, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(closeGripperButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(openGripperButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 6, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(16, 16, 16)
+                                .addComponent(toggleModeButton)
+                                .addGap(18, 18, 18)
+                                .addComponent(jSeparator6, javax.swing.GroupLayout.PREFERRED_SIZE, 6, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(closeGripperButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(openGripperButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 6, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(wristDownButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(wristUpButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 6, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(elbowDownButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(elbowUpButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 6, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(shoulderDownButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(shoulderUpButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 6, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(baseAntiClockwiseButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(baseClockwiseButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, 6, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lightToggleButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(armImagePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 613, Short.MAX_VALUE))
+                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(wristDownButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(wristUpButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 6, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(elbowDownButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(elbowUpButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 6, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(shoulderDownButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(shoulderUpButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 6, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(baseAntiClockwiseButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(baseClockwiseButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, 6, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lightToggleButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(63, 63, 63)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(closeButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(armStatusLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                            .addComponent(armStatusLabel)
+                            .addComponent(backButton)))
+                    .addComponent(basicModeLabel))
+                .addGap(0, 16, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(basicModeLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(armImagePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(backButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 337, Short.MAX_VALUE)
-                        .addComponent(closeButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18))
-                    .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(armImagePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(18, 18, 18)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(baseAntiClockwiseButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(baseAntiClockwiseButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addComponent(elbowUpButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGap(18, 18, 18)
+                                            .addComponent(elbowDownButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(wristUpButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(closeGripperButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGap(18, 18, 18)
+                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(wristDownButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(openGripperButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(elbowUpButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                            .addComponent(shoulderUpButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(baseClockwiseButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                         .addGap(18, 18, 18)
-                                        .addComponent(elbowDownButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(wristUpButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(closeGripperButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGap(18, 18, 18)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(wristDownButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(openGripperButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(toggleModeButton, javax.swing.GroupLayout.Alignment.TRAILING))))
-                                .addGroup(layout.createSequentialGroup()
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(shoulderUpButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(baseClockwiseButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(armStatusLabel))
-                                    .addGap(18, 18, 18)
-                                    .addComponent(shoulderDownButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jSeparator3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jSeparator4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jSeparator5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jSeparator6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(lightToggleButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(shoulderDownButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jSeparator3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jSeparator4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jSeparator5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jSeparator6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lightToggleButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(armStatusLabel)))
+                    .addComponent(toggleModeButton, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
         );
 
@@ -507,227 +641,307 @@ public class BasicMode extends javax.swing.JFrame implements UsbDeviceListener,
      * Private Event Handlers
      * *************************************************************************
      */
-    
+
     private void toggleModeButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_toggleModeButtonActionPerformed
     {//GEN-HEADEREND:event_toggleModeButtonActionPerformed
         this.outputLabel.setText("Mode changed.");
+
+        if (Mode.Mouse != this.currentMode)
+        {
+            this.currentMode = Mode.Mouse;
+        }
+        else
+        {
+            this.currentMode = Mode.Keyboard;
+        }
+
+        this.changeMode();
     }//GEN-LAST:event_toggleModeButtonActionPerformed
-
-    private void closeGripperButtonMousePressed(java.awt.event.MouseEvent evt)//GEN-FIRST:event_closeGripperButtonMousePressed
-    {//GEN-HEADEREND:event_closeGripperButtonMousePressed
-        this.outputLabel.setText("Gripper Close Pressed.");
-        
-        if (this.usbRobotArm.isAttached())
-        {
-            this.usbRobotArm.closeGripper();
-        }
-    }//GEN-LAST:event_closeGripperButtonMousePressed
-
-    private void closeGripperButtonMouseReleased(java.awt.event.MouseEvent evt)//GEN-FIRST:event_closeGripperButtonMouseReleased
-    {//GEN-HEADEREND:event_closeGripperButtonMouseReleased
-        this.outputLabel.setText("Gripper Close Released");
-        
-        if (this.usbRobotArm.isAttached())
-        {
-            this.usbRobotArm.stopGripper();
-        }
-    }//GEN-LAST:event_closeGripperButtonMouseReleased
-
-    private void openGripperButtonMousePressed(java.awt.event.MouseEvent evt)//GEN-FIRST:event_openGripperButtonMousePressed
-    {//GEN-HEADEREND:event_openGripperButtonMousePressed
-        this.outputLabel.setText("Gripper Open Pressed.");
-        
-        if (this.usbRobotArm.isAttached())
-        {
-            this.usbRobotArm.openGripper();
-        }
-    }//GEN-LAST:event_openGripperButtonMousePressed
-
-    private void openGripperButtonMouseReleased(java.awt.event.MouseEvent evt)//GEN-FIRST:event_openGripperButtonMouseReleased
-    {//GEN-HEADEREND:event_openGripperButtonMouseReleased
-        this.outputLabel.setText("Gripper Open Released.");
-        
-        if (this.usbRobotArm.isAttached())
-        {
-            this.usbRobotArm.stopGripper();
-        }
-    }//GEN-LAST:event_openGripperButtonMouseReleased
-
-    private void wristUpButtonMousePressed(java.awt.event.MouseEvent evt)//GEN-FIRST:event_wristUpButtonMousePressed
-    {//GEN-HEADEREND:event_wristUpButtonMousePressed
-        this.outputLabel.setText("Wrist Up Pressed.");
-        
-        if (this.usbRobotArm.isAttached())
-        {
-            this.usbRobotArm.moveWristUp();
-        }
-    }//GEN-LAST:event_wristUpButtonMousePressed
-
-    private void wristUpButtonMouseReleased(java.awt.event.MouseEvent evt)//GEN-FIRST:event_wristUpButtonMouseReleased
-    {//GEN-HEADEREND:event_wristUpButtonMouseReleased
-        this.outputLabel.setText("Wrist Up Released.");
-        
-        if (this.usbRobotArm.isAttached())
-        {
-            this.usbRobotArm.stopWrist();
-        }
-    }//GEN-LAST:event_wristUpButtonMouseReleased
-
-    private void wristDownButtonMousePressed(java.awt.event.MouseEvent evt)//GEN-FIRST:event_wristDownButtonMousePressed
-    {//GEN-HEADEREND:event_wristDownButtonMousePressed
-        this.outputLabel.setText("Wrist Down Pressed.");
-        
-        if (this.usbRobotArm.isAttached())
-        {
-            this.usbRobotArm.moveWristDown();
-        }
-    }//GEN-LAST:event_wristDownButtonMousePressed
-
-    private void wristDownButtonMouseReleased(java.awt.event.MouseEvent evt)//GEN-FIRST:event_wristDownButtonMouseReleased
-    {//GEN-HEADEREND:event_wristDownButtonMouseReleased
-       this.outputLabel.setText("Wrist Down Released.");
-       
-       if (this.usbRobotArm.isAttached())
-       {
-            this.usbRobotArm.stopWrist();
-       }
-    }//GEN-LAST:event_wristDownButtonMouseReleased
-
-    private void elbowUpButtonMousePressed(java.awt.event.MouseEvent evt)//GEN-FIRST:event_elbowUpButtonMousePressed
-    {//GEN-HEADEREND:event_elbowUpButtonMousePressed
-        this.outputLabel.setText("Elbow Up Pressed.");
-        
-        if (this.usbRobotArm.isAttached())
-       {
-            this.usbRobotArm.moveElbowUp();
-       }
-    }//GEN-LAST:event_elbowUpButtonMousePressed
-
-    private void elbowUpButtonMouseReleased(java.awt.event.MouseEvent evt)//GEN-FIRST:event_elbowUpButtonMouseReleased
-    {//GEN-HEADEREND:event_elbowUpButtonMouseReleased
-        this.outputLabel.setText("Elbow Up Released.");
-        
-        if (this.usbRobotArm.isAttached())
-        {
-            this.usbRobotArm.stopElbow();
-        }
-    }//GEN-LAST:event_elbowUpButtonMouseReleased
-
-    private void elbowDownButtonMousePressed(java.awt.event.MouseEvent evt)//GEN-FIRST:event_elbowDownButtonMousePressed
-    {//GEN-HEADEREND:event_elbowDownButtonMousePressed
-        this.outputLabel.setText("Elbow Down Pressed.");
-        
-        if (this.usbRobotArm.isAttached())
-        {
-            this.usbRobotArm.moveElbowDown();
-        }
-    }//GEN-LAST:event_elbowDownButtonMousePressed
-
-    private void elbowDownButtonMouseReleased(java.awt.event.MouseEvent evt)//GEN-FIRST:event_elbowDownButtonMouseReleased
-    {//GEN-HEADEREND:event_elbowDownButtonMouseReleased
-        this.outputLabel.setText("Elbow Down Released.");
-        
-        if (this.usbRobotArm.isAttached())
-        {
-            this.usbRobotArm.stopElbow();
-        }
-    }//GEN-LAST:event_elbowDownButtonMouseReleased
-
-    private void shoulderUpButtonMousePressed(java.awt.event.MouseEvent evt)//GEN-FIRST:event_shoulderUpButtonMousePressed
-    {//GEN-HEADEREND:event_shoulderUpButtonMousePressed
-        this.outputLabel.setText("Shoulder Up Pressed.");
-        
-        if (this.usbRobotArm.isAttached())
-        {
-            this.usbRobotArm.moveShoulderUp();
-        }
-    }//GEN-LAST:event_shoulderUpButtonMousePressed
-
-    private void shoulderUpButtonMouseReleased(java.awt.event.MouseEvent evt)//GEN-FIRST:event_shoulderUpButtonMouseReleased
-    {//GEN-HEADEREND:event_shoulderUpButtonMouseReleased
-        this.outputLabel.setText("Shoulder Up Released.");
-        
-        if (this.usbRobotArm.isAttached())
-        {
-            this.usbRobotArm.stopShoulder();
-        }
-    }//GEN-LAST:event_shoulderUpButtonMouseReleased
-
-    private void shoulderDownButtonMousePressed(java.awt.event.MouseEvent evt)//GEN-FIRST:event_shoulderDownButtonMousePressed
-    {//GEN-HEADEREND:event_shoulderDownButtonMousePressed
-        this.outputLabel.setText("Shoulder Down Pressed.");
-        
-        if (this.usbRobotArm.isAttached())
-        {
-            this.usbRobotArm.moveShoulderDown();
-        }
-    }//GEN-LAST:event_shoulderDownButtonMousePressed
 
     private void shoulderDownButtonMouseReleased(java.awt.event.MouseEvent evt)//GEN-FIRST:event_shoulderDownButtonMouseReleased
     {//GEN-HEADEREND:event_shoulderDownButtonMouseReleased
-        this.outputLabel.setText("Shoulder Down Released.");
-        
-        if (this.usbRobotArm.isAttached())
+        if (this.shoulderDownButton.isEnabled())
         {
-            this.usbRobotArm.stopShoulder();
+            this.outputLabel.setText("Shoulder Down Released.");
+
+            if (this.usbRobotArm.isAttached())
+            {
+                this.usbRobotArm.stopShoulder();
+            }
         }
     }//GEN-LAST:event_shoulderDownButtonMouseReleased
 
     private void baseClockwiseButtonMousePressed(java.awt.event.MouseEvent evt)//GEN-FIRST:event_baseClockwiseButtonMousePressed
     {//GEN-HEADEREND:event_baseClockwiseButtonMousePressed
-        this.outputLabel.setText("Base Clockwise Pressed.");
-        
-        if (this.usbRobotArm.isAttached())
+        if (this.baseClockwiseButton.isEnabled())
         {
-            this.usbRobotArm.rotateBaseClockwise();
+            this.outputLabel.setText("Base Clockwise Pressed.");
+
+            if (this.usbRobotArm.isAttached())
+            {
+                this.usbRobotArm.rotateBaseClockwise();
+            }
         }
     }//GEN-LAST:event_baseClockwiseButtonMousePressed
 
     private void baseClockwiseButtonMouseReleased(java.awt.event.MouseEvent evt)//GEN-FIRST:event_baseClockwiseButtonMouseReleased
     {//GEN-HEADEREND:event_baseClockwiseButtonMouseReleased
-        this.outputLabel.setText("Base Clockwise Released.");
-        
-        if (this.usbRobotArm.isAttached())
+        if (this.baseClockwiseButton.isEnabled())
         {
-            this.usbRobotArm.stopBase();
+            this.outputLabel.setText("Base Clockwise Released.");
+
+            if (this.usbRobotArm.isAttached())
+            {
+                this.usbRobotArm.stopBase();
+            }
         }
     }//GEN-LAST:event_baseClockwiseButtonMouseReleased
 
     private void baseAntiClockwiseButtonMousePressed(java.awt.event.MouseEvent evt)//GEN-FIRST:event_baseAntiClockwiseButtonMousePressed
     {//GEN-HEADEREND:event_baseAntiClockwiseButtonMousePressed
-        this.outputLabel.setText("Base Anti-Clockwise Pressed.");
-        
-        if (this.usbRobotArm.isAttached())
+        if (this.baseAntiClockwiseButton.isEnabled())
         {
-            this.usbRobotArm.rotateBaseAntiClockwise();
+            this.outputLabel.setText("Base Anti-Clockwise Pressed.");
+
+            if (this.usbRobotArm.isAttached())
+            {
+                this.usbRobotArm.rotateBaseAntiClockwise();
+            }
         }
     }//GEN-LAST:event_baseAntiClockwiseButtonMousePressed
 
     private void baseAntiClockwiseButtonMouseReleased(java.awt.event.MouseEvent evt)//GEN-FIRST:event_baseAntiClockwiseButtonMouseReleased
     {//GEN-HEADEREND:event_baseAntiClockwiseButtonMouseReleased
-        this.outputLabel.setText("Base Anti-Clockwise Released.");
-        
-        if (this.usbRobotArm.isAttached())
+        if (this.baseAntiClockwiseButton.isEnabled())
         {
-            this.usbRobotArm.stopBase();
+            this.outputLabel.setText("Base Anti-Clockwise Released.");
+
+            if (this.usbRobotArm.isAttached())
+            {
+                this.usbRobotArm.stopBase();
+            }
         }
     }//GEN-LAST:event_baseAntiClockwiseButtonMouseReleased
 
     private void lightToggleButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_lightToggleButtonActionPerformed
     {//GEN-HEADEREND:event_lightToggleButtonActionPerformed
-        JToggleButton toggleButton = (JToggleButton)evt.getSource();
+        JToggleButton toggleButton = (JToggleButton) evt.getSource();
         this.outputLabel.setText("Light State: " + toggleButton.isSelected());
-        
+
         if (this.usbRobotArm.isAttached())
         {
             this.usbRobotArm.toggleLight(toggleButton.isSelected());
         }
     }//GEN-LAST:event_lightToggleButtonActionPerformed
 
-    private void closeButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_closeButtonActionPerformed
-    {//GEN-HEADEREND:event_closeButtonActionPerformed
-        this.outputLabel.setText("Close Pressed.");
-    }//GEN-LAST:event_closeButtonActionPerformed
+    private void shoulderDownButtonMousePressed(java.awt.event.MouseEvent evt)//GEN-FIRST:event_shoulderDownButtonMousePressed
+    {//GEN-HEADEREND:event_shoulderDownButtonMousePressed
+        if (this.shoulderDownButton.isEnabled())
+        {
+            this.outputLabel.setText("Shoulder Down Pressed.");
+
+            if (this.usbRobotArm.isAttached())
+            {
+                this.usbRobotArm.moveShoulderDown();
+            }
+        }
+    }//GEN-LAST:event_shoulderDownButtonMousePressed
+
+    private void shoulderUpButtonMouseReleased(java.awt.event.MouseEvent evt)//GEN-FIRST:event_shoulderUpButtonMouseReleased
+    {//GEN-HEADEREND:event_shoulderUpButtonMouseReleased
+        if (this.shoulderUpButton.isEnabled())
+        {
+            this.outputLabel.setText("Shoulder Up Released.");
+
+            if (this.usbRobotArm.isAttached())
+            {
+                this.usbRobotArm.stopShoulder();
+            }
+        }
+    }//GEN-LAST:event_shoulderUpButtonMouseReleased
+
+    private void shoulderUpButtonMousePressed(java.awt.event.MouseEvent evt)//GEN-FIRST:event_shoulderUpButtonMousePressed
+    {//GEN-HEADEREND:event_shoulderUpButtonMousePressed
+        if (this.shoulderUpButton.isEnabled())
+        {
+            this.outputLabel.setText("Shoulder Up Pressed.");
+
+            if (this.usbRobotArm.isAttached())
+            {
+                this.usbRobotArm.moveShoulderUp();
+            }
+        }
+    }//GEN-LAST:event_shoulderUpButtonMousePressed
+
+    private void elbowDownButtonMouseReleased(java.awt.event.MouseEvent evt)//GEN-FIRST:event_elbowDownButtonMouseReleased
+    {//GEN-HEADEREND:event_elbowDownButtonMouseReleased
+        if (this.elbowDownButton.isEnabled())
+        {
+            this.outputLabel.setText("Elbow Down Released.");
+
+            if (this.usbRobotArm.isAttached())
+            {
+                this.usbRobotArm.stopElbow();
+            }
+        }
+    }//GEN-LAST:event_elbowDownButtonMouseReleased
+
+    private void elbowDownButtonMousePressed(java.awt.event.MouseEvent evt)//GEN-FIRST:event_elbowDownButtonMousePressed
+    {//GEN-HEADEREND:event_elbowDownButtonMousePressed
+        if (this.elbowDownButton.isEnabled())
+        {
+            this.outputLabel.setText("Elbow Down Pressed.");
+
+            if (this.usbRobotArm.isAttached())
+            {
+                this.usbRobotArm.moveElbowDown();
+            }
+        }
+    }//GEN-LAST:event_elbowDownButtonMousePressed
+
+    private void elbowUpButtonMouseReleased(java.awt.event.MouseEvent evt)//GEN-FIRST:event_elbowUpButtonMouseReleased
+    {//GEN-HEADEREND:event_elbowUpButtonMouseReleased
+        if (this.elbowUpButton.isEnabled())
+        {
+            this.outputLabel.setText("Elbow Up Released.");
+
+            if (this.usbRobotArm.isAttached())
+            {
+                this.usbRobotArm.stopElbow();
+            }
+        }
+    }//GEN-LAST:event_elbowUpButtonMouseReleased
+
+    private void elbowUpButtonMousePressed(java.awt.event.MouseEvent evt)//GEN-FIRST:event_elbowUpButtonMousePressed
+    {//GEN-HEADEREND:event_elbowUpButtonMousePressed
+        if (this.elbowUpButton.isEnabled())
+        {
+            this.outputLabel.setText("Elbow Up Pressed.");
+
+            if (this.usbRobotArm.isAttached())
+            {
+                this.usbRobotArm.moveElbowUp();
+            }
+        }
+    }//GEN-LAST:event_elbowUpButtonMousePressed
+
+    private void wristDownButtonMouseReleased(java.awt.event.MouseEvent evt)//GEN-FIRST:event_wristDownButtonMouseReleased
+    {//GEN-HEADEREND:event_wristDownButtonMouseReleased
+        if (this.wristDownButton.isEnabled())
+        {
+            this.outputLabel.setText("Wrist Down Released.");
+
+            if (this.usbRobotArm.isAttached())
+            {
+                this.usbRobotArm.stopWrist();
+            }
+        }
+    }//GEN-LAST:event_wristDownButtonMouseReleased
+
+    private void wristDownButtonMousePressed(java.awt.event.MouseEvent evt)//GEN-FIRST:event_wristDownButtonMousePressed
+    {//GEN-HEADEREND:event_wristDownButtonMousePressed
+        if (this.wristDownButton.isEnabled())
+        {
+            this.outputLabel.setText("Wrist Down Pressed.");
+
+            if (this.usbRobotArm.isAttached())
+            {
+                this.usbRobotArm.moveWristDown();
+            }
+        }
+    }//GEN-LAST:event_wristDownButtonMousePressed
+
+    private void wristUpButtonMouseReleased(java.awt.event.MouseEvent evt)//GEN-FIRST:event_wristUpButtonMouseReleased
+    {//GEN-HEADEREND:event_wristUpButtonMouseReleased
+        if (this.wristUpButton.isEnabled())
+        {
+            this.outputLabel.setText("Wrist Up Released.");
+
+            if (this.usbRobotArm.isAttached())
+            {
+                this.usbRobotArm.stopWrist();
+            }
+        }
+    }//GEN-LAST:event_wristUpButtonMouseReleased
+
+    private void wristUpButtonMousePressed(java.awt.event.MouseEvent evt)//GEN-FIRST:event_wristUpButtonMousePressed
+    {//GEN-HEADEREND:event_wristUpButtonMousePressed
+        if (this.wristUpButton.isEnabled())
+        {
+            this.outputLabel.setText("Wrist Up Pressed.");
+
+            if (this.usbRobotArm.isAttached())
+            {
+                this.usbRobotArm.moveWristUp();
+            }
+        }
+    }//GEN-LAST:event_wristUpButtonMousePressed
+
+    private void openGripperButtonMouseReleased(java.awt.event.MouseEvent evt)//GEN-FIRST:event_openGripperButtonMouseReleased
+    {//GEN-HEADEREND:event_openGripperButtonMouseReleased
+        if (this.openGripperButton.isEnabled())
+        {
+            this.outputLabel.setText("Gripper Open Released.");
+
+            if (this.usbRobotArm.isAttached())
+            {
+                this.usbRobotArm.stopGripper();
+            }
+        }
+    }//GEN-LAST:event_openGripperButtonMouseReleased
+
+    private void openGripperButtonMousePressed(java.awt.event.MouseEvent evt)//GEN-FIRST:event_openGripperButtonMousePressed
+    {//GEN-HEADEREND:event_openGripperButtonMousePressed
+        if (this.openGripperButton.isEnabled())
+        {
+            this.outputLabel.setText("Gripper Open Pressed.");
+
+            if (this.usbRobotArm.isAttached())
+            {
+                this.usbRobotArm.openGripper();
+            }
+        }
+    }//GEN-LAST:event_openGripperButtonMousePressed
+
+    private void closeGripperButtonMouseReleased(java.awt.event.MouseEvent evt)//GEN-FIRST:event_closeGripperButtonMouseReleased
+    {//GEN-HEADEREND:event_closeGripperButtonMouseReleased
+        if (this.closeGripperButton.isEnabled())
+        {
+            this.outputLabel.setText("Gripper Close Released");
+
+            if (this.usbRobotArm.isAttached())
+            {
+                this.usbRobotArm.stopGripper();
+            }
+        }
+    }//GEN-LAST:event_closeGripperButtonMouseReleased
+
+    private void closeGripperButtonMousePressed(java.awt.event.MouseEvent evt)//GEN-FIRST:event_closeGripperButtonMousePressed
+    {//GEN-HEADEREND:event_closeGripperButtonMousePressed
+        if (this.closeGripperButton.isEnabled())
+        {
+            this.outputLabel.setText("Gripper Close Pressed.");
+
+            if (this.usbRobotArm.isAttached())
+            {
+                this.usbRobotArm.closeGripper();
+            }
+        }
+    }//GEN-LAST:event_closeGripperButtonMousePressed
+
+    private void componentKeyPressed(java.awt.event.KeyEvent evt)//GEN-FIRST:event_componentKeyPressed
+    {//GEN-HEADEREND:event_componentKeyPressed
+        Component component = (Component)evt.getSource();
+        component.requestFocus();
+        System.out.println("k");
+    }//GEN-LAST:event_componentKeyPressed
+
+    private void componentKeyReleased(java.awt.event.KeyEvent evt)//GEN-FIRST:event_componentKeyReleased
+    {//GEN-HEADEREND:event_componentKeyReleased
+        Component component = (Component)evt.getSource();
+        component.requestFocus();
+        System.out.println("l");
+    }//GEN-LAST:event_componentKeyReleased
 
     /**
      * @param args the command line arguments
@@ -782,10 +996,10 @@ public class BasicMode extends javax.swing.JFrame implements UsbDeviceListener,
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel armImagePanel;
     private javax.swing.JLabel armStatusLabel;
+    private javax.swing.JButton backButton;
     private javax.swing.JButton baseAntiClockwiseButton;
     private javax.swing.JButton baseClockwiseButton;
     private javax.swing.JLabel basicModeLabel;
-    private javax.swing.JButton closeButton;
     private javax.swing.JButton closeGripperButton;
     private javax.swing.JButton elbowDownButton;
     private javax.swing.JButton elbowUpButton;

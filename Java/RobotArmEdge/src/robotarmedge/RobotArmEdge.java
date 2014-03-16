@@ -55,10 +55,8 @@ public class RobotArmEdge
     public static void main(String[] args) throws UsbException
     {
         setLookAndFeel();
-
-        UsbRobotArm robotArm = new UsbRobotArm();
         
-        BasicMode view = new BasicMode(robotArm);
+        BasicMode view = new BasicMode(UsbRobotArm.getInstance());
         view.setVisible(true);
     }
 }
