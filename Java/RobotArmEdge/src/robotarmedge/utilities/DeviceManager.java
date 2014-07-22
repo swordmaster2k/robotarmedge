@@ -1,3 +1,13 @@
+/*
+ ********************************************************************
+ * Robot Arm Edge Version 1.0
+ * This file copyright (C) 2014 Joshua Michael Daly
+ * 
+ * Robot Arm Edge is licensed under the GNU General Public License
+ * version 3. See <http://www.gnu.org/licenses/> for more details.
+ ********************************************************************
+ */
+
 package robotarmedge.utilities;
 
 import java.util.List;
@@ -9,6 +19,7 @@ import javax.usb.UsbHub;
  * 
  * 
  * @author Joshua Michael Daly
+ * @version 1.0
  */
 public abstract class DeviceManager
 {
@@ -41,7 +52,8 @@ public abstract class DeviceManager
     }
     
     /**
-     *
+     * 
+     * 
      * @param hub
      * @param vendorId
      * @param productId

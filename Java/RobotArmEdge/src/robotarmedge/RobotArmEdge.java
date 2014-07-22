@@ -1,3 +1,13 @@
+/*
+ ********************************************************************
+ * Robot Arm Edge Version 1.0
+ * This file copyright (C) 2014 Joshua Michael Daly
+ * 
+ * Robot Arm Edge is licensed under the GNU General Public License
+ * version 3. See <http://www.gnu.org/licenses/> for more details.
+ ********************************************************************
+ */
+
 package robotarmedge;
 
 import javax.usb.UsbException;
@@ -5,9 +15,11 @@ import robotarmedge.device.UsbRobotArm;
 import robotarmedge.view.BasicMode;
 
 /**
- * 
+ * The central driver class which contains the main method, it starts the 
+ * applications GUI.
  * 
  * @author Joshua Michael Daly
+ * @version 1.0
  */
 public class RobotArmEdge
 {
@@ -49,6 +61,8 @@ public class RobotArmEdge
     }
     
     /**
+     * Main entry point, creates the initial GUI which takes over from there on.
+     * 
      * @param args the command line arguments
      * @throws javax.usb.UsbException
      */
@@ -57,6 +71,7 @@ public class RobotArmEdge
         setLookAndFeel();
         
         BasicMode view = new BasicMode(UsbRobotArm.getInstance());
+        view.setLocationRelativeTo(null);
         view.setVisible(true);
     }
 }

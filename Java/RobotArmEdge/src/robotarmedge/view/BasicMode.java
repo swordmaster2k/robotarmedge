@@ -1,7 +1,21 @@
+/*
+ ********************************************************************
+ * Robot Arm Edge Version 1.0
+ * This file copyright (C) 2014 Joshua Michael Daly
+ * 
+ * Robot Arm Edge is licensed under the GNU General Public License
+ * version 3. See <http://www.gnu.org/licenses/> for more details.
+ ********************************************************************
+ */
+
 package robotarmedge.view;
 
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.net.URL;
 import java.util.Timer;
 import java.util.TimerTask;
+import javax.swing.ImageIcon;
 import javax.swing.JToggleButton;
 import robotarmedge.device.UsbRobotArm;
 import robotarmedge.event.RobotArmChangedEvent;
@@ -11,14 +25,22 @@ import robotarmedge.event.RobotArmChangeListener;
  *
  *
  * @author Joshua Michael Daly
+ * @version 1.0
  */
 public class BasicMode extends javax.swing.JFrame implements
         RobotArmChangeListener
 {
-
     private UsbRobotArm usbRobotArm;
 
     private Mode currentMode;
+    
+    private final String applicationIconString = "/robotarmedge/resources/application.png";
+    
+    private final String usbConnectedString = "/robotarmedge/resources/plug.png";
+    private final String usbDisconnectedString = "/robotarmedge/resources/plug--exclamation.png";
+    
+    private final Image usbConnectedImage;
+    private final Image usbDisconnectedImage;
     
     Timer t = new Timer();
     TimerTask tt;
@@ -35,6 +57,15 @@ public class BasicMode extends javax.swing.JFrame implements
     public BasicMode()
     {
         initComponents();
+        
+        ImageIcon icon = new ImageIcon(getClass().getResource(this.applicationIconString));
+        this.setIconImage(icon.getImage());
+        
+        URL imageUrl = this.getClass().getResource(this.usbConnectedString);
+        this.usbConnectedImage = Toolkit.getDefaultToolkit().createImage(imageUrl);
+        
+        imageUrl = this.getClass().getResource(this.usbDisconnectedString);
+        this.usbDisconnectedImage = Toolkit.getDefaultToolkit().createImage(imageUrl);
     }
 
     /**
@@ -48,12 +79,15 @@ public class BasicMode extends javax.swing.JFrame implements
         this.usbRobotArm = robotArm;
         this.usbRobotArm.addRobotArmChangeListener(this);
 
+        this.currentMode = Mode.Mouse;
+        
         if (this.usbRobotArm.isAttached())
         {
-            this.armStatusLabel.setText("Connected");
+            this.toggleButttons(true);
+            this.connectionLabel.setText("Connected");
+            this.connectionLabel.setIcon(new javax.swing.ImageIcon(this.getClass().getResource
+                ("/robotarmedge/resources/plug.png")));
         }
-
-        this.currentMode = Mode.Mouse;
     }
 
     /*
@@ -61,22 +95,33 @@ public class BasicMode extends javax.swing.JFrame implements
      * Public Methods
      * *************************************************************************
      */
+    
     @Override
     public void robotArmAttached(RobotArmChangedEvent race)
     {
-        this.armStatusLabel.setText("Connected");
+        this.toggleButttons(true);
+        this.connectionLabel.setText("Connected");
+        this.connectionLabel.setIcon(new javax.swing.ImageIcon(this.getClass().getResource
+                ("/robotarmedge/resources/plug.png")));
     }
 
     @Override
     public void robotArmDetached(RobotArmChangedEvent race)
     {
-        this.armStatusLabel.setText("Not Connected");
+        this.toggleButttons(false);
+        this.connectionLabel.setText("No Connection");
+        this.connectionLabel.setIcon(new javax.swing.ImageIcon(this.getClass().getResource
+                ("/robotarmedge/resources/plug--exclamation.png")));
     }
 
     /*
      * ************************************************************************* 
      * Private Methods
      * *************************************************************************
+     */
+    
+    /**
+     * 
      */
     private void changeMode()
     {
@@ -87,6 +132,16 @@ public class BasicMode extends javax.swing.JFrame implements
             buttonState = false;
         }
 
+        this.toggleButttons(buttonState);
+    }
+    
+    /**
+     * 
+     * 
+     * @param buttonState 
+     */
+    private void toggleButttons(boolean buttonState)
+    {
         this.closeGripperButton.setEnabled(buttonState);
         this.openGripperButton.setEnabled(buttonState);
         this.wristUpButton.setEnabled(buttonState);
@@ -120,24 +175,21 @@ public class BasicMode extends javax.swing.JFrame implements
         shoulderUpButton = new javax.swing.JButton();
         baseAntiClockwiseButton = new javax.swing.JButton();
         baseClockwiseButton = new javax.swing.JButton();
-        toggleModeButton = new javax.swing.JButton();
         basicModeLabel = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         jSeparator2 = new javax.swing.JSeparator();
         jSeparator3 = new javax.swing.JSeparator();
         jSeparator4 = new javax.swing.JSeparator();
         jSeparator5 = new javax.swing.JSeparator();
-        jSeparator6 = new javax.swing.JSeparator();
-        armStatusLabel = new javax.swing.JLabel();
         lightToggleButton = new javax.swing.JToggleButton();
-        backButton = new javax.swing.JButton();
-        outputLabel = new javax.swing.JLabel();
         robotArmPanel = new robotarmedge.view.RobotArmPanel();
+        connectionLabel = new javax.swing.JLabel();
+        aboutButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Basic Mode");
-        setMaximumSize(new java.awt.Dimension(790, 565));
-        setMinimumSize(new java.awt.Dimension(790, 565));
+        setLocationByPlatform(true);
+        setMaximumSize(new java.awt.Dimension(0, 0));
         setName("BasicModeFrame"); // NOI18N
         setResizable(false);
         addKeyListener(new java.awt.event.KeyAdapter()
@@ -155,6 +207,7 @@ public class BasicMode extends javax.swing.JFrame implements
         closeGripperButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/arrow-curve-090.png"))); // NOI18N
         closeGripperButton.setText("W");
         closeGripperButton.setToolTipText("Close Gripper");
+        closeGripperButton.setEnabled(false);
         closeGripperButton.setMaximumSize(new java.awt.Dimension(70, 50));
         closeGripperButton.setMinimumSize(new java.awt.Dimension(70, 50));
         closeGripperButton.setPreferredSize(new java.awt.Dimension(70, 50));
@@ -184,6 +237,7 @@ public class BasicMode extends javax.swing.JFrame implements
         openGripperButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/arrow-curve-270.png"))); // NOI18N
         openGripperButton.setText("S");
         openGripperButton.setToolTipText("Open Gripper");
+        openGripperButton.setEnabled(false);
         openGripperButton.setMaximumSize(new java.awt.Dimension(70, 50));
         openGripperButton.setMinimumSize(new java.awt.Dimension(70, 50));
         openGripperButton.setPreferredSize(new java.awt.Dimension(70, 50));
@@ -213,6 +267,7 @@ public class BasicMode extends javax.swing.JFrame implements
         wristDownButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/arrow-curve-270.png"))); // NOI18N
         wristDownButton.setText("D");
         wristDownButton.setToolTipText("Wrist Down");
+        wristDownButton.setEnabled(false);
         wristDownButton.setMaximumSize(new java.awt.Dimension(70, 50));
         wristDownButton.setMinimumSize(new java.awt.Dimension(70, 50));
         wristDownButton.setPreferredSize(new java.awt.Dimension(70, 50));
@@ -242,6 +297,7 @@ public class BasicMode extends javax.swing.JFrame implements
         wristUpButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/arrow-curve-090.png"))); // NOI18N
         wristUpButton.setText("E");
         wristUpButton.setToolTipText("Wrist Up");
+        wristUpButton.setEnabled(false);
         wristUpButton.setMaximumSize(new java.awt.Dimension(70, 50));
         wristUpButton.setMinimumSize(new java.awt.Dimension(70, 50));
         wristUpButton.setPreferredSize(new java.awt.Dimension(70, 50));
@@ -271,6 +327,7 @@ public class BasicMode extends javax.swing.JFrame implements
         elbowUpButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/arrow-curve-090.png"))); // NOI18N
         elbowUpButton.setText("R");
         elbowUpButton.setToolTipText("Elbow Up");
+        elbowUpButton.setEnabled(false);
         elbowUpButton.setMaximumSize(new java.awt.Dimension(70, 50));
         elbowUpButton.setMinimumSize(new java.awt.Dimension(70, 50));
         elbowUpButton.setPreferredSize(new java.awt.Dimension(70, 50));
@@ -300,6 +357,7 @@ public class BasicMode extends javax.swing.JFrame implements
         elbowDownButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/arrow-curve-270.png"))); // NOI18N
         elbowDownButton.setText("F");
         elbowDownButton.setToolTipText("Elbow Down");
+        elbowDownButton.setEnabled(false);
         elbowDownButton.setMaximumSize(new java.awt.Dimension(70, 50));
         elbowDownButton.setMinimumSize(new java.awt.Dimension(70, 50));
         elbowDownButton.setPreferredSize(new java.awt.Dimension(70, 50));
@@ -329,6 +387,7 @@ public class BasicMode extends javax.swing.JFrame implements
         shoulderDownButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/arrow-curve-270.png"))); // NOI18N
         shoulderDownButton.setText("J");
         shoulderDownButton.setToolTipText("Shoulder Down");
+        shoulderDownButton.setEnabled(false);
         shoulderDownButton.setMaximumSize(new java.awt.Dimension(70, 50));
         shoulderDownButton.setMinimumSize(new java.awt.Dimension(70, 50));
         shoulderDownButton.setPreferredSize(new java.awt.Dimension(70, 50));
@@ -358,6 +417,7 @@ public class BasicMode extends javax.swing.JFrame implements
         shoulderUpButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/arrow-curve-090.png"))); // NOI18N
         shoulderUpButton.setText("U");
         shoulderUpButton.setToolTipText("Shoulder Up");
+        shoulderUpButton.setEnabled(false);
         shoulderUpButton.setMaximumSize(new java.awt.Dimension(70, 50));
         shoulderUpButton.setMinimumSize(new java.awt.Dimension(70, 50));
         shoulderUpButton.setPreferredSize(new java.awt.Dimension(70, 50));
@@ -387,6 +447,7 @@ public class BasicMode extends javax.swing.JFrame implements
         baseAntiClockwiseButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/arrow-circle-anticlockwise.png"))); // NOI18N
         baseAntiClockwiseButton.setText("K");
         baseAntiClockwiseButton.setToolTipText("Base Anti Clockwise");
+        baseAntiClockwiseButton.setEnabled(false);
         baseAntiClockwiseButton.setMaximumSize(new java.awt.Dimension(70, 50));
         baseAntiClockwiseButton.setMinimumSize(new java.awt.Dimension(70, 50));
         baseAntiClockwiseButton.setPreferredSize(new java.awt.Dimension(70, 50));
@@ -416,6 +477,7 @@ public class BasicMode extends javax.swing.JFrame implements
         baseClockwiseButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/arrow-circle.png"))); // NOI18N
         baseClockwiseButton.setText("I");
         baseClockwiseButton.setToolTipText("Base Clockwise");
+        baseClockwiseButton.setEnabled(false);
         baseClockwiseButton.setMaximumSize(new java.awt.Dimension(70, 50));
         baseClockwiseButton.setMinimumSize(new java.awt.Dimension(70, 50));
         baseClockwiseButton.setPreferredSize(new java.awt.Dimension(70, 50));
@@ -442,28 +504,7 @@ public class BasicMode extends javax.swing.JFrame implements
             }
         });
 
-        toggleModeButton.setText("MODE");
-        toggleModeButton.setToolTipText("Toggle Mode");
-        toggleModeButton.setEnabled(false);
-        toggleModeButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
-                toggleModeButtonActionPerformed(evt);
-            }
-        });
-        toggleModeButton.addKeyListener(new java.awt.event.KeyAdapter()
-        {
-            public void keyPressed(java.awt.event.KeyEvent evt)
-            {
-                componentKeyPressed(evt);
-            }
-            public void keyReleased(java.awt.event.KeyEvent evt)
-            {
-                componentKeyReleased(evt);
-            }
-        });
-
+        basicModeLabel.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
         basicModeLabel.setText("BASIC MODE");
         basicModeLabel.setToolTipText("Basic Mode");
         basicModeLabel.setFocusable(false);
@@ -478,14 +519,10 @@ public class BasicMode extends javax.swing.JFrame implements
 
         jSeparator5.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
-        jSeparator6.setOrientation(javax.swing.SwingConstants.VERTICAL);
-
-        armStatusLabel.setText("Not Connected");
-        armStatusLabel.setFocusable(false);
-
         lightToggleButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/light-bulb-off.png"))); // NOI18N
         lightToggleButton.setText("L");
         lightToggleButton.setToolTipText("Light On");
+        lightToggleButton.setEnabled(false);
         lightToggleButton.setMaximumSize(new java.awt.Dimension(70, 50));
         lightToggleButton.setMinimumSize(new java.awt.Dimension(70, 50));
         lightToggleButton.setPreferredSize(new java.awt.Dimension(70, 50));
@@ -510,165 +547,133 @@ public class BasicMode extends javax.swing.JFrame implements
             }
         });
 
-        backButton.setText("Back");
-        backButton.setEnabled(false);
-
-        outputLabel.setText("jLabel1");
-        outputLabel.setFocusable(false);
-
         javax.swing.GroupLayout robotArmPanelLayout = new javax.swing.GroupLayout(robotArmPanel);
         robotArmPanel.setLayout(robotArmPanelLayout);
         robotArmPanelLayout.setHorizontalGroup(
             robotArmPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 613, Short.MAX_VALUE)
+            .addGap(0, 556, Short.MAX_VALUE)
         );
         robotArmPanelLayout.setVerticalGroup(
             robotArmPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 366, Short.MAX_VALUE)
+            .addGap(0, 385, Short.MAX_VALUE)
         );
+
+        connectionLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/plug--exclamation.png"))); // NOI18N
+        connectionLabel.setText("No Connection");
+        connectionLabel.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+
+        aboutButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/information.png"))); // NOI18N
+        aboutButton.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                aboutButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(16, 16, 16)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(toggleModeButton)
-                                .addGap(18, 18, 18)
-                                .addComponent(jSeparator6, javax.swing.GroupLayout.PREFERRED_SIZE, 6, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(closeGripperButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(openGripperButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 6, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(wristDownButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(wristUpButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 6, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(elbowDownButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(elbowUpButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 6, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(shoulderDownButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(shoulderUpButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 6, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(baseAntiClockwiseButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(baseClockwiseButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, 6, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lightToggleButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(robotArmPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(armStatusLabel)
-                            .addComponent(backButton)))
+                .addGap(24, 24, 24)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(basicModeLabel)
-                        .addGap(58, 58, 58)
-                        .addComponent(outputLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 6, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(connectionLabel))
+                    .addComponent(robotArmPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 20, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(closeGripperButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(openGripperButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 6, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(wristDownButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(wristUpButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 6, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(elbowDownButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(elbowUpButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 6, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(shoulderDownButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(shoulderUpButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 6, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(baseAntiClockwiseButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(baseClockwiseButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, 6, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(lightToggleButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(aboutButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(44, 44, 44))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(basicModeLabel)
-                    .addComponent(outputLabel))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(342, 342, 342)
-                        .addComponent(backButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(robotArmPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(baseAntiClockwiseButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addGroup(layout.createSequentialGroup()
-                                            .addComponent(elbowUpButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGap(18, 18, 18)
-                                            .addComponent(elbowDownButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGroup(layout.createSequentialGroup()
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(wristUpButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(closeGripperButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addGap(18, 18, 18)
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(wristDownButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(openGripperButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(basicModeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
+                    .addComponent(connectionLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(robotArmPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(baseAntiClockwiseButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                            .addComponent(shoulderUpButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(baseClockwiseButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(elbowUpButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(18, 18, 18)
-                                        .addComponent(shoulderDownButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jSeparator3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jSeparator4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jSeparator5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jSeparator6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lightToggleButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(armStatusLabel)))
-                    .addComponent(toggleModeButton, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addContainerGap())
+                                        .addComponent(elbowDownButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(wristUpButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(closeGripperButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGap(18, 18, 18)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(wristDownButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(openGripperButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(shoulderUpButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(baseClockwiseButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGap(18, 18, 18)
+                                    .addComponent(shoulderDownButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jSeparator3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jSeparator4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jSeparator5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lightToggleButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(aboutButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGap(18, 18, 18))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /*
-     * ************************************************************************* 
-     * Private Event Handlers
-     * *************************************************************************
-     */
-
-    private void toggleModeButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_toggleModeButtonActionPerformed
-    {//GEN-HEADEREND:event_toggleModeButtonActionPerformed
-        this.outputLabel.setText("Mode changed.");
-
-        if (Mode.Mouse != this.currentMode)
-        {
-            this.currentMode = Mode.Mouse;
-        }
-        else
-        {
-            this.currentMode = Mode.Keyboard;
-        }
-
-        this.changeMode();
-    }//GEN-LAST:event_toggleModeButtonActionPerformed
-
     private void shoulderDownButtonMouseReleased(java.awt.event.MouseEvent evt)//GEN-FIRST:event_shoulderDownButtonMouseReleased
     {//GEN-HEADEREND:event_shoulderDownButtonMouseReleased
         if (this.shoulderDownButton.isEnabled())
         {
-            this.outputLabel.setText("Shoulder Down Released.");
-
             if (this.usbRobotArm.isAttached())
             {
                 this.usbRobotArm.stopShoulder();
@@ -681,8 +686,6 @@ public class BasicMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_baseClockwiseButtonMousePressed
         if (this.baseClockwiseButton.isEnabled())
         {
-            this.outputLabel.setText("Base Clockwise Pressed.");
-
             if (this.usbRobotArm.isAttached())
             {
                 this.usbRobotArm.rotateBaseClockwise();
@@ -695,8 +698,6 @@ public class BasicMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_baseClockwiseButtonMouseReleased
         if (this.baseClockwiseButton.isEnabled())
         {
-            this.outputLabel.setText("Base Clockwise Released.");
-
             if (this.usbRobotArm.isAttached())
             {
                 this.usbRobotArm.stopBase();
@@ -709,8 +710,6 @@ public class BasicMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_baseAntiClockwiseButtonMousePressed
         if (this.baseAntiClockwiseButton.isEnabled())
         {
-            this.outputLabel.setText("Base Anti-Clockwise Pressed.");
-
             if (this.usbRobotArm.isAttached())
             {
                 this.usbRobotArm.rotateBaseAntiClockwise();
@@ -723,8 +722,6 @@ public class BasicMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_baseAntiClockwiseButtonMouseReleased
         if (this.baseAntiClockwiseButton.isEnabled())
         {
-            this.outputLabel.setText("Base Anti-Clockwise Released.");
-
             if (this.usbRobotArm.isAttached())
             {
                 this.usbRobotArm.stopBase();
@@ -736,8 +733,7 @@ public class BasicMode extends javax.swing.JFrame implements
     private void lightToggleButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_lightToggleButtonActionPerformed
     {//GEN-HEADEREND:event_lightToggleButtonActionPerformed
         JToggleButton toggleButton = (JToggleButton) evt.getSource();
-        this.outputLabel.setText("Light State: " + toggleButton.isSelected());
-
+        
         if (this.usbRobotArm.isAttached())
         {
             this.usbRobotArm.toggleLight(toggleButton.isSelected());
@@ -749,8 +745,6 @@ public class BasicMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_shoulderDownButtonMousePressed
         if (this.shoulderDownButton.isEnabled())
         {
-            this.outputLabel.setText("Shoulder Down Pressed.");
-
             if (this.usbRobotArm.isAttached())
             {
                 this.usbRobotArm.moveShoulderDown();
@@ -763,8 +757,6 @@ public class BasicMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_shoulderUpButtonMouseReleased
         if (this.shoulderUpButton.isEnabled())
         {
-            this.outputLabel.setText("Shoulder Up Released.");
-
             if (this.usbRobotArm.isAttached())
             {
                 this.usbRobotArm.stopShoulder();
@@ -777,8 +769,6 @@ public class BasicMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_shoulderUpButtonMousePressed
         if (this.shoulderUpButton.isEnabled())
         {
-            this.outputLabel.setText("Shoulder Up Pressed.");
-
             if (this.usbRobotArm.isAttached())
             {
                 this.usbRobotArm.moveShoulderUp();
@@ -791,8 +781,6 @@ public class BasicMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_elbowDownButtonMouseReleased
         if (this.elbowDownButton.isEnabled())
         {
-            this.outputLabel.setText("Elbow Down Released.");
-
             if (this.usbRobotArm.isAttached())
             {
                 this.usbRobotArm.stopElbow();
@@ -805,8 +793,6 @@ public class BasicMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_elbowDownButtonMousePressed
         if (this.elbowDownButton.isEnabled())
         {
-            this.outputLabel.setText("Elbow Down Pressed.");
-
             if (this.usbRobotArm.isAttached())
             {
                 this.usbRobotArm.moveElbowDown();
@@ -819,8 +805,6 @@ public class BasicMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_elbowUpButtonMouseReleased
         if (this.elbowUpButton.isEnabled())
         {
-            this.outputLabel.setText("Elbow Up Released.");
-
             if (this.usbRobotArm.isAttached())
             {
                 this.usbRobotArm.stopElbow();
@@ -833,8 +817,6 @@ public class BasicMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_elbowUpButtonMousePressed
         if (this.elbowUpButton.isEnabled())
         {
-            this.outputLabel.setText("Elbow Up Pressed.");
-
             if (this.usbRobotArm.isAttached())
             {
                 this.usbRobotArm.moveElbowUp();
@@ -847,8 +829,6 @@ public class BasicMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_wristDownButtonMouseReleased
         if (this.wristDownButton.isEnabled())
         {
-            this.outputLabel.setText("Wrist Down Released.");
-
             if (this.usbRobotArm.isAttached())
             {
                 this.usbRobotArm.stopWrist();
@@ -861,8 +841,6 @@ public class BasicMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_wristDownButtonMousePressed
         if (this.wristDownButton.isEnabled())
         {
-            this.outputLabel.setText("Wrist Down Pressed.");
-
             if (this.usbRobotArm.isAttached())
             {
                 this.usbRobotArm.moveWristDown();
@@ -875,8 +853,6 @@ public class BasicMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_wristUpButtonMouseReleased
         if (this.wristUpButton.isEnabled())
         {
-            this.outputLabel.setText("Wrist Up Released.");
-
             if (this.usbRobotArm.isAttached())
             {
                 this.usbRobotArm.stopWrist();
@@ -889,8 +865,6 @@ public class BasicMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_wristUpButtonMousePressed
         if (this.wristUpButton.isEnabled())
         {
-            this.outputLabel.setText("Wrist Up Pressed.");
-
             if (this.usbRobotArm.isAttached())
             {
                 this.usbRobotArm.moveWristUp();
@@ -903,8 +877,6 @@ public class BasicMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_openGripperButtonMouseReleased
         if (this.openGripperButton.isEnabled())
         {
-            this.outputLabel.setText("Gripper Open Released.");
-
             if (this.usbRobotArm.isAttached())
             {
                 this.usbRobotArm.stopGripper();
@@ -917,8 +889,6 @@ public class BasicMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_openGripperButtonMousePressed
         if (this.openGripperButton.isEnabled())
         {
-            this.outputLabel.setText("Gripper Open Pressed.");
-
             if (this.usbRobotArm.isAttached())
             {
                 this.usbRobotArm.openGripper();
@@ -931,8 +901,6 @@ public class BasicMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_closeGripperButtonMouseReleased
         if (this.closeGripperButton.isEnabled())
         {
-            this.outputLabel.setText("Gripper Close Released");
-
             if (this.usbRobotArm.isAttached())
             {
                 this.usbRobotArm.stopGripper();
@@ -945,8 +913,6 @@ public class BasicMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_closeGripperButtonMousePressed
         if (this.closeGripperButton.isEnabled())
         {
-            this.outputLabel.setText("Gripper Close Pressed.");
-
             if (this.usbRobotArm.isAttached())
             {
                 this.usbRobotArm.closeGripper();
@@ -976,6 +942,13 @@ public class BasicMode extends javax.swing.JFrame implements
         tt = null;
         System.out.println("released");
     }//GEN-LAST:event_componentKeyReleased
+
+    private void aboutButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_aboutButtonActionPerformed
+    {//GEN-HEADEREND:event_aboutButtonActionPerformed
+        AboutDialog aboutDialog = new AboutDialog(this, true);
+        aboutDialog.setLocationRelativeTo(this);
+        aboutDialog.setVisible(true);
+    }//GEN-LAST:event_aboutButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1028,12 +1001,12 @@ public class BasicMode extends javax.swing.JFrame implements
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel armStatusLabel;
-    private javax.swing.JButton backButton;
+    private javax.swing.JButton aboutButton;
     private javax.swing.JButton baseAntiClockwiseButton;
     private javax.swing.JButton baseClockwiseButton;
     private javax.swing.JLabel basicModeLabel;
     private javax.swing.JButton closeGripperButton;
+    private javax.swing.JLabel connectionLabel;
     private javax.swing.JButton elbowDownButton;
     private javax.swing.JButton elbowUpButton;
     private javax.swing.JSeparator jSeparator1;
@@ -1041,14 +1014,11 @@ public class BasicMode extends javax.swing.JFrame implements
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JSeparator jSeparator5;
-    private javax.swing.JSeparator jSeparator6;
     private javax.swing.JToggleButton lightToggleButton;
     private javax.swing.JButton openGripperButton;
-    private javax.swing.JLabel outputLabel;
     private robotarmedge.view.RobotArmPanel robotArmPanel;
     private javax.swing.JButton shoulderDownButton;
     private javax.swing.JButton shoulderUpButton;
-    private javax.swing.JButton toggleModeButton;
     private javax.swing.JButton wristDownButton;
     private javax.swing.JButton wristUpButton;
     // End of variables declaration//GEN-END:variables

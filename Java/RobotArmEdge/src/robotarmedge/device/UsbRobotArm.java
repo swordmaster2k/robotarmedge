@@ -1,3 +1,13 @@
+/*
+ ********************************************************************
+ * Robot Arm Edge Version 1.0
+ * This file copyright (C) 2014 Joshua Michael Daly
+ * 
+ * Robot Arm Edge is licensed under the GNU General Public License
+ * version 3. See <http://www.gnu.org/licenses/> for more details.
+ ********************************************************************
+ */
+
 package robotarmedge.device;
 
 import java.util.Iterator;
@@ -28,6 +38,7 @@ import robotarmedge.utilities.DeviceManager;
  * 
  * 
  * @author Joshua Michael Daly
+ * @version 1.0
  */
 public class UsbRobotArm implements UsbDeviceListener, UsbServicesListener
 {
@@ -173,7 +184,7 @@ public class UsbRobotArm implements UsbDeviceListener, UsbServicesListener
             this.usbServices.addUsbServicesListener(this);
             
             UsbHub rootHub = this.usbServices.getRootUsbHub();
-            DeviceManager.dump(rootHub);
+            //DeviceManager.dump(rootHub);
             
             // Look for the robot arm in that list.
             this.robotArmDevice = DeviceManager.findDevice(rootHub, 
