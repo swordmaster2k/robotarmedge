@@ -51,6 +51,7 @@ public class UsbRobotArm implements UsbDeviceListener, UsbServicesListener
     private UsbControlIrp irp;
     
     private byte lightState;
+
     private byte gripperState;
     private byte wristState;
     private byte elbowState;
@@ -91,6 +92,66 @@ public class UsbRobotArm implements UsbDeviceListener, UsbServicesListener
     public boolean isAttached()
     {
         return this.robotArmDevice != null;
+    }
+    
+    /**
+     * 
+     * 
+     * @return 
+     */
+    public byte getLightState()
+    {
+        return lightState;
+    }
+
+    /**
+     * 
+     * 
+     * @return 
+     */
+    public byte getGripperState()
+    {
+        return gripperState;
+    }
+
+    /**
+     * 
+     * 
+     * @return 
+     */
+    public byte getWristState()
+    {
+        return wristState;
+    }
+
+    /**
+     * 
+     * 
+     * @return 
+     */
+    public byte getElbowState()
+    {
+        return elbowState;
+    }
+
+    /**
+     * 
+     * 
+     * @return 
+     */
+    public byte getShoulderState()
+    {
+        return shoulderState;
+    }
+
+    /**
+     * 
+     * 
+     * @return 
+     */
+    public byte getBaseState()
+    {
+        return baseState;
     }
     
     /*
