@@ -43,7 +43,7 @@ import robotarmedge.utilities.DeviceManager;
 public class UsbRobotArm implements UsbDeviceListener, UsbServicesListener
 {
     // Singleton.
-    private static final UsbRobotArm usbRobotArm = new UsbRobotArm();
+    private static final UsbRobotArm instance = new UsbRobotArm();
     
     /**
      *
@@ -58,16 +58,16 @@ public class UsbRobotArm implements UsbDeviceListener, UsbServicesListener
     private final LinkedList changeListeners = new LinkedList<>();
     
     private UsbServices usbServices;
-    private UsbDevice robotArmDevice;
+    private UsbDevice usbDevice;
     private UsbControlIrp irp;
-    
-    private byte lightState;
 
     private byte gripperState;
     private byte wristState;
     private byte elbowState;
     private byte shoulderState;
     private byte baseState;
+    private byte lightState;
+    
     
     /*
      * ************************************************************************* 
@@ -82,7 +82,7 @@ public class UsbRobotArm implements UsbDeviceListener, UsbServicesListener
      */
     public static UsbRobotArm getInstance()
     {
-        return usbRobotArm;
+        return instance;
     }
     
     /**
@@ -92,7 +92,7 @@ public class UsbRobotArm implements UsbDeviceListener, UsbServicesListener
      */
     public UsbDevice getUsbDevice()
     {
-        return this.robotArmDevice;
+        return this.usbDevice;
     }
     
     /**
@@ -102,17 +102,7 @@ public class UsbRobotArm implements UsbDeviceListener, UsbServicesListener
      */
     public boolean isAttached()
     {
-        return this.robotArmDevice != null;
-    }
-    
-    /**
-     * 
-     * 
-     * @return 
-     */
-    public byte getLightState()
-    {
-        return lightState;
+        return this.usbDevice != null;
     }
 
     /**
@@ -122,7 +112,7 @@ public class UsbRobotArm implements UsbDeviceListener, UsbServicesListener
      */
     public byte getGripperState()
     {
-        return gripperState;
+        return this.gripperState;
     }
 
     /**
@@ -132,7 +122,7 @@ public class UsbRobotArm implements UsbDeviceListener, UsbServicesListener
      */
     public byte getWristState()
     {
-        return wristState;
+        return this.wristState;
     }
 
     /**
@@ -142,7 +132,7 @@ public class UsbRobotArm implements UsbDeviceListener, UsbServicesListener
      */
     public byte getElbowState()
     {
-        return elbowState;
+        return this.elbowState;
     }
 
     /**
@@ -152,7 +142,7 @@ public class UsbRobotArm implements UsbDeviceListener, UsbServicesListener
      */
     public byte getShoulderState()
     {
-        return shoulderState;
+        return this.shoulderState;
     }
 
     /**
@@ -162,7 +152,17 @@ public class UsbRobotArm implements UsbDeviceListener, UsbServicesListener
      */
     public byte getBaseState()
     {
-        return baseState;
+        return this.baseState;
+    }
+    
+    /**
+     * 
+     * 
+     * @return 
+     */
+    public byte getLightState()
+    {
+        return this.lightState;
     }
     
     /*
@@ -187,12 +187,12 @@ public class UsbRobotArm implements UsbDeviceListener, UsbServicesListener
             //DeviceManager.dump(rootHub);
             
             // Look for the robot arm in that list.
-            this.robotArmDevice = DeviceManager.findDevice(rootHub, 
+            this.usbDevice = DeviceManager.findDevice(rootHub, 
                                                             VENDOR_ID,
                                                             PRODUCT_ID);
             
             // If we haven't found it then throw an exception.
-            if (this.robotArmDevice == null)
+            if (this.usbDevice == null)
             {
                 throw new UsbException("Robot Arm Edge not found.");
             }
@@ -240,25 +240,6 @@ public class UsbRobotArm implements UsbDeviceListener, UsbServicesListener
     public void stop()
     {
         this.resetStates();
-        this.sendCommands();
-    }
-    
-    /**
-     * 
-     * 
-     * @param on 
-     */
-    public void toggleLight(boolean on)
-    {          
-        if (on)
-        {
-            this.lightState = ByteCommand.LIGHT_ON;
-        }
-        else
-        {
-            this.lightState = ByteCommand.LIGHT_OFF;
-        }
-        
         this.sendCommands();
     }
     
@@ -397,6 +378,25 @@ public class UsbRobotArm implements UsbDeviceListener, UsbServicesListener
         this.sendCommands();
     }
     
+    /**
+     * 
+     * 
+     * @param on 
+     */
+    public void toggleLight(boolean on)
+    {          
+        if (on)
+        {
+            this.lightState = ByteCommand.LIGHT_ON;
+        }
+        else
+        {
+            this.lightState = ByteCommand.LIGHT_OFF;
+        }
+        
+        this.sendCommands();
+    }
+    
     public void sendBytes(byte[] commands)
     {
         try
@@ -407,7 +407,7 @@ public class UsbRobotArm implements UsbDeviceListener, UsbServicesListener
             data[2] = this.lightState;
             
             this.irp.setData(data);
-            this.robotArmDevice.syncSubmit(this.irp);
+            this.usbDevice.syncSubmit(this.irp);
         }
         catch (UsbException | IllegalArgumentException | 
                 UsbDisconnectedException ex)
@@ -432,7 +432,7 @@ public class UsbRobotArm implements UsbDeviceListener, UsbServicesListener
     public void usbDeviceAttached(UsbServicesEvent use)
     {
         // If we are not already attached see if the device was the robot arm.
-        if (this.robotArmDevice == null)
+        if (this.usbDevice == null)
         {
             UsbDeviceDescriptor descriptor = use.getUsbDevice().
                                                     getUsbDeviceDescriptor();
@@ -442,7 +442,7 @@ public class UsbRobotArm implements UsbDeviceListener, UsbServicesListener
                 if (descriptor.idProduct() == PRODUCT_ID)
                 {
                     // It is the robot arm, connect it.
-                    this.robotArmDevice = use.getUsbDevice();
+                    this.usbDevice = use.getUsbDevice();
                     this.init();
                     
                     this.fireRobotArmAttached();
@@ -475,7 +475,7 @@ public class UsbRobotArm implements UsbDeviceListener, UsbServicesListener
                     ude.getUsbDevice().toString() + "\n", ude);
         
         this.resetStates();
-        this.robotArmDevice = null;
+        this.usbDevice = null;
         this.fireRobotArmDetached();
     }
 
@@ -513,12 +513,12 @@ public class UsbRobotArm implements UsbDeviceListener, UsbServicesListener
     
     private void init()
     {
-        this.robotArmDevice.addUsbDeviceListener(this);
+        this.usbDevice.addUsbDeviceListener(this);
         
         this.resetStates();
         
         // Set up the control pipe.
-        this.irp = robotArmDevice.createUsbControlIrp(
+        this.irp = usbDevice.createUsbControlIrp(
                 (byte) UsbConst.CONFIGURATION_SELF_POWERED,
                 (byte) UsbConst.REQUEST_GET_DESCRIPTOR,
                 (short) 0x100,
@@ -528,12 +528,12 @@ public class UsbRobotArm implements UsbDeviceListener, UsbServicesListener
     
     private void resetStates()
     {
-        this.lightState = 0x00;
         this.gripperState = 0x00;
         this.wristState = 0x00;
         this.elbowState = 0x00;
         this.shoulderState = 0x00;
         this.baseState = 0x00;
+        this.lightState = 0x00;
     }
     
     private void sendCommands()
@@ -547,7 +547,7 @@ public class UsbRobotArm implements UsbDeviceListener, UsbServicesListener
             data[2] = this.lightState;
             
             this.irp.setData(data);
-            this.robotArmDevice.syncSubmit(this.irp);
+            this.usbDevice.syncSubmit(this.irp);
         }
         catch (UsbException | IllegalArgumentException | 
                 UsbDisconnectedException ex)

@@ -76,6 +76,7 @@ public class AboutDialog extends javax.swing.JDialog
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("About Robot Arm Edge 1.0");
+        setResizable(false);
 
         copyrightTextBox.setEditable(false);
         copyrightTextBox.setColumns(20);

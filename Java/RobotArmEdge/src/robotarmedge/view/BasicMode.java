@@ -85,7 +85,8 @@ public class BasicMode extends javax.swing.JFrame implements
         {
             this.toggleButttons(true);
             this.connectionLabel.setText("Connected");
-            this.connectionLabel.setIcon(new javax.swing.ImageIcon(this.getClass().getResource
+            this.connectionLabel.setIcon(new javax.swing.ImageIcon(
+                    this.getClass().getResource
                 ("/robotarmedge/resources/plug.png")));
         }
     }
@@ -101,7 +102,8 @@ public class BasicMode extends javax.swing.JFrame implements
     {
         this.toggleButttons(true);
         this.connectionLabel.setText("Connected");
-        this.connectionLabel.setIcon(new javax.swing.ImageIcon(this.getClass().getResource
+        this.connectionLabel.setIcon(new javax.swing.ImageIcon(
+                this.getClass().getResource
                 ("/robotarmedge/resources/plug.png")));
     }
 
@@ -110,7 +112,8 @@ public class BasicMode extends javax.swing.JFrame implements
     {
         this.toggleButttons(false);
         this.connectionLabel.setText("No Connection");
-        this.connectionLabel.setIcon(new javax.swing.ImageIcon(this.getClass().getResource
+        this.connectionLabel.setIcon(new javax.swing.ImageIcon(
+                this.getClass().getResource
                 ("/robotarmedge/resources/plug--exclamation.png")));
     }
 
@@ -221,6 +224,14 @@ public class BasicMode extends javax.swing.JFrame implements
             {
                 closeGripperButtonMouseReleased(evt);
             }
+            public void mouseExited(java.awt.event.MouseEvent evt)
+            {
+                closeGripperButtonMouseExited(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt)
+            {
+                closeGripperButtonMouseEntered(evt);
+            }
         });
         closeGripperButton.addKeyListener(new java.awt.event.KeyAdapter()
         {
@@ -250,6 +261,14 @@ public class BasicMode extends javax.swing.JFrame implements
             public void mouseReleased(java.awt.event.MouseEvent evt)
             {
                 openGripperButtonMouseReleased(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt)
+            {
+                closeGripperButtonMouseExited(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt)
+            {
+                closeGripperButtonMouseEntered(evt);
             }
         });
         openGripperButton.addKeyListener(new java.awt.event.KeyAdapter()
@@ -281,6 +300,14 @@ public class BasicMode extends javax.swing.JFrame implements
             {
                 wristDownButtonMouseReleased(evt);
             }
+            public void mouseExited(java.awt.event.MouseEvent evt)
+            {
+                wristUpButtonMouseExited(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt)
+            {
+                wristUpButtonMouseEntered(evt);
+            }
         });
         wristDownButton.addKeyListener(new java.awt.event.KeyAdapter()
         {
@@ -310,6 +337,14 @@ public class BasicMode extends javax.swing.JFrame implements
             public void mouseReleased(java.awt.event.MouseEvent evt)
             {
                 wristUpButtonMouseReleased(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt)
+            {
+                wristUpButtonMouseExited(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt)
+            {
+                wristUpButtonMouseEntered(evt);
             }
         });
         wristUpButton.addKeyListener(new java.awt.event.KeyAdapter()
@@ -341,6 +376,14 @@ public class BasicMode extends javax.swing.JFrame implements
             {
                 elbowUpButtonMouseReleased(evt);
             }
+            public void mouseExited(java.awt.event.MouseEvent evt)
+            {
+                elbowUpButtonMouseExited(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt)
+            {
+                elbowUpButtonMouseEntered(evt);
+            }
         });
         elbowUpButton.addKeyListener(new java.awt.event.KeyAdapter()
         {
@@ -370,6 +413,14 @@ public class BasicMode extends javax.swing.JFrame implements
             public void mouseReleased(java.awt.event.MouseEvent evt)
             {
                 elbowDownButtonMouseReleased(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt)
+            {
+                elbowUpButtonMouseExited(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt)
+            {
+                elbowUpButtonMouseEntered(evt);
             }
         });
         elbowDownButton.addKeyListener(new java.awt.event.KeyAdapter()
@@ -401,6 +452,14 @@ public class BasicMode extends javax.swing.JFrame implements
             {
                 shoulderDownButtonMouseReleased(evt);
             }
+            public void mouseExited(java.awt.event.MouseEvent evt)
+            {
+                shoulderUpButtonMouseExited(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt)
+            {
+                shoulderUpButtonMouseEntered(evt);
+            }
         });
         shoulderDownButton.addKeyListener(new java.awt.event.KeyAdapter()
         {
@@ -430,6 +489,14 @@ public class BasicMode extends javax.swing.JFrame implements
             public void mouseReleased(java.awt.event.MouseEvent evt)
             {
                 shoulderUpButtonMouseReleased(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt)
+            {
+                shoulderUpButtonMouseExited(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt)
+            {
+                shoulderUpButtonMouseEntered(evt);
             }
         });
         shoulderUpButton.addKeyListener(new java.awt.event.KeyAdapter()
@@ -461,6 +528,14 @@ public class BasicMode extends javax.swing.JFrame implements
             {
                 baseAntiClockwiseButtonMouseReleased(evt);
             }
+            public void mouseExited(java.awt.event.MouseEvent evt)
+            {
+                baseClockwiseButtonMouseExited(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt)
+            {
+                baseClockwiseButtonMouseEntered(evt);
+            }
         });
         baseAntiClockwiseButton.addKeyListener(new java.awt.event.KeyAdapter()
         {
@@ -490,6 +565,14 @@ public class BasicMode extends javax.swing.JFrame implements
             public void mouseReleased(java.awt.event.MouseEvent evt)
             {
                 baseClockwiseButtonMouseReleased(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt)
+            {
+                baseClockwiseButtonMouseExited(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt)
+            {
+                baseClockwiseButtonMouseEntered(evt);
             }
         });
         baseClockwiseButton.addKeyListener(new java.awt.event.KeyAdapter()
@@ -551,7 +634,7 @@ public class BasicMode extends javax.swing.JFrame implements
         robotArmPanel.setLayout(robotArmPanelLayout);
         robotArmPanelLayout.setHorizontalGroup(
             robotArmPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 556, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
         robotArmPanelLayout.setVerticalGroup(
             robotArmPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -576,16 +659,18 @@ public class BasicMode extends javax.swing.JFrame implements
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(24, 24, 24)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addComponent(robotArmPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(basicModeLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(connectionLabel))
-                    .addComponent(robotArmPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 20, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(connectionLabel)))
+                .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(57, 57, 57)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(closeGripperButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(openGripperButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -618,8 +703,8 @@ public class BasicMode extends javax.swing.JFrame implements
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(lightToggleButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(aboutButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(44, 44, 44))
+                    .addComponent(aboutButton, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(61, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -949,6 +1034,66 @@ public class BasicMode extends javax.swing.JFrame implements
         aboutDialog.setLocationRelativeTo(this);
         aboutDialog.setVisible(true);
     }//GEN-LAST:event_aboutButtonActionPerformed
+
+    private void closeGripperButtonMouseEntered(java.awt.event.MouseEvent evt)//GEN-FIRST:event_closeGripperButtonMouseEntered
+    {//GEN-HEADEREND:event_closeGripperButtonMouseEntered
+        this.robotArmPanel.setGripperHovered(true);
+        this.robotArmPanel.repaint();
+    }//GEN-LAST:event_closeGripperButtonMouseEntered
+
+    private void closeGripperButtonMouseExited(java.awt.event.MouseEvent evt)//GEN-FIRST:event_closeGripperButtonMouseExited
+    {//GEN-HEADEREND:event_closeGripperButtonMouseExited
+        this.robotArmPanel.setGripperHovered(false);
+        this.robotArmPanel.repaint();
+    }//GEN-LAST:event_closeGripperButtonMouseExited
+
+    private void wristUpButtonMouseEntered(java.awt.event.MouseEvent evt)//GEN-FIRST:event_wristUpButtonMouseEntered
+    {//GEN-HEADEREND:event_wristUpButtonMouseEntered
+        this.robotArmPanel.setWristHovered(true);
+        this.robotArmPanel.repaint();
+    }//GEN-LAST:event_wristUpButtonMouseEntered
+
+    private void wristUpButtonMouseExited(java.awt.event.MouseEvent evt)//GEN-FIRST:event_wristUpButtonMouseExited
+    {//GEN-HEADEREND:event_wristUpButtonMouseExited
+        this.robotArmPanel.setWristHovered(false);
+        this.robotArmPanel.repaint();
+    }//GEN-LAST:event_wristUpButtonMouseExited
+
+    private void elbowUpButtonMouseEntered(java.awt.event.MouseEvent evt)//GEN-FIRST:event_elbowUpButtonMouseEntered
+    {//GEN-HEADEREND:event_elbowUpButtonMouseEntered
+        this.robotArmPanel.setElbowHovered(true);
+        this.robotArmPanel.repaint();
+    }//GEN-LAST:event_elbowUpButtonMouseEntered
+
+    private void elbowUpButtonMouseExited(java.awt.event.MouseEvent evt)//GEN-FIRST:event_elbowUpButtonMouseExited
+    {//GEN-HEADEREND:event_elbowUpButtonMouseExited
+        this.robotArmPanel.setElbowHovered(false);
+        this.robotArmPanel.repaint();
+    }//GEN-LAST:event_elbowUpButtonMouseExited
+
+    private void shoulderUpButtonMouseEntered(java.awt.event.MouseEvent evt)//GEN-FIRST:event_shoulderUpButtonMouseEntered
+    {//GEN-HEADEREND:event_shoulderUpButtonMouseEntered
+        this.robotArmPanel.setShoulderHovered(true);
+        this.robotArmPanel.repaint();
+    }//GEN-LAST:event_shoulderUpButtonMouseEntered
+
+    private void shoulderUpButtonMouseExited(java.awt.event.MouseEvent evt)//GEN-FIRST:event_shoulderUpButtonMouseExited
+    {//GEN-HEADEREND:event_shoulderUpButtonMouseExited
+        this.robotArmPanel.setShoulderHovered(false);
+        this.robotArmPanel.repaint();
+    }//GEN-LAST:event_shoulderUpButtonMouseExited
+
+    private void baseClockwiseButtonMouseEntered(java.awt.event.MouseEvent evt)//GEN-FIRST:event_baseClockwiseButtonMouseEntered
+    {//GEN-HEADEREND:event_baseClockwiseButtonMouseEntered
+        this.robotArmPanel.setBaseHovered(true);
+        this.robotArmPanel.repaint();
+    }//GEN-LAST:event_baseClockwiseButtonMouseEntered
+
+    private void baseClockwiseButtonMouseExited(java.awt.event.MouseEvent evt)//GEN-FIRST:event_baseClockwiseButtonMouseExited
+    {//GEN-HEADEREND:event_baseClockwiseButtonMouseExited
+        this.robotArmPanel.setBaseHovered(false);
+        this.robotArmPanel.repaint();
+    }//GEN-LAST:event_baseClockwiseButtonMouseExited
 
     /**
      * @param args the command line arguments

@@ -1,4 +1,4 @@
-/*
+           /*
  ********************************************************************
  * Robot Arm Edge Version 1.0
  * This file copyright (C) 2014 Joshua Michael Daly
@@ -89,7 +89,7 @@ public final class ByteCommand
     /**
      *
      */
-        public static final byte BASE_STOP = 0x00;
+    public static final byte BASE_STOP = 0x00;
 
     /**
      *
@@ -106,7 +106,7 @@ public final class ByteCommand
     /**
      *
      */
-        public static final byte LIGHT_ON = 0x01;
+    public static final byte LIGHT_ON = 0x01;
 
     /**
      *
