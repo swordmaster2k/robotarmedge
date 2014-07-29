@@ -448,7 +448,7 @@ public class UsbRobotArm implements UsbDeviceListener, UsbServicesListener
                     this.fireRobotArmAttached();
                     
                     Logger.getLogger(UsbRobotArm.class.getName()).log(Level.INFO, 
-                    "Robotic Arm attached.", use);
+                    "Robotic Arm attached.\n", use);
                 }
             }
         }

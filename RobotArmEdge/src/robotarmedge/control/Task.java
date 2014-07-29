@@ -10,7 +10,7 @@
 
 package robotarmedge.control;
 
-import java.util.LinkedList;
+import java.util.TreeSet;
 
 /**
  *
@@ -19,34 +19,35 @@ import java.util.LinkedList;
  */
 public class Task
 {
-    private final LinkedList<Instruction> instructions;
-    private final byte byte1;
-    private final byte byte2;
+    private byte byte0;
+    private byte byte1;
+    
+    private final TreeSet<Instruction> instructions;
 
     /*
      * ************************************************************************* 
      * Public Getters
      * *************************************************************************
      */
-
-    public LinkedList<Instruction> getInstructions()
-    {
-        return this.instructions;
-    }
     
+    public byte getByte0()
+    {
+        return this.byte0;
+    }
+
     public byte getByte1()
     {
         return this.byte1;
     }
-
-    public byte getByte2()
+    
+    public TreeSet<Instruction> getInstructions()
     {
-        return this.byte2;
+        return instructions;
     }
     
     public byte[] getBytes()
     {
-        byte bytes[] = { byte1, byte2 };
+        byte bytes[] = { byte0, byte1 };
         return bytes;
     }
     
@@ -56,10 +57,36 @@ public class Task
      * *************************************************************************
      */
     
-    public Task(LinkedList<Instruction> instructions, byte byte1, byte byte2)
+    public Task()
     {
-        this.instructions = instructions;
-        this.byte1 = byte1;
-        this.byte2 = byte2;
+        this.byte0 = 0x00;
+        this.byte1 = 0x00;
+        this.instructions = new TreeSet<>();
+    }
+    
+    /*
+     * ************************************************************************* 
+     * Public Methods
+     * *************************************************************************
+     */
+    
+    public void addInstruction(Instruction instruction)
+    {
+        this.instructions.add(instruction);
+        
+        if (instruction.getByteType() == 0)
+            this.byte0 = (byte)(this.byte0 + instruction.getCommand());
+        else if (instruction.getByteType() == 1)
+            this.byte1 = (byte)(this.byte1 + instruction.getCommand());
+    }
+    
+    public void decrementByte1(byte amount)
+    {
+        this.byte0 -= amount;
+    }
+    
+    public void decrementByte2(byte amount)
+    {
+        this.byte1 -= amount;
     }
 }

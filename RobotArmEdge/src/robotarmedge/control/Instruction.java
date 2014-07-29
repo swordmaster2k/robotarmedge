@@ -1,50 +1,64 @@
-/*
- ********************************************************************
- * Robot Arm Edge Version 1.0
- * This file copyright (C) 2014 Joshua Michael Daly
- * 
- * Robot Arm Edge is licensed under the GNU General Public License
- * version 3. See <http://www.gnu.org/licenses/> for more details.
- ********************************************************************
- */
-
 package robotarmedge.control;
 
 /**
  *
+ *
  * @author Joshua Michael Daly
- * @version 1.0
  */
-public class Instruction
+public class Instruction implements Comparable<Instruction>
 {
-    private final byte stopByte;
+    private final byte command;
     private final int runTime;
-    
+    private final int byteType;
+
     /*
      * ************************************************************************* 
      * Public Getters
      * *************************************************************************
      */
     
-    public byte getStopByte()
+    public byte getCommand()
     {
-        return this.stopByte;
+        return command;
     }
 
     public int getRunTime()
     {
-        return this.runTime;
+        return runTime;
     }
-    
+
+    public int getByteType()
+    {
+        return byteType;
+    }
+
     /*
      * ************************************************************************* 
      * Public Constructors
      * *************************************************************************
      */
     
-    public Instruction(byte stopByte, int runTime)
+    public Instruction(byte command, int runTime, int type)
     {
-        this.stopByte = stopByte;
+        this.command = command;
         this.runTime = runTime;
+        this.byteType = type;
+    }
+
+    /*
+     * ************************************************************************* 
+     * Public Methods
+     * *************************************************************************
+     */
+    
+    @Override
+    public int compareTo(Instruction o)
+    {
+        if (this.runTime < o.runTime)
+            return -1;
+        else if (this.runTime > o.runTime)
+            return 1;
+        else 
+            return 0;
     }
 }
