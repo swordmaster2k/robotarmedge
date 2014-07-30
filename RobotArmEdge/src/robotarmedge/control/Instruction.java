@@ -1,8 +1,8 @@
 package robotarmedge.control;
 
 /**
- *
- *
+ * 
+ * 
  * @author Joshua Michael Daly
  */
 public class Instruction implements Comparable<Instruction>

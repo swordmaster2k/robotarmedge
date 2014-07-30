@@ -13,7 +13,8 @@ package robotarmedge.control;
 import java.util.TreeSet;
 
 /**
- *
+ * 
+ * 
  * @author Joshua Michael Daly
  * @version 1.0
  */
@@ -72,12 +73,28 @@ public class Task
     
     public void addInstruction(Instruction instruction)
     {
-        this.instructions.add(instruction);
+        boolean didAdd = this.instructions.add(instruction);
         
-        if (instruction.getByteType() == 0)
-            this.byte0 = (byte)(this.byte0 + instruction.getCommand());
-        else if (instruction.getByteType() == 1)
-            this.byte1 = (byte)(this.byte1 + instruction.getCommand());
+        if (didAdd)
+        {
+            if (instruction.getByteType() == 0)
+                this.byte0 = (byte)(this.byte0 + instruction.getCommand());
+            else if (instruction.getByteType() == 1)
+                this.byte1 = (byte)(this.byte1 + instruction.getCommand());
+        }
+    }
+    
+    public void removeInstruction(Instruction instruction)
+    {
+        boolean didRemove = this.instructions.remove(instruction);
+        
+        if (didRemove)
+        {
+            if (instruction.getByteType() == 0)
+                this.byte0 = (byte)(this.byte0 - instruction.getCommand());
+            else if (instruction.getByteType() == 1)
+                this.byte1 = (byte)(this.byte1 - instruction.getCommand());
+        }
     }
     
     public void decrementByte1(byte amount)

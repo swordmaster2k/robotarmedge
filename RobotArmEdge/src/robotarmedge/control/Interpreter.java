@@ -16,8 +16,8 @@ import robotarmedge.device.UsbRobotArm;
 import robotarmedge.utilities.ByteCommand;
 
 /**
- *
- *
+ * 
+ * 
  * @author Joshua Michael Daly
  * @version 1.0
  */
@@ -100,23 +100,31 @@ public class Interpreter extends Thread
 
     public static void main(String[] args)
     {
-        Instruction instruction1 = new Instruction(ByteCommand.GRIPPER_CLOSE, 1000, 0);
-        Instruction instruction2 = new Instruction(ByteCommand.WRIST_DOWN, 3000, 0);
-        Instruction instruction3 = new Instruction(ByteCommand.ELBOW_DOWN, 2000, 0);
-        Instruction instruction4 = new Instruction(ByteCommand.SHOULDER_DOWN, 2500, 0);
-        Instruction instruction5 = new Instruction(ByteCommand.BASE_CLOCKWISE, 3100, 1);
+        Instruction instruction1 = new Instruction(ByteCommand.GRIPPER_OPEN, 2000, 0);
+        Instruction instruction2 = new Instruction(ByteCommand.WRIST_UP, 3500, 0);
+        Instruction instruction3 = new Instruction(ByteCommand.ELBOW_UP, 5000, 0);
+        Instruction instruction4 = new Instruction(ByteCommand.SHOULDER_DOWN, 3000, 0);
+        //Instruction instruction5 = new Instruction(ByteCommand.BASE_ANTI_CLOCKWISE, 2500, 1);
 
+        //Instruction instruction1 = new Instruction(ByteCommand.GRIPPER_CLOSE, 2000, 0);
+        //Instruction instruction2 = new Instruction(ByteCommand.WRIST_DOWN, 3500, 0);
+        //Instruction instruction3 = new Instruction(ByteCommand.ELBOW_DOWN, 5000, 0);
+        //Instruction instruction4 = new Instruction(ByteCommand.SHOULDER_UP, 3000, 0);
+        //Instruction instruction5 = new Instruction(ByteCommand.BASE_CLOCKWISE, 2500, 1);
+        
         Task task = new Task();
         task.addInstruction(instruction1);
         task.addInstruction(instruction2);
         task.addInstruction(instruction3);
         task.addInstruction(instruction4);
-        task.addInstruction(instruction5);
+        //task.addInstruction(instruction5);
 
         LinkedList<Task> taskList = new LinkedList<>();
         taskList.add(task);
 
         Interpreter interpreter = new Interpreter(taskList);
         interpreter.start();
+        
+        UsbRobotArm.getInstance().toggleLight(true);
     }
 }
