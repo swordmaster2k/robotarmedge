@@ -13,10 +13,10 @@ package robotarmedge.view;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
-import java.net.URL;
 import javax.swing.JPanel;
 import robotarmedge.device.UsbRobotArm;
 import robotarmedge.utilities.ByteCommand;
+import robotarmedge.utilities.ImageResourceBundle;
 
 /**
  * 
@@ -26,23 +26,6 @@ import robotarmedge.utilities.ByteCommand;
  */
 public class RobotArmPanel extends JPanel
 {
-    private final String noHighlight = "/robotarmedge/resources/highlight_none.png";
-    private final String gripperHighlight = "/robotarmedge/resources/highlight_gripper.png";
-    private final String wristHighlight = "/robotarmedge/resources/highlight_wrist.png";
-    private final String elbowHighlight = "/robotarmedge/resources/highlight_elbow.png";
-    private final String shoulderHighlight = "/robotarmedge/resources/highlight_shoulder.png";
-    private final String baseHighlight = "/robotarmedge/resources/highlight_base.png";
-    
-    private final String arrowCircleAnti = "/robotarmedge/resources/arrow-circle"
-            + "-anticlockwise-large.png";
-    private final String arrowCircle = "/robotarmedge/resources/arrow-circle-"
-            + "large.png";
-    private final String arrowCurve90 = "/robotarmedge/resources/arrow-curve-090"
-            + "-large.png";
-    private final String arrowCurve270 = "/robotarmedge/resources/arrow-curve-270"
-            + "-large.png";
-    private final String lightOn = "/robotarmedge/resources/highlight_light.png";
-    
     private final Image noHighlightImage;
     private final Image gripperHighlightImage;
     private final Image wristHighlightImage;
@@ -128,38 +111,42 @@ public class RobotArmPanel extends JPanel
     
     public RobotArmPanel()
     {
-        URL imageUrl = this.getClass().getResource(this.noHighlight);
-        this.noHighlightImage = Toolkit.getDefaultToolkit().createImage(imageUrl);
-        
-        imageUrl = this.getClass().getResource(this.gripperHighlight);
-        this.gripperHighlightImage = Toolkit.getDefaultToolkit().createImage(imageUrl);
-        
-        imageUrl = this.getClass().getResource(this.wristHighlight);
-        this.wristHighlightImage = Toolkit.getDefaultToolkit().createImage(imageUrl);
-        
-        imageUrl = this.getClass().getResource(this.elbowHighlight);
-        this.elbowHighlightImage = Toolkit.getDefaultToolkit().createImage(imageUrl);
-        
-        imageUrl = this.getClass().getResource(this.shoulderHighlight);
-        this.shoulderHighlightImage = Toolkit.getDefaultToolkit().createImage(imageUrl);
-        
-        imageUrl = this.getClass().getResource(this.baseHighlight);
-        this.baseHighlightImage = Toolkit.getDefaultToolkit().createImage(imageUrl);
-        
-        imageUrl = this.getClass().getResource(this.arrowCircleAnti);
-        this.arrowCircleAntiImage = Toolkit.getDefaultToolkit().createImage(imageUrl);
-        
-        imageUrl = this.getClass().getResource(this.arrowCircle);
-        this.arrowCircleImage = Toolkit.getDefaultToolkit().createImage(imageUrl);
-        
-        imageUrl = this.getClass().getResource(this.arrowCurve90);
-        this.arrowCurve90Image = Toolkit.getDefaultToolkit().createImage(imageUrl);
-        
-        imageUrl = this.getClass().getResource(this.arrowCurve270);
-        this.arrowCurve270Image = Toolkit.getDefaultToolkit().createImage(imageUrl);
-        
-        imageUrl = this.getClass().getResource(this.lightOn);
-        this.lightOnImage = Toolkit.getDefaultToolkit().createImage(imageUrl);
+        ImageResourceBundle imageResourceBundle = ImageResourceBundle.getInstance(
+                ImageResourceBundle.class.getResourceAsStream(
+                        ImageResourceBundle.PROPERTIES_FILE));
+
+        this.noHighlightImage = Toolkit.getDefaultToolkit().createImage(
+                imageResourceBundle.getImage("image.highlight_none"));
+
+        this.gripperHighlightImage = Toolkit.getDefaultToolkit().createImage(
+                imageResourceBundle.getImage("image.highlight_gripper"));
+
+        this.wristHighlightImage = Toolkit.getDefaultToolkit().createImage(
+                imageResourceBundle.getImage("image.highlight_wrist"));
+
+        this.elbowHighlightImage = Toolkit.getDefaultToolkit().createImage(
+                imageResourceBundle.getImage("image.highlight_elbow"));
+
+        this.shoulderHighlightImage = Toolkit.getDefaultToolkit().createImage(
+                imageResourceBundle.getImage("image.highlight_shoulder"));
+
+        this.baseHighlightImage = Toolkit.getDefaultToolkit().createImage(
+                imageResourceBundle.getImage("image.highlight_base"));
+
+        this.arrowCircleAntiImage = Toolkit.getDefaultToolkit().createImage(
+                imageResourceBundle.getImage("icon.arrow_circle_anticlockwise_large"));
+
+        this.arrowCircleImage = Toolkit.getDefaultToolkit().createImage(
+                imageResourceBundle.getImage("icon.arrow_circle_large"));
+
+        this.arrowCurve90Image = Toolkit.getDefaultToolkit().createImage(
+                imageResourceBundle.getImage("icon.arrow_curve_090_large"));
+
+        this.arrowCurve270Image = Toolkit.getDefaultToolkit().createImage(
+                imageResourceBundle.getImage("icon.arrow_curve_270_large"));
+
+        this.lightOnImage = Toolkit.getDefaultToolkit().createImage(
+                imageResourceBundle.getImage("image.highlight_light"));
     }
     
     /*
