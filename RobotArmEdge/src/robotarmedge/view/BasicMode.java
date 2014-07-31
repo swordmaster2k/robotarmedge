@@ -178,7 +178,8 @@ public class BasicMode extends javax.swing.JFrame implements
         aboutButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Basic Mode");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("robotarmedge/resources/RobotArmEdge_en"); // NOI18N
+        setTitle(bundle.getString("mode.basic")); // NOI18N
         setLocationByPlatform(true);
         setMaximumSize(new java.awt.Dimension(0, 0));
         setName("BasicModeFrame"); // NOI18N
@@ -197,7 +198,7 @@ public class BasicMode extends javax.swing.JFrame implements
 
         closeGripperButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/arrow-curve-090.png"))); // NOI18N
         closeGripperButton.setText("W");
-        closeGripperButton.setToolTipText("Close Gripper");
+        closeGripperButton.setToolTipText(bundle.getString("tooltip.gripper.close")); // NOI18N
         closeGripperButton.setEnabled(false);
         closeGripperButton.setMaximumSize(new java.awt.Dimension(70, 50));
         closeGripperButton.setMinimumSize(new java.awt.Dimension(70, 50));
@@ -235,7 +236,7 @@ public class BasicMode extends javax.swing.JFrame implements
 
         openGripperButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/arrow-curve-270.png"))); // NOI18N
         openGripperButton.setText("S");
-        openGripperButton.setToolTipText("Open Gripper");
+        openGripperButton.setToolTipText(bundle.getString("tooltip.gripper.open")); // NOI18N
         openGripperButton.setEnabled(false);
         openGripperButton.setMaximumSize(new java.awt.Dimension(70, 50));
         openGripperButton.setMinimumSize(new java.awt.Dimension(70, 50));
@@ -273,7 +274,7 @@ public class BasicMode extends javax.swing.JFrame implements
 
         wristDownButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/arrow-curve-270.png"))); // NOI18N
         wristDownButton.setText("D");
-        wristDownButton.setToolTipText("Wrist Down");
+        wristDownButton.setToolTipText(bundle.getString("tooltip.wrist.down")); // NOI18N
         wristDownButton.setEnabled(false);
         wristDownButton.setMaximumSize(new java.awt.Dimension(70, 50));
         wristDownButton.setMinimumSize(new java.awt.Dimension(70, 50));
@@ -311,7 +312,7 @@ public class BasicMode extends javax.swing.JFrame implements
 
         wristUpButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/arrow-curve-090.png"))); // NOI18N
         wristUpButton.setText("E");
-        wristUpButton.setToolTipText("Wrist Up");
+        wristUpButton.setToolTipText(bundle.getString("tooltip.wrist.up")); // NOI18N
         wristUpButton.setEnabled(false);
         wristUpButton.setMaximumSize(new java.awt.Dimension(70, 50));
         wristUpButton.setMinimumSize(new java.awt.Dimension(70, 50));
@@ -349,7 +350,7 @@ public class BasicMode extends javax.swing.JFrame implements
 
         elbowUpButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/arrow-curve-090.png"))); // NOI18N
         elbowUpButton.setText("R");
-        elbowUpButton.setToolTipText("Elbow Up");
+        elbowUpButton.setToolTipText(bundle.getString("tooltip.elbow.up")); // NOI18N
         elbowUpButton.setEnabled(false);
         elbowUpButton.setMaximumSize(new java.awt.Dimension(70, 50));
         elbowUpButton.setMinimumSize(new java.awt.Dimension(70, 50));
@@ -387,7 +388,7 @@ public class BasicMode extends javax.swing.JFrame implements
 
         elbowDownButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/arrow-curve-270.png"))); // NOI18N
         elbowDownButton.setText("F");
-        elbowDownButton.setToolTipText("Elbow Down");
+        elbowDownButton.setToolTipText(bundle.getString("tooltip.elbow.down")); // NOI18N
         elbowDownButton.setEnabled(false);
         elbowDownButton.setMaximumSize(new java.awt.Dimension(70, 50));
         elbowDownButton.setMinimumSize(new java.awt.Dimension(70, 50));
@@ -425,7 +426,7 @@ public class BasicMode extends javax.swing.JFrame implements
 
         shoulderDownButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/arrow-curve-270.png"))); // NOI18N
         shoulderDownButton.setText("J");
-        shoulderDownButton.setToolTipText("Shoulder Down");
+        shoulderDownButton.setToolTipText(bundle.getString("tooltip.shoulder.down")); // NOI18N
         shoulderDownButton.setEnabled(false);
         shoulderDownButton.setMaximumSize(new java.awt.Dimension(70, 50));
         shoulderDownButton.setMinimumSize(new java.awt.Dimension(70, 50));
@@ -463,7 +464,7 @@ public class BasicMode extends javax.swing.JFrame implements
 
         shoulderUpButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/arrow-curve-090.png"))); // NOI18N
         shoulderUpButton.setText("U");
-        shoulderUpButton.setToolTipText("Shoulder Up");
+        shoulderUpButton.setToolTipText(bundle.getString("tooltip.shoulder.up")); // NOI18N
         shoulderUpButton.setEnabled(false);
         shoulderUpButton.setMaximumSize(new java.awt.Dimension(70, 50));
         shoulderUpButton.setMinimumSize(new java.awt.Dimension(70, 50));
@@ -501,7 +502,7 @@ public class BasicMode extends javax.swing.JFrame implements
 
         baseAntiClockwiseButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/arrow-circle-anticlockwise.png"))); // NOI18N
         baseAntiClockwiseButton.setText("K");
-        baseAntiClockwiseButton.setToolTipText("Base Anti Clockwise");
+        baseAntiClockwiseButton.setToolTipText(bundle.getString("tooltip.base.anticlockwise")); // NOI18N
         baseAntiClockwiseButton.setEnabled(false);
         baseAntiClockwiseButton.setMaximumSize(new java.awt.Dimension(70, 50));
         baseAntiClockwiseButton.setMinimumSize(new java.awt.Dimension(70, 50));
@@ -539,7 +540,7 @@ public class BasicMode extends javax.swing.JFrame implements
 
         baseClockwiseButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/arrow-circle.png"))); // NOI18N
         baseClockwiseButton.setText("I");
-        baseClockwiseButton.setToolTipText("Base Clockwise");
+        baseClockwiseButton.setToolTipText(bundle.getString("tooltip.base.clockwise")); // NOI18N
         baseClockwiseButton.setEnabled(false);
         baseClockwiseButton.setMaximumSize(new java.awt.Dimension(70, 50));
         baseClockwiseButton.setMinimumSize(new java.awt.Dimension(70, 50));
@@ -576,8 +577,8 @@ public class BasicMode extends javax.swing.JFrame implements
         });
 
         basicModeLabel.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
-        basicModeLabel.setText("BASIC MODE");
-        basicModeLabel.setToolTipText("Basic Mode");
+        basicModeLabel.setText(bundle.getString("mode.basic")); // NOI18N
+        basicModeLabel.setToolTipText("");
         basicModeLabel.setFocusable(false);
 
         jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
@@ -592,7 +593,7 @@ public class BasicMode extends javax.swing.JFrame implements
 
         lightToggleButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/light-bulb-off.png"))); // NOI18N
         lightToggleButton.setText("L");
-        lightToggleButton.setToolTipText("Light On");
+        lightToggleButton.setToolTipText(bundle.getString("tooltip.light.toggle")); // NOI18N
         lightToggleButton.setEnabled(false);
         lightToggleButton.setMaximumSize(new java.awt.Dimension(70, 50));
         lightToggleButton.setMinimumSize(new java.awt.Dimension(70, 50));
@@ -630,7 +631,7 @@ public class BasicMode extends javax.swing.JFrame implements
         );
 
         connectionLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/plug--exclamation.png"))); // NOI18N
-        connectionLabel.setText("No Connection");
+        connectionLabel.setText(bundle.getString("connection.none")); // NOI18N
         connectionLabel.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
 
         aboutButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/information.png"))); // NOI18N

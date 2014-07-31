@@ -10,14 +10,19 @@
 
 package robotarmedge.view;
 
+import java.awt.FlowLayout;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.ImageIcon;
 import javax.swing.JToggleButton;
+import robotarmedge.control.Instruction;
 import robotarmedge.device.UsbRobotArm;
 import robotarmedge.event.RobotArmChangedEvent;
 import robotarmedge.event.RobotArmChangeListener;
+import robotarmedge.utilities.ByteCommand;
 import robotarmedge.utilities.ImageResourceBundle;
+import robotarmedge.view.controls.InstructionView;
+import robotarmedge.view.controls.TaskPanel;
 
 /**
  *
@@ -57,6 +62,30 @@ public class ProgramMode extends javax.swing.JFrame implements
         ImageIcon icon = new ImageIcon(this.imageResourceBundle.
                 getImage("icon.application"));
         this.setIconImage(icon.getImage());
+        
+        this.tasksPanel.setLayout(new FlowLayout());
+        
+        TaskPanel panel = new TaskPanel();
+        
+        Instruction instruction1 = new Instruction(ByteCommand.GRIPPER_CLOSE, 1000, 0);
+        Instruction instruction2 = new Instruction(ByteCommand.WRIST_UP, 8000, 0);
+        Instruction instruction3 = new Instruction(ByteCommand.ELBOW_DOWN, 4000, 0);
+        Instruction instruction4 = new Instruction(ByteCommand.SHOULDER_UP, 10000, 0);
+        Instruction instruction5 = new Instruction(ByteCommand.BASE_CLOCKWISE, 6000, 1);
+
+        InstructionView instructionView1 = new InstructionView(instruction1);
+        InstructionView instructionView2 = new InstructionView(instruction2);
+        InstructionView instructionView3 = new InstructionView(instruction3);
+        InstructionView instructionView4 = new InstructionView(instruction4);
+        InstructionView instructionView5 = new InstructionView(instruction5);
+
+        panel.add(instructionView1);
+        panel.add(instructionView2);
+        panel.add(instructionView3);
+        panel.add(instructionView4);
+        panel.add(instructionView5);
+        
+        this.tasksPanel.add(panel);
     }
 
     /**
@@ -176,17 +205,19 @@ public class ProgramMode extends javax.swing.JFrame implements
         robotArmPanel = new robotarmedge.view.RobotArmPanel();
         connectionLabel = new javax.swing.JLabel();
         aboutButton = new javax.swing.JButton();
-        jPanel1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        programPanel = new javax.swing.JPanel();
+        newButton = new javax.swing.JButton();
+        openButton = new javax.swing.JButton();
+        saveButton = new javax.swing.JButton();
+        runButton = new javax.swing.JButton();
+        stopButton = new javax.swing.JButton();
+        rewindButton = new javax.swing.JButton();
+        taskScrollPane = new javax.swing.JScrollPane();
+        tasksPanel = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Basic Mode");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("robotarmedge/resources/RobotArmEdge_en"); // NOI18N
+        setTitle(bundle.getString("mode.program")); // NOI18N
         setLocationByPlatform(true);
         setName("BasicModeFrame"); // NOI18N
         setResizable(false);
@@ -204,7 +235,7 @@ public class ProgramMode extends javax.swing.JFrame implements
 
         closeGripperButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/arrow-curve-090.png"))); // NOI18N
         closeGripperButton.setText("W");
-        closeGripperButton.setToolTipText("Close Gripper");
+        closeGripperButton.setToolTipText(bundle.getString("tooltip.gripper.close")); // NOI18N
         closeGripperButton.setEnabled(false);
         closeGripperButton.setMaximumSize(new java.awt.Dimension(70, 50));
         closeGripperButton.setMinimumSize(new java.awt.Dimension(70, 50));
@@ -242,7 +273,7 @@ public class ProgramMode extends javax.swing.JFrame implements
 
         openGripperButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/arrow-curve-270.png"))); // NOI18N
         openGripperButton.setText("S");
-        openGripperButton.setToolTipText("Open Gripper");
+        openGripperButton.setToolTipText(bundle.getString("tooltip.gripper.open")); // NOI18N
         openGripperButton.setEnabled(false);
         openGripperButton.setMaximumSize(new java.awt.Dimension(70, 50));
         openGripperButton.setMinimumSize(new java.awt.Dimension(70, 50));
@@ -280,7 +311,7 @@ public class ProgramMode extends javax.swing.JFrame implements
 
         wristDownButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/arrow-curve-270.png"))); // NOI18N
         wristDownButton.setText("D");
-        wristDownButton.setToolTipText("Wrist Down");
+        wristDownButton.setToolTipText(bundle.getString("tooltip.wrist.down")); // NOI18N
         wristDownButton.setEnabled(false);
         wristDownButton.setMaximumSize(new java.awt.Dimension(70, 50));
         wristDownButton.setMinimumSize(new java.awt.Dimension(70, 50));
@@ -318,7 +349,7 @@ public class ProgramMode extends javax.swing.JFrame implements
 
         wristUpButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/arrow-curve-090.png"))); // NOI18N
         wristUpButton.setText("E");
-        wristUpButton.setToolTipText("Wrist Up");
+        wristUpButton.setToolTipText(bundle.getString("tooltip.wrist.up")); // NOI18N
         wristUpButton.setEnabled(false);
         wristUpButton.setMaximumSize(new java.awt.Dimension(70, 50));
         wristUpButton.setMinimumSize(new java.awt.Dimension(70, 50));
@@ -356,7 +387,7 @@ public class ProgramMode extends javax.swing.JFrame implements
 
         elbowUpButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/arrow-curve-090.png"))); // NOI18N
         elbowUpButton.setText("R");
-        elbowUpButton.setToolTipText("Elbow Up");
+        elbowUpButton.setToolTipText(bundle.getString("tooltip.elbow.up")); // NOI18N
         elbowUpButton.setEnabled(false);
         elbowUpButton.setMaximumSize(new java.awt.Dimension(70, 50));
         elbowUpButton.setMinimumSize(new java.awt.Dimension(70, 50));
@@ -394,7 +425,7 @@ public class ProgramMode extends javax.swing.JFrame implements
 
         elbowDownButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/arrow-curve-270.png"))); // NOI18N
         elbowDownButton.setText("F");
-        elbowDownButton.setToolTipText("Elbow Down");
+        elbowDownButton.setToolTipText(bundle.getString("tooltip.elbow.down")); // NOI18N
         elbowDownButton.setEnabled(false);
         elbowDownButton.setMaximumSize(new java.awt.Dimension(70, 50));
         elbowDownButton.setMinimumSize(new java.awt.Dimension(70, 50));
@@ -432,7 +463,7 @@ public class ProgramMode extends javax.swing.JFrame implements
 
         shoulderDownButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/arrow-curve-270.png"))); // NOI18N
         shoulderDownButton.setText("J");
-        shoulderDownButton.setToolTipText("Shoulder Down");
+        shoulderDownButton.setToolTipText(bundle.getString("tooltip.shoulder.down")); // NOI18N
         shoulderDownButton.setEnabled(false);
         shoulderDownButton.setMaximumSize(new java.awt.Dimension(70, 50));
         shoulderDownButton.setMinimumSize(new java.awt.Dimension(70, 50));
@@ -470,7 +501,7 @@ public class ProgramMode extends javax.swing.JFrame implements
 
         shoulderUpButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/arrow-curve-090.png"))); // NOI18N
         shoulderUpButton.setText("U");
-        shoulderUpButton.setToolTipText("Shoulder Up");
+        shoulderUpButton.setToolTipText(bundle.getString("tooltip.shoulder.up")); // NOI18N
         shoulderUpButton.setEnabled(false);
         shoulderUpButton.setMaximumSize(new java.awt.Dimension(70, 50));
         shoulderUpButton.setMinimumSize(new java.awt.Dimension(70, 50));
@@ -508,7 +539,7 @@ public class ProgramMode extends javax.swing.JFrame implements
 
         baseAntiClockwiseButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/arrow-circle-anticlockwise.png"))); // NOI18N
         baseAntiClockwiseButton.setText("K");
-        baseAntiClockwiseButton.setToolTipText("Base Anti Clockwise");
+        baseAntiClockwiseButton.setToolTipText(bundle.getString("tooltip.base.anticlockwise")); // NOI18N
         baseAntiClockwiseButton.setEnabled(false);
         baseAntiClockwiseButton.setMaximumSize(new java.awt.Dimension(70, 50));
         baseAntiClockwiseButton.setMinimumSize(new java.awt.Dimension(70, 50));
@@ -546,7 +577,7 @@ public class ProgramMode extends javax.swing.JFrame implements
 
         baseClockwiseButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/arrow-circle.png"))); // NOI18N
         baseClockwiseButton.setText("I");
-        baseClockwiseButton.setToolTipText("Base Clockwise");
+        baseClockwiseButton.setToolTipText(bundle.getString("tooltip.base.clockwise")); // NOI18N
         baseClockwiseButton.setEnabled(false);
         baseClockwiseButton.setMaximumSize(new java.awt.Dimension(70, 50));
         baseClockwiseButton.setMinimumSize(new java.awt.Dimension(70, 50));
@@ -583,8 +614,8 @@ public class ProgramMode extends javax.swing.JFrame implements
         });
 
         basicModeLabel.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
-        basicModeLabel.setText("BASIC MODE");
-        basicModeLabel.setToolTipText("Basic Mode");
+        basicModeLabel.setText(bundle.getString("mode.program")); // NOI18N
+        basicModeLabel.setToolTipText("");
         basicModeLabel.setFocusable(false);
 
         jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
@@ -598,8 +629,9 @@ public class ProgramMode extends javax.swing.JFrame implements
         jSeparator5.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
         lightToggleButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/light-bulb-off.png"))); // NOI18N
-        lightToggleButton.setText("L");
-        lightToggleButton.setToolTipText("Light On");
+        lightToggleButton.setSelected(true);
+        lightToggleButton.setText(bundle.getString("tooltip.light.toggle")); // NOI18N
+        lightToggleButton.setToolTipText(bundle.getString("tooltip.light.toggle")); // NOI18N
         lightToggleButton.setEnabled(false);
         lightToggleButton.setMaximumSize(new java.awt.Dimension(70, 50));
         lightToggleButton.setMinimumSize(new java.awt.Dimension(70, 50));
@@ -633,11 +665,11 @@ public class ProgramMode extends javax.swing.JFrame implements
         );
         robotArmPanelLayout.setVerticalGroup(
             robotArmPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 388, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
 
         connectionLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/plug--exclamation.png"))); // NOI18N
-        connectionLabel.setText("No Connection");
+        connectionLabel.setText(bundle.getString("connection.none")); // NOI18N
         connectionLabel.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
 
         aboutButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/information.png"))); // NOI18N
@@ -649,66 +681,85 @@ public class ProgramMode extends javax.swing.JFrame implements
             }
         });
 
-        jPanel1.setBackground(java.awt.Color.lightGray);
+        programPanel.setBackground(java.awt.Color.lightGray);
 
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/blue-document.png"))); // NOI18N
-        jButton1.setText("New");
+        newButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/blue-document.png"))); // NOI18N
+        newButton.setText(bundle.getString("control.new")); // NOI18N
+        newButton.setToolTipText(bundle.getString("tooltip.control.new")); // NOI18N
 
-        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/blue-folder-open.png"))); // NOI18N
-        jButton2.setText("Open");
+        openButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/blue-folder-open.png"))); // NOI18N
+        openButton.setText(bundle.getString("control.open")); // NOI18N
+        openButton.setToolTipText(bundle.getString("tooltip.control.open")); // NOI18N
 
-        jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/disk.png"))); // NOI18N
-        jButton3.setText("Save");
+        saveButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/disk.png"))); // NOI18N
+        saveButton.setText(bundle.getString("control.save")); // NOI18N
+        saveButton.setToolTipText(bundle.getString("tooltip.control.save")); // NOI18N
 
-        jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/control.png"))); // NOI18N
-        jButton4.setText("Play");
+        runButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/control.png"))); // NOI18N
+        runButton.setText(bundle.getString("control.run")); // NOI18N
+        runButton.setToolTipText(bundle.getString("tooltip.control.run")); // NOI18N
 
-        jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/control-stop-square.png"))); // NOI18N
-        jButton5.setText("Stop");
+        stopButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/control-stop-square.png"))); // NOI18N
+        stopButton.setText(bundle.getString("control.stop")); // NOI18N
+        stopButton.setToolTipText(bundle.getString("tooltip.control.stop")); // NOI18N
 
-        jButton6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/control-double-180.png"))); // NOI18N
-        jButton6.setText("Rewind");
+        rewindButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/control-double-180.png"))); // NOI18N
+        rewindButton.setText(bundle.getString("control.rewind")); // NOI18N
+        rewindButton.setToolTipText(bundle.getString("tooltip.control.rewind")); // NOI18N
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        javax.swing.GroupLayout tasksPanelLayout = new javax.swing.GroupLayout(tasksPanel);
+        tasksPanel.setLayout(tasksPanelLayout);
+        tasksPanelLayout.setHorizontalGroup(
+            tasksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 241, Short.MAX_VALUE)
+        );
+        tasksPanelLayout.setVerticalGroup(
+            tasksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 464, Short.MAX_VALUE)
+        );
+
+        taskScrollPane.setViewportView(tasksPanel);
+
+        javax.swing.GroupLayout programPanelLayout = new javax.swing.GroupLayout(programPanel);
+        programPanel.setLayout(programPanelLayout);
+        programPanelLayout.setHorizontalGroup(
+            programPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(programPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jButton1)
+                .addGroup(programPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(taskScrollPane)
+                    .addGroup(programPanelLayout.createSequentialGroup()
+                        .addGroup(programPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(programPanelLayout.createSequentialGroup()
+                                .addComponent(newButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton2)
+                                .addComponent(openButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton3))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jButton4)
+                                .addComponent(saveButton))
+                            .addGroup(programPanelLayout.createSequentialGroup()
+                                .addComponent(runButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton5)
+                                .addComponent(stopButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton6)))
-                        .addGap(0, 24, Short.MAX_VALUE)))
+                                .addComponent(rewindButton)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        programPanelLayout.setVerticalGroup(
+            programPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(programPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3))
+                .addGroup(programPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(newButton)
+                    .addComponent(openButton)
+                    .addComponent(saveButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1)
+                .addComponent(taskScrollPane)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton4)
-                    .addComponent(jButton5)
-                    .addComponent(jButton6))
+                .addGroup(programPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(runButton)
+                    .addComponent(stopButton)
+                    .addComponent(rewindButton))
                 .addContainerGap())
         );
 
@@ -721,7 +772,7 @@ public class ProgramMode extends javax.swing.JFrame implements
                     .addGroup(layout.createSequentialGroup()
                         .addGap(12, 12, 12)
                         .addComponent(basicModeLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 378, Short.MAX_VALUE)
                         .addComponent(connectionLabel))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(57, 57, 57)
@@ -757,12 +808,13 @@ public class ProgramMode extends javax.swing.JFrame implements
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(lightToggleButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(aboutButton, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(aboutButton, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(24, 24, 24)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(robotArmPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(programPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -771,15 +823,15 @@ public class ProgramMode extends javax.swing.JFrame implements
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(programPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(basicModeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
+                            .addComponent(basicModeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(connectionLabel))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(robotArmPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -1204,7 +1256,7 @@ public class ProgramMode extends javax.swing.JFrame implements
             @Override
             public void run()
             {
-                new BasicMode().setVisible(true);
+                new ProgramMode().setVisible(true);
             }
         });
     }
@@ -1218,24 +1270,25 @@ public class ProgramMode extends javax.swing.JFrame implements
     private javax.swing.JLabel connectionLabel;
     private javax.swing.JButton elbowDownButton;
     private javax.swing.JButton elbowUpButton;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JSeparator jSeparator5;
     private javax.swing.JToggleButton lightToggleButton;
+    private javax.swing.JButton newButton;
+    private javax.swing.JButton openButton;
     private javax.swing.JButton openGripperButton;
+    private javax.swing.JPanel programPanel;
+    private javax.swing.JButton rewindButton;
     private robotarmedge.view.RobotArmPanel robotArmPanel;
+    private javax.swing.JButton runButton;
+    private javax.swing.JButton saveButton;
     private javax.swing.JButton shoulderDownButton;
     private javax.swing.JButton shoulderUpButton;
+    private javax.swing.JButton stopButton;
+    private javax.swing.JScrollPane taskScrollPane;
+    private javax.swing.JPanel tasksPanel;
     private javax.swing.JButton wristDownButton;
     private javax.swing.JButton wristUpButton;
     // End of variables declaration//GEN-END:variables

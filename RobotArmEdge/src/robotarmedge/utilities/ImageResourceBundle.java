@@ -27,7 +27,7 @@ public class ImageResourceBundle extends PropertyResourceBundle
     public static final String RESOURCES_PREFIX = "/robotarmedge/resources/";
     
     public static final String PROPERTIES_FILE = RESOURCES_PREFIX + 
-            "RobotArmEdge.properties";
+            "Images.properties";
 
     /*
      * ************************************************************************* 
