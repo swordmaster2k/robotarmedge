@@ -173,7 +173,7 @@ public class BasicMode extends javax.swing.JFrame implements
         jSeparator4 = new javax.swing.JSeparator();
         jSeparator5 = new javax.swing.JSeparator();
         lightToggleButton = new javax.swing.JToggleButton();
-        robotArmPanel = new robotarmedge.view.RobotArmPanel();
+        robotArmPanel = new robotarmedge.view.controls.RobotArmPanel();
         connectionLabel = new javax.swing.JLabel();
         aboutButton = new javax.swing.JButton();
 
@@ -1150,7 +1150,7 @@ public class BasicMode extends javax.swing.JFrame implements
     private javax.swing.JSeparator jSeparator5;
     private javax.swing.JToggleButton lightToggleButton;
     private javax.swing.JButton openGripperButton;
-    private robotarmedge.view.RobotArmPanel robotArmPanel;
+    private robotarmedge.view.controls.RobotArmPanel robotArmPanel;
     private javax.swing.JButton shoulderDownButton;
     private javax.swing.JButton shoulderUpButton;
     private javax.swing.JButton wristDownButton;

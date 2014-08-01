@@ -10,18 +10,20 @@
 
 package robotarmedge.view;
 
-import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.ImageIcon;
 import javax.swing.JToggleButton;
 import robotarmedge.control.Instruction;
+import robotarmedge.control.Interpreter;
+import robotarmedge.control.Task;
 import robotarmedge.device.UsbRobotArm;
 import robotarmedge.event.RobotArmChangedEvent;
 import robotarmedge.event.RobotArmChangeListener;
 import robotarmedge.utilities.ByteCommand;
 import robotarmedge.utilities.ImageResourceBundle;
-import robotarmedge.view.controls.InstructionView;
 import robotarmedge.view.controls.TaskPanel;
 
 /**
@@ -38,6 +40,10 @@ public class ProgramMode extends javax.swing.JFrame implements
     private Mode currentMode;
     
     private final ImageResourceBundle imageResourceBundle;
+    
+    private final LinkedList<Task> tasksList = new LinkedList<>();
+    
+    private Interpreter interpreter;
     
     Timer t = new Timer();
     TimerTask tt;
@@ -62,30 +68,8 @@ public class ProgramMode extends javax.swing.JFrame implements
         ImageIcon icon = new ImageIcon(this.imageResourceBundle.
                 getImage("icon.application"));
         this.setIconImage(icon.getImage());
-        
-        this.tasksPanel.setLayout(new FlowLayout());
-        
-        TaskPanel panel = new TaskPanel();
-        
-        Instruction instruction1 = new Instruction(ByteCommand.GRIPPER_CLOSE, 1000, 0);
-        Instruction instruction2 = new Instruction(ByteCommand.WRIST_UP, 8000, 0);
-        Instruction instruction3 = new Instruction(ByteCommand.ELBOW_DOWN, 4000, 0);
-        Instruction instruction4 = new Instruction(ByteCommand.SHOULDER_UP, 10000, 0);
-        Instruction instruction5 = new Instruction(ByteCommand.BASE_CLOCKWISE, 6000, 1);
 
-        InstructionView instructionView1 = new InstructionView(instruction1);
-        InstructionView instructionView2 = new InstructionView(instruction2);
-        InstructionView instructionView3 = new InstructionView(instruction3);
-        InstructionView instructionView4 = new InstructionView(instruction4);
-        InstructionView instructionView5 = new InstructionView(instruction5);
-
-        panel.add(instructionView1);
-        panel.add(instructionView2);
-        panel.add(instructionView3);
-        panel.add(instructionView4);
-        panel.add(instructionView5);
-        
-        this.tasksPanel.add(panel);
+        this.tasksPanel.setLayout(new GridLayout(0, 1, 0, 0));
     }
 
     /**
@@ -174,6 +158,35 @@ public class ProgramMode extends javax.swing.JFrame implements
         this.baseAntiClockwiseButton.setEnabled(buttonState);
         this.lightToggleButton.setEnabled(buttonState);
     }
+    
+    /**
+     * 
+     */
+    private void addTask()
+    {
+        Instruction instruction1 = new Instruction(ByteCommand.BASE_CLOCKWISE, 1000, 1);
+        //Instruction instruction2 = new Instruction(ByteCommand.WRIST_UP, 8000, 0);
+        //Instruction instruction3 = new Instruction(ByteCommand.ELBOW_DOWN, 4000, 0);
+        //Instruction instruction4 = new Instruction(ByteCommand.SHOULDER_UP, 10000, 0);
+        //Instruction instruction5 = new Instruction(ByteCommand.BASE_CLOCKWISE, 6000, 1);
+        
+        Task task = new Task();
+        task.addInstruction(instruction1);
+        //task.addInstruction(instruction2);
+        //task.addInstruction(instruction3);
+        //task.addInstruction(instruction4);
+        //task.addInstruction(instruction5);
+        
+        this.tasksList.add(task);
+
+        TaskPanel panel = new TaskPanel(task);
+        
+        this.tasksPanel.add(panel);
+        this.tasksPanel.validate();
+        this.tasksPanel.repaint();
+        
+        this.taskScrollPane.getViewport().revalidate();
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -202,9 +215,9 @@ public class ProgramMode extends javax.swing.JFrame implements
         jSeparator4 = new javax.swing.JSeparator();
         jSeparator5 = new javax.swing.JSeparator();
         lightToggleButton = new javax.swing.JToggleButton();
-        robotArmPanel = new robotarmedge.view.RobotArmPanel();
+        robotArmPanel = new robotarmedge.view.controls.RobotArmPanel();
         connectionLabel = new javax.swing.JLabel();
-        aboutButton = new javax.swing.JButton();
+        enterButton = new javax.swing.JButton();
         programPanel = new javax.swing.JPanel();
         newButton = new javax.swing.JButton();
         openButton = new javax.swing.JButton();
@@ -629,7 +642,6 @@ public class ProgramMode extends javax.swing.JFrame implements
         jSeparator5.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
         lightToggleButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/light-bulb-off.png"))); // NOI18N
-        lightToggleButton.setSelected(true);
         lightToggleButton.setText(bundle.getString("tooltip.light.toggle")); // NOI18N
         lightToggleButton.setToolTipText(bundle.getString("tooltip.light.toggle")); // NOI18N
         lightToggleButton.setEnabled(false);
@@ -672,12 +684,12 @@ public class ProgramMode extends javax.swing.JFrame implements
         connectionLabel.setText(bundle.getString("connection.none")); // NOI18N
         connectionLabel.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
 
-        aboutButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/information.png"))); // NOI18N
-        aboutButton.addActionListener(new java.awt.event.ActionListener()
+        enterButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/information.png"))); // NOI18N
+        enterButton.addActionListener(new java.awt.event.ActionListener()
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
             {
-                aboutButtonActionPerformed(evt);
+                enterButtonActionPerformed(evt);
             }
         });
 
@@ -686,26 +698,77 @@ public class ProgramMode extends javax.swing.JFrame implements
         newButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/blue-document.png"))); // NOI18N
         newButton.setText(bundle.getString("control.new")); // NOI18N
         newButton.setToolTipText(bundle.getString("tooltip.control.new")); // NOI18N
+        newButton.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                newButtonActionPerformed(evt);
+            }
+        });
 
         openButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/blue-folder-open.png"))); // NOI18N
         openButton.setText(bundle.getString("control.open")); // NOI18N
         openButton.setToolTipText(bundle.getString("tooltip.control.open")); // NOI18N
+        openButton.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                openButtonActionPerformed(evt);
+            }
+        });
 
         saveButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/disk.png"))); // NOI18N
         saveButton.setText(bundle.getString("control.save")); // NOI18N
         saveButton.setToolTipText(bundle.getString("tooltip.control.save")); // NOI18N
+        saveButton.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                saveButtonActionPerformed(evt);
+            }
+        });
 
         runButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/control.png"))); // NOI18N
         runButton.setText(bundle.getString("control.run")); // NOI18N
         runButton.setToolTipText(bundle.getString("tooltip.control.run")); // NOI18N
+        runButton.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                runButtonActionPerformed(evt);
+            }
+        });
 
         stopButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/control-stop-square.png"))); // NOI18N
         stopButton.setText(bundle.getString("control.stop")); // NOI18N
         stopButton.setToolTipText(bundle.getString("tooltip.control.stop")); // NOI18N
+        stopButton.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                stopButtonActionPerformed(evt);
+            }
+        });
 
         rewindButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/control-double-180.png"))); // NOI18N
         rewindButton.setText(bundle.getString("control.rewind")); // NOI18N
         rewindButton.setToolTipText(bundle.getString("tooltip.control.rewind")); // NOI18N
+        rewindButton.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                rewindButtonActionPerformed(evt);
+            }
+        });
+
+        taskScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        taskScrollPane.setMaximumSize(new java.awt.Dimension(241, 464));
+        taskScrollPane.setMinimumSize(new java.awt.Dimension(241, 464));
+        taskScrollPane.setPreferredSize(new java.awt.Dimension(241, 464));
+
+        tasksPanel.setMaximumSize(new java.awt.Dimension(241, 464));
+        tasksPanel.setMinimumSize(new java.awt.Dimension(241, 464));
+        tasksPanel.setName(""); // NOI18N
 
         javax.swing.GroupLayout tasksPanelLayout = new javax.swing.GroupLayout(tasksPanel);
         tasksPanel.setLayout(tasksPanelLayout);
@@ -727,7 +790,7 @@ public class ProgramMode extends javax.swing.JFrame implements
             .addGroup(programPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(programPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(taskScrollPane)
+                    .addComponent(taskScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 249, Short.MAX_VALUE)
                     .addGroup(programPanelLayout.createSequentialGroup()
                         .addGroup(programPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(programPanelLayout.createSequentialGroup()
@@ -754,7 +817,7 @@ public class ProgramMode extends javax.swing.JFrame implements
                     .addComponent(openButton)
                     .addComponent(saveButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(taskScrollPane)
+                .addComponent(taskScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(programPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(runButton)
@@ -772,7 +835,7 @@ public class ProgramMode extends javax.swing.JFrame implements
                     .addGroup(layout.createSequentialGroup()
                         .addGap(12, 12, 12)
                         .addComponent(basicModeLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 378, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 372, Short.MAX_VALUE)
                         .addComponent(connectionLabel))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(57, 57, 57)
@@ -808,10 +871,10 @@ public class ProgramMode extends javax.swing.JFrame implements
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(lightToggleButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(aboutButton, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(enterButton, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap(18, Short.MAX_VALUE)
                         .addComponent(robotArmPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(programPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -864,7 +927,7 @@ public class ProgramMode extends javax.swing.JFrame implements
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(lightToggleButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(aboutButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addComponent(enterButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                         .addGap(18, 18, 18))))
         );
 
@@ -1144,13 +1207,6 @@ public class ProgramMode extends javax.swing.JFrame implements
         System.out.println("released");
     }//GEN-LAST:event_componentKeyReleased
 
-    private void aboutButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_aboutButtonActionPerformed
-    {//GEN-HEADEREND:event_aboutButtonActionPerformed
-        AboutDialog aboutDialog = new AboutDialog(this, true);
-        aboutDialog.setLocationRelativeTo(this);
-        aboutDialog.setVisible(true);
-    }//GEN-LAST:event_aboutButtonActionPerformed
-
     private void closeGripperButtonMouseEntered(java.awt.event.MouseEvent evt)//GEN-FIRST:event_closeGripperButtonMouseEntered
     {//GEN-HEADEREND:event_closeGripperButtonMouseEntered
         this.robotArmPanel.setGripperHovered(true);
@@ -1211,6 +1267,48 @@ public class ProgramMode extends javax.swing.JFrame implements
         this.robotArmPanel.repaint();
     }//GEN-LAST:event_baseClockwiseButtonMouseExited
 
+    private void enterButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_enterButtonActionPerformed
+    {//GEN-HEADEREND:event_enterButtonActionPerformed
+        this.addTask();
+    }//GEN-LAST:event_enterButtonActionPerformed
+
+    private void newButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_newButtonActionPerformed
+    {//GEN-HEADEREND:event_newButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_newButtonActionPerformed
+
+    private void openButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_openButtonActionPerformed
+    {//GEN-HEADEREND:event_openButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_openButtonActionPerformed
+
+    private void saveButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_saveButtonActionPerformed
+    {//GEN-HEADEREND:event_saveButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_saveButtonActionPerformed
+
+    private void runButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_runButtonActionPerformed
+    {//GEN-HEADEREND:event_runButtonActionPerformed
+        if (!this.tasksList.isEmpty())
+        {
+            this.interpreter = new Interpreter(this.tasksList);
+            this.interpreter.start();
+        }
+    }//GEN-LAST:event_runButtonActionPerformed
+
+    private void stopButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_stopButtonActionPerformed
+    {//GEN-HEADEREND:event_stopButtonActionPerformed
+        if (this.interpreter != null)
+        {
+            this.interpreter.shutdown();
+        }
+    }//GEN-LAST:event_stopButtonActionPerformed
+
+    private void rewindButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_rewindButtonActionPerformed
+    {//GEN-HEADEREND:event_rewindButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_rewindButtonActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1262,7 +1360,6 @@ public class ProgramMode extends javax.swing.JFrame implements
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton aboutButton;
     private javax.swing.JButton baseAntiClockwiseButton;
     private javax.swing.JButton baseClockwiseButton;
     private javax.swing.JLabel basicModeLabel;
@@ -1270,6 +1367,7 @@ public class ProgramMode extends javax.swing.JFrame implements
     private javax.swing.JLabel connectionLabel;
     private javax.swing.JButton elbowDownButton;
     private javax.swing.JButton elbowUpButton;
+    private javax.swing.JButton enterButton;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
@@ -1281,7 +1379,7 @@ public class ProgramMode extends javax.swing.JFrame implements
     private javax.swing.JButton openGripperButton;
     private javax.swing.JPanel programPanel;
     private javax.swing.JButton rewindButton;
-    private robotarmedge.view.RobotArmPanel robotArmPanel;
+    private robotarmedge.view.controls.RobotArmPanel robotArmPanel;
     private javax.swing.JButton runButton;
     private javax.swing.JButton saveButton;
     private javax.swing.JButton shoulderDownButton;

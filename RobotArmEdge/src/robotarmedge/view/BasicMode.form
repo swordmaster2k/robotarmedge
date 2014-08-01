@@ -515,7 +515,7 @@
         <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="componentKeyReleased"/>
       </Events>
     </Component>
-    <Container class="robotarmedge.view.RobotArmPanel" name="robotArmPanel">
+    <Container class="robotarmedge.view.controls.RobotArmPanel" name="robotArmPanel">
 
       <Layout>
         <DimensionLayout dim="0">

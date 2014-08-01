@@ -13,6 +13,7 @@ package robotarmedge;
 import javax.usb.UsbException;
 import robotarmedge.device.UsbRobotArm;
 import robotarmedge.view.BasicMode;
+import robotarmedge.view.ProgramMode;
 
 /**
  * The central driver class which contains the main method, it starts the 
@@ -70,7 +71,7 @@ public class RobotArmEdge
     {
         setLookAndFeel();
         
-        BasicMode view = new BasicMode(UsbRobotArm.getInstance());
+        ProgramMode view = new ProgramMode(UsbRobotArm.getInstance());
         view.setLocationRelativeTo(null);
         view.setVisible(true);
     }

@@ -24,6 +24,8 @@ import robotarmedge.utilities.ByteCommand;
 public class Interpreter extends Thread
 {
 
+    private boolean isShuttingDown;
+    
     private final LinkedList<Task> runningTasks;
     private final UsbRobotArm usbRobotArm;
 
@@ -34,7 +36,7 @@ public class Interpreter extends Thread
      */
     public Interpreter(LinkedList<Task> taskList)
     {
-        this.runningTasks = taskList;
+        this.runningTasks = (LinkedList<Task>)taskList.clone();
         this.usbRobotArm = UsbRobotArm.getInstance();
     }
 
@@ -51,6 +53,9 @@ public class Interpreter extends Thread
             // O(n^2) algorithm...
             for (Task task : this.runningTasks)
             {
+                if (this.isShuttingDown)
+                    break;
+                
                 Logger.getLogger(UsbRobotArm.class.getName()).log(Level.INFO,
                         "Sending Byte0: " + task.getByte0()
                         + " Sending Byte1:" + task.getByte1() + "\n",
@@ -62,6 +67,9 @@ public class Interpreter extends Thread
 
                 for (Instruction instruction : task.getInstructions())
                 {
+                    if (this.isShuttingDown)
+                        break;
+                    
                     try
                     {
                         // Find out why this is bad...
@@ -96,6 +104,11 @@ public class Interpreter extends Thread
 
             }
         }
+    }
+    
+    public void shutdown()
+    {
+        this.isShuttingDown = true;
     }
 
     public static void main(String[] args)

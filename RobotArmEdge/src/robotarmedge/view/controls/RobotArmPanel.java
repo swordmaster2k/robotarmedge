@@ -8,7 +8,7 @@
  ********************************************************************
  */
 
-package robotarmedge.view;
+package robotarmedge.view.controls;
 
 import java.awt.Graphics;
 import java.awt.Image;

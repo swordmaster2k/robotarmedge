@@ -10,55 +10,88 @@
 package robotarmedge.view.controls;
 
 import java.awt.FlowLayout;
-import java.awt.Panel;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import robotarmedge.control.Instruction;
+import robotarmedge.control.Task;
+import robotarmedge.control.event.TaskChangeListener;
+import robotarmedge.control.event.TaskChangedEvent;
 import robotarmedge.utilities.ByteCommand;
 
 /**
  * 
- *  
+ * 
  * @author Joshua Michael Daly
  */
-public class TaskPanel extends JPanel
+public class TaskPanel extends JPanel implements TaskChangeListener
 {
+
+    private final Task model;
+
     /*
      * ************************************************************************* 
      * Public Constructors
      * *************************************************************************
      */
-    public TaskPanel()
+    public TaskPanel(Task task)
     {
+        this.model = task;
+
+        for (Instruction instruction : task.getInstructions())
+        {
+            this.add(new InstructionView(instruction));
+        }
+
         this.setLayout(new FlowLayout());
     }
     
+    /*
+     * ************************************************************************* 
+     * Public Methods
+     * *************************************************************************
+     */
+    @Override
+    public void taskChanged(TaskChangedEvent e)
+    {
+        // TODO: Consider adding a taskInstructionAdded and taskInstructionRemoved
+        // events to make this process more efficient.
+        this.removeAll();
+        
+        for (Instruction instruction : this.model.getInstructions())
+        {
+            this.add(new InstructionView(instruction));
+        }
+        
+        this.repaint();
+    }
+
+    /*
+     * ************************************************************************* 
+     * Private Methods
+     * *************************************************************************
+     */
     public static void main(String[] args)
     {
-        JFrame frame = new JFrame();
-        TaskPanel panel = new TaskPanel();
-
         Instruction instruction1 = new Instruction(ByteCommand.GRIPPER_CLOSE, 1000, 0);
         Instruction instruction2 = new Instruction(ByteCommand.WRIST_UP, 8000, 0);
         Instruction instruction3 = new Instruction(ByteCommand.ELBOW_DOWN, 4000, 0);
         Instruction instruction4 = new Instruction(ByteCommand.SHOULDER_UP, 10000, 0);
         Instruction instruction5 = new Instruction(ByteCommand.BASE_CLOCKWISE, 6000, 1);
 
-        InstructionView instructionView1 = new InstructionView(instruction1);
-        InstructionView instructionView2 = new InstructionView(instruction2);
-        InstructionView instructionView3 = new InstructionView(instruction3);
-        InstructionView instructionView4 = new InstructionView(instruction4);
-        InstructionView instructionView5 = new InstructionView(instruction5);
+        Task task = new Task();
+        task.addInstruction(instruction1);
+        task.addInstruction(instruction2);
+        task.addInstruction(instruction3);
+        task.addInstruction(instruction4);
+        task.addInstruction(instruction5);
 
-        panel.add(instructionView1);
-        panel.add(instructionView2);
-        panel.add(instructionView3);
-        panel.add(instructionView4);
-        panel.add(instructionView5);
+        TaskPanel panel = new TaskPanel(task);
 
+        JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setContentPane(panel);
         frame.setVisible(true);
         frame.pack();
     }
+
 }
