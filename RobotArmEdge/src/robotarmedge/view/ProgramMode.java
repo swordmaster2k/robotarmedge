@@ -45,6 +45,14 @@ public class ProgramMode extends javax.swing.JFrame implements
     
     private Interpreter interpreter;
     
+    private Instruction gripperInstruction;
+    private Instruction wristInstruction;
+    private Instruction elbowInstruction;
+    private Instruction shoulderInstruction;
+    private Instruction baseInstruction;
+ 
+    private long startTime;
+    
     Timer t = new Timer();
     TimerTask tt;
 
@@ -70,6 +78,7 @@ public class ProgramMode extends javax.swing.JFrame implements
         this.setIconImage(icon.getImage());
 
         this.tasksPanel.setLayout(new GridLayout(0, 1, 0, 0));
+        
     }
 
     /**
@@ -162,30 +171,32 @@ public class ProgramMode extends javax.swing.JFrame implements
     /**
      * 
      */
-    private void addTask()
+    private void addTasks()
     {
-        Instruction instruction1 = new Instruction(ByteCommand.BASE_CLOCKWISE, 1000, 1);
-        //Instruction instruction2 = new Instruction(ByteCommand.WRIST_UP, 8000, 0);
-        //Instruction instruction3 = new Instruction(ByteCommand.ELBOW_DOWN, 4000, 0);
-        //Instruction instruction4 = new Instruction(ByteCommand.SHOULDER_UP, 10000, 0);
-        //Instruction instruction5 = new Instruction(ByteCommand.BASE_CLOCKWISE, 6000, 1);
-        
         Task task = new Task();
-        task.addInstruction(instruction1);
-        //task.addInstruction(instruction2);
-        //task.addInstruction(instruction3);
-        //task.addInstruction(instruction4);
-        //task.addInstruction(instruction5);
         
-        this.tasksList.add(task);
+        if (this.gripperInstruction != null)
+            task.addInstruction(this.gripperInstruction);
+        
+        if (this.wristInstruction != null)
+            task.addInstruction(this.wristInstruction);
+        
+        if (this.elbowInstruction != null)
+            task.addInstruction(this.elbowInstruction);
+        
+        if (this.shoulderInstruction != null)
+            task.addInstruction(this.shoulderInstruction);
+        
+        if (this.baseInstruction != null)
+            task.addInstruction(this.baseInstruction);
 
         TaskPanel panel = new TaskPanel(task);
-        
         this.tasksPanel.add(panel);
         this.tasksPanel.validate();
         this.tasksPanel.repaint();
         
-        this.taskScrollPane.getViewport().revalidate();
+        this.taskScrollPane.getViewport().revalidate();   
+        this.tasksList.add(task);
     }
 
     /**
@@ -684,7 +695,7 @@ public class ProgramMode extends javax.swing.JFrame implements
         connectionLabel.setText(bundle.getString("connection.none")); // NOI18N
         connectionLabel.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
 
-        enterButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/information.png"))); // NOI18N
+        enterButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/tick.png"))); // NOI18N
         enterButton.addActionListener(new java.awt.event.ActionListener()
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
@@ -938,11 +949,16 @@ public class ProgramMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_shoulderDownButtonMouseReleased
         if (this.shoulderDownButton.isEnabled())
         {
+            this.shoulderInstruction = new Instruction(ByteCommand.SHOULDER_DOWN, 
+                    (int)(System.currentTimeMillis() - this.startTime), 
+                    0);
+            
             if (this.usbRobotArm.isAttached())
             {
                 this.usbRobotArm.stopShoulder();
-                this.robotArmPanel.repaint();
             }
+            
+            this.robotArmPanel.repaint();
         }
     }//GEN-LAST:event_shoulderDownButtonMouseReleased
 
@@ -950,11 +966,14 @@ public class ProgramMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_baseClockwiseButtonMousePressed
         if (this.baseClockwiseButton.isEnabled())
         {
+            this.startTime = System.currentTimeMillis();
+            
             if (this.usbRobotArm.isAttached())
             {
                 this.usbRobotArm.rotateBaseClockwise();
-                this.robotArmPanel.repaint();
             }
+            
+            this.robotArmPanel.repaint();
         }
     }//GEN-LAST:event_baseClockwiseButtonMousePressed
 
@@ -962,11 +981,16 @@ public class ProgramMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_baseClockwiseButtonMouseReleased
         if (this.baseClockwiseButton.isEnabled())
         {
+            this.baseInstruction = new Instruction(ByteCommand.BASE_CLOCKWISE, 
+                    (int)(System.currentTimeMillis() - this.startTime), 
+                    1);
+            
             if (this.usbRobotArm.isAttached())
             {
                 this.usbRobotArm.stopBase();
-                this.robotArmPanel.repaint();
             }
+            
+            this.robotArmPanel.repaint();
         }
     }//GEN-LAST:event_baseClockwiseButtonMouseReleased
 
@@ -974,11 +998,14 @@ public class ProgramMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_baseAntiClockwiseButtonMousePressed
         if (this.baseAntiClockwiseButton.isEnabled())
         {
+            this.startTime = System.currentTimeMillis();
+            
             if (this.usbRobotArm.isAttached())
             {
                 this.usbRobotArm.rotateBaseAntiClockwise();
-                this.robotArmPanel.repaint();
             }
+            
+            this.robotArmPanel.repaint();
         }
     }//GEN-LAST:event_baseAntiClockwiseButtonMousePressed
 
@@ -986,11 +1013,16 @@ public class ProgramMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_baseAntiClockwiseButtonMouseReleased
         if (this.baseAntiClockwiseButton.isEnabled())
         {
+            this.baseInstruction = new Instruction(ByteCommand.BASE_ANTI_CLOCKWISE, 
+                    (int)(System.currentTimeMillis() - this.startTime), 
+                    1);
+            
             if (this.usbRobotArm.isAttached())
             {
                 this.usbRobotArm.stopBase();
-                this.robotArmPanel.repaint();
             }
+            
+            this.robotArmPanel.repaint();
         }
     }//GEN-LAST:event_baseAntiClockwiseButtonMouseReleased
 
@@ -1009,11 +1041,14 @@ public class ProgramMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_shoulderDownButtonMousePressed
         if (this.shoulderDownButton.isEnabled())
         {
+            this.startTime = System.currentTimeMillis();
+            
             if (this.usbRobotArm.isAttached())
             {
                 this.usbRobotArm.moveShoulderDown();
-                this.robotArmPanel.repaint();
             }
+            
+            this.robotArmPanel.repaint();
         }
     }//GEN-LAST:event_shoulderDownButtonMousePressed
 
@@ -1021,11 +1056,16 @@ public class ProgramMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_shoulderUpButtonMouseReleased
         if (this.shoulderUpButton.isEnabled())
         {
+            this.shoulderInstruction = new Instruction(ByteCommand.SHOULDER_UP, 
+                    (int)(System.currentTimeMillis() - this.startTime), 
+                    0);
+            
             if (this.usbRobotArm.isAttached())
             {
                 this.usbRobotArm.stopShoulder();
-                this.robotArmPanel.repaint();
             }
+            
+            this.robotArmPanel.repaint();
         }
     }//GEN-LAST:event_shoulderUpButtonMouseReleased
 
@@ -1033,11 +1073,14 @@ public class ProgramMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_shoulderUpButtonMousePressed
         if (this.shoulderUpButton.isEnabled())
         {
+            this.startTime = System.currentTimeMillis();
+            
             if (this.usbRobotArm.isAttached())
             {
                 this.usbRobotArm.moveShoulderUp();
-                this.robotArmPanel.repaint();
             }
+            
+            this.robotArmPanel.repaint();
         }
     }//GEN-LAST:event_shoulderUpButtonMousePressed
 
@@ -1045,11 +1088,16 @@ public class ProgramMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_elbowDownButtonMouseReleased
         if (this.elbowDownButton.isEnabled())
         {
+            this.elbowInstruction = new Instruction(ByteCommand.ELBOW_DOWN, 
+                    (int)(System.currentTimeMillis() - this.startTime), 
+                    0);
+            
             if (this.usbRobotArm.isAttached())
             {
                 this.usbRobotArm.stopElbow();
-                this.robotArmPanel.repaint();
             }
+            
+            this.robotArmPanel.repaint();
         }
     }//GEN-LAST:event_elbowDownButtonMouseReleased
 
@@ -1057,11 +1105,14 @@ public class ProgramMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_elbowDownButtonMousePressed
         if (this.elbowDownButton.isEnabled())
         {
+            this.startTime = System.currentTimeMillis();
+            
             if (this.usbRobotArm.isAttached())
             {
                 this.usbRobotArm.moveElbowDown();
-                this.robotArmPanel.repaint();
             }
+            
+            this.robotArmPanel.repaint();
         }
     }//GEN-LAST:event_elbowDownButtonMousePressed
 
@@ -1069,11 +1120,16 @@ public class ProgramMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_elbowUpButtonMouseReleased
         if (this.elbowUpButton.isEnabled())
         {
+            this.elbowInstruction = new Instruction(ByteCommand.ELBOW_UP, 
+                    (int)(System.currentTimeMillis() - this.startTime), 
+                    0);
+            
             if (this.usbRobotArm.isAttached())
             {
                 this.usbRobotArm.stopElbow();
-                this.robotArmPanel.repaint();
             }
+            
+            this.robotArmPanel.repaint();
         }
     }//GEN-LAST:event_elbowUpButtonMouseReleased
 
@@ -1081,11 +1137,14 @@ public class ProgramMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_elbowUpButtonMousePressed
         if (this.elbowUpButton.isEnabled())
         {
+            this.startTime = System.currentTimeMillis();
+            
             if (this.usbRobotArm.isAttached())
             {
                 this.usbRobotArm.moveElbowUp();
-                this.robotArmPanel.repaint();
             }
+            
+            this.robotArmPanel.repaint();
         }
     }//GEN-LAST:event_elbowUpButtonMousePressed
 
@@ -1093,11 +1152,16 @@ public class ProgramMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_wristDownButtonMouseReleased
         if (this.wristDownButton.isEnabled())
         {
+            this.wristInstruction = new Instruction(ByteCommand.WRIST_DOWN, 
+                    (int)(System.currentTimeMillis() - this.startTime), 
+                    0);
+            
             if (this.usbRobotArm.isAttached())
             {
                 this.usbRobotArm.stopWrist();
-                this.robotArmPanel.repaint();
             }
+            
+            this.robotArmPanel.repaint();
         }
     }//GEN-LAST:event_wristDownButtonMouseReleased
 
@@ -1105,11 +1169,14 @@ public class ProgramMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_wristDownButtonMousePressed
         if (this.wristDownButton.isEnabled())
         {
+            this.startTime = System.currentTimeMillis();
+            
             if (this.usbRobotArm.isAttached())
             {
                 this.usbRobotArm.moveWristDown();
-                this.robotArmPanel.repaint();
             }
+            
+            this.robotArmPanel.repaint();
         }
     }//GEN-LAST:event_wristDownButtonMousePressed
 
@@ -1117,11 +1184,16 @@ public class ProgramMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_wristUpButtonMouseReleased
         if (this.wristUpButton.isEnabled())
         {
+            this.wristInstruction = new Instruction(ByteCommand.WRIST_UP, 
+                    (int)(System.currentTimeMillis() - this.startTime), 
+                    0);
+            
             if (this.usbRobotArm.isAttached())
             {
                 this.usbRobotArm.stopWrist();
-                this.robotArmPanel.repaint();
             }
+            
+            this.robotArmPanel.repaint();
         }
     }//GEN-LAST:event_wristUpButtonMouseReleased
 
@@ -1129,11 +1201,14 @@ public class ProgramMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_wristUpButtonMousePressed
         if (this.wristUpButton.isEnabled())
         {
+            this.startTime = System.currentTimeMillis();
+            
             if (this.usbRobotArm.isAttached())
             {
                 this.usbRobotArm.moveWristUp();
-                this.robotArmPanel.repaint();
             }
+            
+            this.robotArmPanel.repaint();
         }
     }//GEN-LAST:event_wristUpButtonMousePressed
 
@@ -1141,11 +1216,16 @@ public class ProgramMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_openGripperButtonMouseReleased
         if (this.openGripperButton.isEnabled())
         {
+            this.gripperInstruction = new Instruction(ByteCommand.GRIPPER_OPEN, 
+                    (int)(System.currentTimeMillis() - this.startTime), 
+                    0);
+            
             if (this.usbRobotArm.isAttached())
             {
                 this.usbRobotArm.stopGripper();
-                this.robotArmPanel.repaint();
             }
+            
+            this.robotArmPanel.repaint();
         }
     }//GEN-LAST:event_openGripperButtonMouseReleased
 
@@ -1153,11 +1233,14 @@ public class ProgramMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_openGripperButtonMousePressed
         if (this.openGripperButton.isEnabled())
         {
+            this.startTime = System.currentTimeMillis();
+            
             if (this.usbRobotArm.isAttached())
             {
                 this.usbRobotArm.openGripper();
-                this.robotArmPanel.repaint();
             }
+            
+            this.robotArmPanel.repaint();
         }
     }//GEN-LAST:event_openGripperButtonMousePressed
 
@@ -1165,11 +1248,16 @@ public class ProgramMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_closeGripperButtonMouseReleased
         if (this.closeGripperButton.isEnabled())
         {
+            this.gripperInstruction = new Instruction(ByteCommand.GRIPPER_CLOSE, 
+                    (int)(System.currentTimeMillis() - this.startTime), 
+                    0);
+            
             if (this.usbRobotArm.isAttached())
             {
                 this.usbRobotArm.stopGripper();
-                this.robotArmPanel.repaint();
             }
+            
+            this.robotArmPanel.repaint();
         }
     }//GEN-LAST:event_closeGripperButtonMouseReleased
 
@@ -1177,11 +1265,14 @@ public class ProgramMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_closeGripperButtonMousePressed
         if (this.closeGripperButton.isEnabled())
         {
+            this.startTime = System.currentTimeMillis();
+            
             if (this.usbRobotArm.isAttached())
             {
                 this.usbRobotArm.closeGripper();
-                this.robotArmPanel.repaint();
             }
+            
+            this.robotArmPanel.repaint();
         }
     }//GEN-LAST:event_closeGripperButtonMousePressed
 
@@ -1269,7 +1360,7 @@ public class ProgramMode extends javax.swing.JFrame implements
 
     private void enterButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_enterButtonActionPerformed
     {//GEN-HEADEREND:event_enterButtonActionPerformed
-        this.addTask();
+        this.addTasks();
     }//GEN-LAST:event_enterButtonActionPerformed
 
     private void newButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_newButtonActionPerformed
@@ -1301,6 +1392,11 @@ public class ProgramMode extends javax.swing.JFrame implements
         if (this.interpreter != null)
         {
             this.interpreter.shutdown();
+            
+            if (this.interpreter.getState() == Thread.State.TIMED_WAITING)
+            {
+                this.interpreter.interrupt();
+            }
         }
     }//GEN-LAST:event_stopButtonActionPerformed
 

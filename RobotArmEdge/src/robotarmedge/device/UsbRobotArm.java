@@ -237,7 +237,7 @@ public class UsbRobotArm implements UsbDeviceListener, UsbServicesListener
     /**
      * 
      */
-    public void stop()
+    public synchronized void stopAll()
     {
         this.resetStates();
         this.sendCommands();
@@ -246,7 +246,7 @@ public class UsbRobotArm implements UsbDeviceListener, UsbServicesListener
     /**
      *
      */
-    public void stopGripper()
+    public synchronized void stopGripper()
     {
         this.gripperState = ByteCommand.GRIPPER_STOP;
         this.sendCommands();
@@ -255,7 +255,7 @@ public class UsbRobotArm implements UsbDeviceListener, UsbServicesListener
     /**
      *
      */
-    public void closeGripper()
+    public synchronized void closeGripper()
     {
         this.gripperState = ByteCommand.GRIPPER_CLOSE;
         this.sendCommands();
@@ -264,7 +264,7 @@ public class UsbRobotArm implements UsbDeviceListener, UsbServicesListener
     /**
      *
      */
-    public void openGripper()
+    public synchronized void openGripper()
     {
         this.gripperState = ByteCommand.GRIPPER_OPEN;
         this.sendCommands();
@@ -273,7 +273,7 @@ public class UsbRobotArm implements UsbDeviceListener, UsbServicesListener
     /**
      *
      */
-    public void stopWrist()
+    public synchronized void stopWrist()
     {
         this.wristState = ByteCommand.WRIST_STOP;
         this.sendCommands();
@@ -282,7 +282,7 @@ public class UsbRobotArm implements UsbDeviceListener, UsbServicesListener
     /**
      *
      */
-    public void moveWristUp()
+    public synchronized void moveWristUp()
     {
         this.wristState = ByteCommand.WRIST_UP;
         this.sendCommands();
@@ -291,7 +291,7 @@ public class UsbRobotArm implements UsbDeviceListener, UsbServicesListener
     /**
      *
      */
-    public void moveWristDown()
+    public synchronized void moveWristDown()
     {
         this.wristState = ByteCommand.WRIST_DOWN;
         this.sendCommands();
@@ -300,7 +300,7 @@ public class UsbRobotArm implements UsbDeviceListener, UsbServicesListener
     /**
      *
      */
-    public void stopElbow()
+    public synchronized void stopElbow()
     {
         this.elbowState = ByteCommand.ELBOW_STOP;
         this.sendCommands();
@@ -309,7 +309,7 @@ public class UsbRobotArm implements UsbDeviceListener, UsbServicesListener
     /**
      *
      */
-    public void moveElbowUp()
+    public synchronized void moveElbowUp()
     {
         this.elbowState = ByteCommand.ELBOW_UP;
         this.sendCommands();
@@ -318,7 +318,7 @@ public class UsbRobotArm implements UsbDeviceListener, UsbServicesListener
     /**
      *
      */
-    public void moveElbowDown()
+    public synchronized void moveElbowDown()
     {
         this.elbowState = ByteCommand.ELBOW_DOWN;
         this.sendCommands();
@@ -327,7 +327,7 @@ public class UsbRobotArm implements UsbDeviceListener, UsbServicesListener
     /**
      *
      */
-    public void stopShoulder()
+    public synchronized void stopShoulder()
     {
         this.shoulderState = ByteCommand.SHOULDER_STOP;
         this.sendCommands();
@@ -336,7 +336,7 @@ public class UsbRobotArm implements UsbDeviceListener, UsbServicesListener
     /**
      *
      */
-    public void moveShoulderUp()
+    public synchronized void moveShoulderUp()
     {
         this.shoulderState = ByteCommand.SHOULDER_UP;
         this.sendCommands();
@@ -345,7 +345,7 @@ public class UsbRobotArm implements UsbDeviceListener, UsbServicesListener
     /**
      *
      */
-    public void moveShoulderDown()
+    public synchronized void moveShoulderDown()
     {
         this.shoulderState = ByteCommand.SHOULDER_DOWN;
         this.sendCommands();
@@ -354,7 +354,7 @@ public class UsbRobotArm implements UsbDeviceListener, UsbServicesListener
     /**
      *
      */
-    public void stopBase()
+    public synchronized void stopBase()
     {
         this.baseState = ByteCommand.BASE_STOP;
         this.sendCommands();
@@ -363,7 +363,7 @@ public class UsbRobotArm implements UsbDeviceListener, UsbServicesListener
     /**
      *
      */
-    public void rotateBaseClockwise()
+    public synchronized void rotateBaseClockwise()
     {
         this.baseState = ByteCommand.BASE_CLOCKWISE;
         this.sendCommands();
@@ -372,7 +372,7 @@ public class UsbRobotArm implements UsbDeviceListener, UsbServicesListener
     /**
      *
      */
-    public void rotateBaseAntiClockwise()
+    public synchronized void rotateBaseAntiClockwise()
     {
         this.baseState = ByteCommand.BASE_ANTI_CLOCKWISE;
         this.sendCommands();
@@ -383,7 +383,7 @@ public class UsbRobotArm implements UsbDeviceListener, UsbServicesListener
      * 
      * @param on 
      */
-    public void toggleLight(boolean on)
+    public synchronized void toggleLight(boolean on)
     {          
         if (on)
         {
@@ -397,7 +397,7 @@ public class UsbRobotArm implements UsbDeviceListener, UsbServicesListener
         this.sendCommands();
     }
     
-    public void sendBytes(byte[] commands)
+    public synchronized void sendBytes(byte[] commands)
     {
         try
         {

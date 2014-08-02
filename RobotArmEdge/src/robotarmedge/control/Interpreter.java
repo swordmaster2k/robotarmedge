@@ -16,8 +16,8 @@ import robotarmedge.device.UsbRobotArm;
 import robotarmedge.utilities.ByteCommand;
 
 /**
- * 
- * 
+ *
+ *
  * @author Joshua Michael Daly
  * @version 1.0
  */
@@ -25,7 +25,7 @@ public class Interpreter extends Thread
 {
 
     private boolean isShuttingDown;
-    
+
     private final LinkedList<Task> runningTasks;
     private final UsbRobotArm usbRobotArm;
 
@@ -36,7 +36,7 @@ public class Interpreter extends Thread
      */
     public Interpreter(LinkedList<Task> taskList)
     {
-        this.runningTasks = (LinkedList<Task>)taskList.clone();
+        this.runningTasks = (LinkedList<Task>) taskList.clone();
         this.usbRobotArm = UsbRobotArm.getInstance();
     }
 
@@ -54,8 +54,10 @@ public class Interpreter extends Thread
             for (Task task : this.runningTasks)
             {
                 if (this.isShuttingDown)
+                {
                     break;
-                
+                }
+
                 Logger.getLogger(UsbRobotArm.class.getName()).log(Level.INFO,
                         "Sending Byte0: " + task.getByte0()
                         + " Sending Byte1:" + task.getByte1() + "\n",
@@ -64,48 +66,57 @@ public class Interpreter extends Thread
                 this.usbRobotArm.sendBytes(task.getBytes());
 
                 int lastRunTime = 0;
+                byte[] bytes = task.getBytes();
 
                 for (Instruction instruction : task.getInstructions())
                 {
                     if (this.isShuttingDown)
+                    {
                         break;
-                    
+                    }
+                    // Find out why this is bad...
+                    //
+                    // Having two instructions one after the other with
+                    // very close run times causes problems here.
                     try
                     {
-                        // Find out why this is bad...
-                        //
-                        // Having two instructions one after the other with
-                        // very close run times causes problems here.
                         sleep(instruction.getRunTime() - lastRunTime);
-                        lastRunTime = instruction.getRunTime();
-
-                        if (instruction.getByteType() == 0)
-                        {
-                            task.decrementByte1(instruction.getCommand());
-                        }
-                        else if (instruction.getByteType() == 1)
-                        {
-                            task.decrementByte2(instruction.getCommand());
-                        }
-
-                        Logger.getLogger(UsbRobotArm.class.getName()).log(Level.INFO,
-                                "Sending Byte0: " + task.getByte0()
-                                + " Sending Byte1: " + task.getByte1() + "\n",
-                                this);
-
-                        this.usbRobotArm.sendBytes(task.getBytes());
                     }
                     catch (InterruptedException ex)
                     {
+                        if (this.isShuttingDown)
+                        {
+                            break;
+                        }
+                        
                         Logger.getLogger(Interpreter.class.getName())
                                 .log(Level.SEVERE, null, ex);
                     }
-                }
 
+                    lastRunTime = instruction.getRunTime();
+
+                    if (instruction.getByteType() == 0)
+                    {
+                        bytes[0] -= instruction.getCommand();
+                    }
+                    else if (instruction.getByteType() == 1)
+                    {
+                        bytes[1] -= instruction.getCommand();
+                    }
+
+                    Logger.getLogger(UsbRobotArm.class.getName()).log(Level.INFO,
+                            "Sending Byte0: " + task.getByte0()
+                            + " Sending Byte1: " + task.getByte1() + "\n",
+                            this);
+
+                    this.usbRobotArm.sendBytes(bytes);
+                }
             }
+            
+            this.usbRobotArm.stopAll();
         }
     }
-    
+
     public void shutdown()
     {
         this.isShuttingDown = true;
@@ -124,7 +135,6 @@ public class Interpreter extends Thread
         //Instruction instruction3 = new Instruction(ByteCommand.ELBOW_DOWN, 5000, 0);
         //Instruction instruction4 = new Instruction(ByteCommand.SHOULDER_UP, 3000, 0);
         //Instruction instruction5 = new Instruction(ByteCommand.BASE_CLOCKWISE, 2500, 1);
-        
         Task task = new Task();
         task.addInstruction(instruction1);
         task.addInstruction(instruction2);
@@ -137,7 +147,7 @@ public class Interpreter extends Thread
 
         Interpreter interpreter = new Interpreter(taskList);
         interpreter.start();
-        
+
         UsbRobotArm.getInstance().toggleLight(true);
     }
 }
