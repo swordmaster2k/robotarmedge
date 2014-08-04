@@ -93,18 +93,25 @@ public class Instruction implements Comparable<Instruction>, Cloneable
             {
                 case ByteCommand.GRIPPER_CLOSE:
                     this.command = ByteCommand.GRIPPER_OPEN;
+                    break;
                 case ByteCommand.GRIPPER_OPEN:
                     this.command = ByteCommand.GRIPPER_CLOSE;
+                    break;
                 case ByteCommand.WRIST_UP:
                     this.command = ByteCommand.WRIST_DOWN;
+                    break;
                 case ByteCommand.WRIST_DOWN:
                     this.command = ByteCommand.WRIST_UP;
+                    break;
                 case ByteCommand.ELBOW_UP:
                     this.command = ByteCommand.ELBOW_DOWN;
+                    break;
                 case ByteCommand.ELBOW_DOWN:
                     this.command = ByteCommand.ELBOW_UP;
+                    break;
                 case ByteCommand.SHOULDER_UP:
                     this.command = ByteCommand.SHOULDER_DOWN;
+                    break;
                 case ByteCommand.SHOULDER_DOWN:
                     this.command = ByteCommand.SHOULDER_UP;
             }
@@ -115,6 +122,7 @@ public class Instruction implements Comparable<Instruction>, Cloneable
             {
                 case ByteCommand.BASE_CLOCKWISE:
                     this.command = ByteCommand.BASE_ANTI_CLOCKWISE;
+                    break;
                 case ByteCommand.BASE_ANTI_CLOCKWISE:
                     this.command = ByteCommand.BASE_CLOCKWISE;
             }

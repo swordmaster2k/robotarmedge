@@ -10,7 +10,6 @@
 package robotarmedge.view;
 
 import java.awt.GridLayout;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -19,6 +18,8 @@ import javax.swing.JToggleButton;
 import robotarmedge.control.Instruction;
 import robotarmedge.control.Interpreter;
 import robotarmedge.control.Task;
+import robotarmedge.control.event.InterpreterFinishedEvent;
+import robotarmedge.control.event.InterpreterFinishedListener;
 import robotarmedge.device.UsbRobotArm;
 import robotarmedge.event.RobotArmChangedEvent;
 import robotarmedge.event.RobotArmChangeListener;
@@ -33,7 +34,7 @@ import robotarmedge.view.controls.TaskPanel;
  * @version 1.0
  */
 public class ProgramMode extends javax.swing.JFrame implements
-        RobotArmChangeListener
+        RobotArmChangeListener, InterpreterFinishedListener
 {
 
     private UsbRobotArm usbRobotArm;
@@ -78,7 +79,6 @@ public class ProgramMode extends javax.swing.JFrame implements
         this.setIconImage(icon.getImage());
 
         this.tasksPanel.setLayout(new GridLayout(0, 1, 0, 0));
-
     }
 
     /**
@@ -124,6 +124,14 @@ public class ProgramMode extends javax.swing.JFrame implements
         this.connectionLabel.setText("No Connection");
         this.connectionLabel.setIcon(new javax.swing.ImageIcon(
                 this.imageResourceBundle.getImage("icon.plug_exclamation")));
+    }
+    
+    @Override
+    public void interpreterFinished(InterpreterFinishedEvent e)
+    {
+        this.stopButton.setEnabled(false);
+        this.runButton.setEnabled(true);
+        this.rewindButton.setEnabled(true);
     }
 
     /*
@@ -771,6 +779,7 @@ public class ProgramMode extends javax.swing.JFrame implements
         stopButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/control-stop-square.png"))); // NOI18N
         stopButton.setText(bundle.getString("control.stop")); // NOI18N
         stopButton.setToolTipText(bundle.getString("tooltip.control.stop")); // NOI18N
+        stopButton.setEnabled(false);
         stopButton.addActionListener(new java.awt.event.ActionListener()
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
@@ -1404,7 +1413,12 @@ public class ProgramMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_runButtonActionPerformed
         if (!this.tasksList.isEmpty())
         {
+            this.runButton.setEnabled(false);
+            this.rewindButton.setEnabled(false);
+            this.stopButton.setEnabled(true);
+            
             this.interpreter = new Interpreter(this.tasksList);
+            this.interpreter.addInterpreterFinishedListener(this);
             this.interpreter.start();
         }
     }//GEN-LAST:event_runButtonActionPerformed
@@ -1419,6 +1433,10 @@ public class ProgramMode extends javax.swing.JFrame implements
             {
                 this.interpreter.interrupt();
             }
+            
+            this.stopButton.setEnabled(false);
+            this.runButton.setEnabled(true);
+            this.rewindButton.setEnabled(true);
         }
     }//GEN-LAST:event_stopButtonActionPerformed
 
@@ -1426,7 +1444,30 @@ public class ProgramMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_rewindButtonActionPerformed
         if (!this.tasksList.isEmpty())
         {
+            this.rewindButton.setEnabled(false);
+            this.runButton.setEnabled(false);
+            this.stopButton.setEnabled(true);
+            
+             LinkedList<Task> reversedList = new LinkedList<>();
+            
+             for (Task task : this.tasksList)
+             {
+                 Task clonedTask = new Task();
+                 
+                 for (Instruction instruction : task.getInstructions())
+                 {
+                     Instruction clonedInstruction = (Instruction)instruction.clone();
+                     clonedInstruction.reverseCommand();
+                     
+                     clonedTask.addInstruction(clonedInstruction);
+                 }
+                 
+                 reversedList.addFirst(clonedTask);
+             }
              
+            this.interpreter = new Interpreter(reversedList);
+            this.interpreter.addInterpreterFinishedListener(this);
+            this.interpreter.start();
         }
     }//GEN-LAST:event_rewindButtonActionPerformed
 

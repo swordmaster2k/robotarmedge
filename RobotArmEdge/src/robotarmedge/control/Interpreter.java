@@ -9,9 +9,12 @@
  */
 package robotarmedge.control;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import robotarmedge.control.event.InterpreterFinishedEvent;
+import robotarmedge.control.event.InterpreterFinishedListener;
 import robotarmedge.device.UsbRobotArm;
 import robotarmedge.utilities.ByteCommand;
 
@@ -23,6 +26,9 @@ import robotarmedge.utilities.ByteCommand;
  */
 public class Interpreter extends Thread
 {
+    
+    private final LinkedList<InterpreterFinishedListener> 
+            interpreterFinishedListeners = new LinkedList<>();
 
     private boolean isShuttingDown;
 
@@ -114,12 +120,39 @@ public class Interpreter extends Thread
             }
             
             this.usbRobotArm.stopAll();
+            this.fireInterpreterFinished();
         }
     }
 
     public void shutdown()
     {
         this.isShuttingDown = true;
+    }
+    
+    public void addInterpreterFinishedListener(InterpreterFinishedListener listener)
+    {
+        this.interpreterFinishedListeners.add(listener);
+    }
+    
+    public void removeInterpreterFinishedListener(InterpreterFinishedListener listener)
+    {
+        this.interpreterFinishedListeners.remove(listener);
+    }
+    
+    public void fireInterpreterFinished()
+    {
+        InterpreterFinishedEvent event = null;
+        Iterator iterator = this.interpreterFinishedListeners.iterator();
+
+        while (iterator.hasNext())
+        {
+            if (event == null)
+            {
+                event = new InterpreterFinishedEvent(this);
+            }
+
+            ((InterpreterFinishedListener) iterator.next()).interpreterFinished(event);
+        }
     }
 
     public static void main(String[] args)

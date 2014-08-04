@@ -12,6 +12,8 @@ package robotarmedge.control;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.TreeSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import robotarmedge.control.event.TaskChangeListener;
 import robotarmedge.control.event.TaskChangedEvent;
 
@@ -21,7 +23,7 @@ import robotarmedge.control.event.TaskChangedEvent;
  * @author Joshua Michael Daly
  * @version 1.0
  */
-public class Task
+public class Task implements Cloneable
 {
 
     private final LinkedList<TaskChangeListener> taskChangeListeners = new LinkedList<>();
@@ -150,5 +152,19 @@ public class Task
     {
         this.byte1 -= amount;
     }
-    
+     
+    @Override
+    public Object clone()
+    {
+        try
+        {
+            return super.clone();
+        }
+        catch (CloneNotSupportedException ex)
+        {
+            Logger.getLogger(Instruction.class.getName()).log(Level.SEVERE, null, ex);
+            return this;
+        }
+
+    }
 }
