@@ -52,8 +52,18 @@ public class ProgramMode extends javax.swing.JFrame implements
     private Instruction elbowInstruction;
     private Instruction shoulderInstruction;
     private Instruction baseInstruction;
-
-    private long startTime;
+    
+    private long pressedTime;
+    private long gripperOpenTime;
+    private long gripperCloseTime;
+    private long wristUpTime;
+    private long wristDownTime;
+    private long elbowUpTime;
+    private long elbowDownTime;
+    private long shoulderUpTime;
+    private long shoulderDownTime;
+    private long baseClockwiseTime;
+    private long baseAnticlockwiseTime;
 
     Timer t = new Timer();
     TimerTask tt;
@@ -976,8 +986,10 @@ public class ProgramMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_shoulderDownButtonMouseReleased
         if (this.shoulderDownButton.isEnabled())
         {
+            this.shoulderDownTime += System.currentTimeMillis() - this.pressedTime;
+            
             this.shoulderInstruction = new Instruction(ByteCommand.SHOULDER_DOWN,
-                    (int) (System.currentTimeMillis() - this.startTime),
+                    (int) (this.shoulderDownTime),
                     0);
 
             if (this.usbRobotArm.isAttached())
@@ -993,7 +1005,8 @@ public class ProgramMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_baseClockwiseButtonMousePressed
         if (this.baseClockwiseButton.isEnabled())
         {
-            this.startTime = System.currentTimeMillis();
+            this.pressedTime = System.currentTimeMillis();
+            this.baseAnticlockwiseTime = 0;
 
             if (this.usbRobotArm.isAttached())
             {
@@ -1008,8 +1021,10 @@ public class ProgramMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_baseClockwiseButtonMouseReleased
         if (this.baseClockwiseButton.isEnabled())
         {
+            this.baseClockwiseTime += System.currentTimeMillis() - this.pressedTime;
+            
             this.baseInstruction = new Instruction(ByteCommand.BASE_CLOCKWISE,
-                    (int) (System.currentTimeMillis() - this.startTime),
+                    (int) (this.baseClockwiseTime),
                     1);
 
             if (this.usbRobotArm.isAttached())
@@ -1025,7 +1040,8 @@ public class ProgramMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_baseAntiClockwiseButtonMousePressed
         if (this.baseAntiClockwiseButton.isEnabled())
         {
-            this.startTime = System.currentTimeMillis();
+            this.pressedTime = System.currentTimeMillis();
+            this.baseClockwiseTime = 0;
 
             if (this.usbRobotArm.isAttached())
             {
@@ -1040,8 +1056,10 @@ public class ProgramMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_baseAntiClockwiseButtonMouseReleased
         if (this.baseAntiClockwiseButton.isEnabled())
         {
+            this.baseAnticlockwiseTime += System.currentTimeMillis() - this.pressedTime;
+            
             this.baseInstruction = new Instruction(ByteCommand.BASE_ANTI_CLOCKWISE,
-                    (int) (System.currentTimeMillis() - this.startTime),
+                    (int) (this.baseAnticlockwiseTime),
                     1);
 
             if (this.usbRobotArm.isAttached())
@@ -1068,7 +1086,8 @@ public class ProgramMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_shoulderDownButtonMousePressed
         if (this.shoulderDownButton.isEnabled())
         {
-            this.startTime = System.currentTimeMillis();
+            this.pressedTime = System.currentTimeMillis();
+            this.shoulderUpTime = 0;
 
             if (this.usbRobotArm.isAttached())
             {
@@ -1083,8 +1102,10 @@ public class ProgramMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_shoulderUpButtonMouseReleased
         if (this.shoulderUpButton.isEnabled())
         {
+            this.shoulderUpTime += System.currentTimeMillis() - this.pressedTime;
+            
             this.shoulderInstruction = new Instruction(ByteCommand.SHOULDER_UP,
-                    (int) (System.currentTimeMillis() - this.startTime),
+                    (int) (this.shoulderUpTime),
                     0);
 
             if (this.usbRobotArm.isAttached())
@@ -1100,7 +1121,8 @@ public class ProgramMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_shoulderUpButtonMousePressed
         if (this.shoulderUpButton.isEnabled())
         {
-            this.startTime = System.currentTimeMillis();
+            this.pressedTime = System.currentTimeMillis();
+            this.shoulderDownTime = 0;
 
             if (this.usbRobotArm.isAttached())
             {
@@ -1115,8 +1137,10 @@ public class ProgramMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_elbowDownButtonMouseReleased
         if (this.elbowDownButton.isEnabled())
         {
+            this.elbowDownTime += System.currentTimeMillis() - this.pressedTime;
+            
             this.elbowInstruction = new Instruction(ByteCommand.ELBOW_DOWN,
-                    (int) (System.currentTimeMillis() - this.startTime),
+                    (int) (this.elbowDownTime),
                     0);
 
             if (this.usbRobotArm.isAttached())
@@ -1132,7 +1156,8 @@ public class ProgramMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_elbowDownButtonMousePressed
         if (this.elbowDownButton.isEnabled())
         {
-            this.startTime = System.currentTimeMillis();
+            this.pressedTime = System.currentTimeMillis();
+            this.elbowUpTime = 0;
 
             if (this.usbRobotArm.isAttached())
             {
@@ -1147,8 +1172,10 @@ public class ProgramMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_elbowUpButtonMouseReleased
         if (this.elbowUpButton.isEnabled())
         {
+            this.elbowUpTime += System.currentTimeMillis() - this.pressedTime;
+            
             this.elbowInstruction = new Instruction(ByteCommand.ELBOW_UP,
-                    (int) (System.currentTimeMillis() - this.startTime),
+                    (int) (this.elbowUpTime),
                     0);
 
             if (this.usbRobotArm.isAttached())
@@ -1164,7 +1191,8 @@ public class ProgramMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_elbowUpButtonMousePressed
         if (this.elbowUpButton.isEnabled())
         {
-            this.startTime = System.currentTimeMillis();
+            this.pressedTime = System.currentTimeMillis();
+            this.elbowDownTime = 0;
 
             if (this.usbRobotArm.isAttached())
             {
@@ -1179,8 +1207,10 @@ public class ProgramMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_wristDownButtonMouseReleased
         if (this.wristDownButton.isEnabled())
         {
+            this.wristDownTime += System.currentTimeMillis() - this.pressedTime;
+            
             this.wristInstruction = new Instruction(ByteCommand.WRIST_DOWN,
-                    (int) (System.currentTimeMillis() - this.startTime),
+                    (int) (this.wristDownTime),
                     0);
 
             if (this.usbRobotArm.isAttached())
@@ -1196,7 +1226,8 @@ public class ProgramMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_wristDownButtonMousePressed
         if (this.wristDownButton.isEnabled())
         {
-            this.startTime = System.currentTimeMillis();
+            this.pressedTime = System.currentTimeMillis();
+            this.wristUpTime = 0;
 
             if (this.usbRobotArm.isAttached())
             {
@@ -1211,8 +1242,10 @@ public class ProgramMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_wristUpButtonMouseReleased
         if (this.wristUpButton.isEnabled())
         {
+            this.wristUpTime += System.currentTimeMillis() - this.pressedTime;
+            
             this.wristInstruction = new Instruction(ByteCommand.WRIST_UP,
-                    (int) (System.currentTimeMillis() - this.startTime),
+                    (int) (this.wristUpTime),
                     0);
 
             if (this.usbRobotArm.isAttached())
@@ -1228,7 +1261,8 @@ public class ProgramMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_wristUpButtonMousePressed
         if (this.wristUpButton.isEnabled())
         {
-            this.startTime = System.currentTimeMillis();
+            this.pressedTime = System.currentTimeMillis();
+            this.wristDownTime = 0;
 
             if (this.usbRobotArm.isAttached())
             {
@@ -1243,8 +1277,10 @@ public class ProgramMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_openGripperButtonMouseReleased
         if (this.openGripperButton.isEnabled())
         {
+            this.gripperOpenTime += System.currentTimeMillis() - this.pressedTime;
+            
             this.gripperInstruction = new Instruction(ByteCommand.GRIPPER_OPEN,
-                    (int) (System.currentTimeMillis() - this.startTime),
+                    (int) (this.gripperOpenTime),
                     0);
 
             if (this.usbRobotArm.isAttached())
@@ -1260,7 +1296,8 @@ public class ProgramMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_openGripperButtonMousePressed
         if (this.openGripperButton.isEnabled())
         {
-            this.startTime = System.currentTimeMillis();
+            this.pressedTime = System.currentTimeMillis();
+            this.gripperCloseTime = 0;
 
             if (this.usbRobotArm.isAttached())
             {
@@ -1275,8 +1312,10 @@ public class ProgramMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_closeGripperButtonMouseReleased
         if (this.closeGripperButton.isEnabled())
         {
+            this.gripperCloseTime += System.currentTimeMillis() - this.pressedTime;
+            
             this.gripperInstruction = new Instruction(ByteCommand.GRIPPER_CLOSE,
-                    (int) (System.currentTimeMillis() - this.startTime),
+                    (int) (this.gripperCloseTime),
                     0);
 
             if (this.usbRobotArm.isAttached())
@@ -1292,7 +1331,8 @@ public class ProgramMode extends javax.swing.JFrame implements
     {//GEN-HEADEREND:event_closeGripperButtonMousePressed
         if (this.closeGripperButton.isEnabled())
         {
-            this.startTime = System.currentTimeMillis();
+            this.pressedTime = System.currentTimeMillis();
+            this.gripperOpenTime = 0;
 
             if (this.usbRobotArm.isAttached())
             {
@@ -1391,6 +1431,16 @@ public class ProgramMode extends javax.swing.JFrame implements
 
     private void enterButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_enterButtonActionPerformed
     {//GEN-HEADEREND:event_enterButtonActionPerformed
+        this.gripperOpenTime = 0;
+        this.gripperCloseTime = 0;
+        this.wristUpTime = 0;
+        this.wristDownTime = 0;
+        this.elbowUpTime = 0;
+        this.elbowDownTime = 0;
+        this.shoulderUpTime = 0;
+        this.shoulderDownTime = 0;
+        this.baseClockwiseTime = 0;
+        this.baseAnticlockwiseTime = 0;
         this.addTasks();
     }//GEN-LAST:event_enterButtonActionPerformed
 

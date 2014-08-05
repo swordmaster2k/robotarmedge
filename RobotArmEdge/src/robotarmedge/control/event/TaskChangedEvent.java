@@ -27,3 +27,4 @@ public class TaskChangedEvent extends EventObject
     }
     
 }
+
