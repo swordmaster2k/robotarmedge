@@ -9,33 +9,60 @@
  */
 package robotarmedge.view.controls;
 
+import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import javax.swing.JFrame;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import robotarmedge.control.Instruction;
 import robotarmedge.control.Task;
 import robotarmedge.control.event.TaskChangeListener;
 import robotarmedge.control.event.TaskChangedEvent;
 import robotarmedge.utilities.ByteCommand;
+import robotarmedge.view.ProgramMode;
 
 /**
- * 
- * 
+ *
+ *
  * @author Joshua Michael Daly
  */
-public class TaskPanel extends JPanel implements TaskChangeListener
+public class TaskPanel extends JPanel implements MouseListener, 
+        ActionListener, TaskChangeListener
 {
 
     private final Task model;
+    private final ProgramMode parent;
 
+    private final JPopupMenu popupMenu;
+    private final JMenuItem deleteMenuItem;
+    
+    private boolean isHovered;
+
+    /*
+     * ************************************************************************* 
+     * Public Getter
+     * *************************************************************************
+     */
+    public Task getModel()
+    {
+        return model;
+    }
+    
     /*
      * ************************************************************************* 
      * Public Constructors
      * *************************************************************************
      */
-    public TaskPanel(Task task)
+    public TaskPanel(Task task, ProgramMode parent)
     {
         this.model = task;
+        this.parent = parent;
 
         for (Instruction instruction : task.getInstructions())
         {
@@ -43,26 +70,108 @@ public class TaskPanel extends JPanel implements TaskChangeListener
         }
 
         this.setLayout(new FlowLayout());
+        
+        // Make singleton with this in it...
+        java.util.ResourceBundle bundle = 
+                java.util.ResourceBundle.getBundle("robotarmedge/resources/RobotArmEdge_en"); // NOI18N
+        
+        // If more commands are added associated actions with them instead.
+        this.deleteMenuItem = new JMenuItem(bundle.getString("menu.popup.delete"));
+        this.deleteMenuItem.addActionListener(this);
+        
+        this.popupMenu = new JPopupMenu();
+        this.popupMenu.add(this.deleteMenuItem);
+
+        this.add(popupMenu);
+        
+        this.addMouseListener(this);
     }
-    
+
     /*
      * ************************************************************************* 
      * Public Methods
      * *************************************************************************
      */
     @Override
+    public void paint(Graphics g)
+    {
+        super.paint(g);
+        
+        if (this.isHovered)
+        {
+            g.setColor(Color.red);
+            g.fillRect(0, 0, this.getParent().getWidth(), this.getHeight());
+
+            g.setColor(Color.blue);
+            g.drawRect(0, 0, this.getParent().getWidth() - 1, 
+                this.getHeight() - 1);
+            
+            this.paintChildren(g);
+        } 
+    }
+    
+    @Override
     public void taskChanged(TaskChangedEvent e)
     {
         // TODO: Consider adding a taskInstructionAdded and taskInstructionRemoved
         // events to make this process more efficient.
         this.removeAll();
-        
+
         for (Instruction instruction : this.model.getInstructions())
         {
             this.add(new InstructionView(instruction));
         }
-        
+
         this.repaint();
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e)
+    {
+
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e)
+    {
+        if (e.isPopupTrigger())
+        {
+            this.popupMenu.show(e.getComponent(),
+                    e.getX(), e.getY());
+        }
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e)
+    {
+        if (e.isPopupTrigger())
+        {
+            this.popupMenu.show(e.getComponent(),
+                    e.getX(), e.getY());
+        }
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e)
+    {
+        this.isHovered = true;
+        this.repaint();
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e)
+    {
+        this.isHovered = false;
+        this.repaint();
+    }
+    
+    @Override
+    public void actionPerformed(ActionEvent e)
+    {
+        if (e.getSource().equals(this.deleteMenuItem))
+        {
+            this.parent.deleteTask(this);
+        }
     }
 
     /*
@@ -85,7 +194,7 @@ public class TaskPanel extends JPanel implements TaskChangeListener
         task.addInstruction(instruction4);
         task.addInstruction(instruction5);
 
-        TaskPanel panel = new TaskPanel(task);
+        TaskPanel panel = new TaskPanel(task, null);
 
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

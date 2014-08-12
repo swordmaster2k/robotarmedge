@@ -143,6 +143,16 @@ public class ProgramMode extends javax.swing.JFrame implements
         this.runButton.setEnabled(true);
         this.rewindButton.setEnabled(true);
     }
+    
+    public void deleteTask(TaskPanel panel)
+    {
+        this.tasksList.remove(panel.getModel());
+        this.tasksPanel.remove(panel);
+        this.tasksPanel.validate();
+        this.tasksPanel.repaint();
+        
+        this.taskScrollPane.getViewport().revalidate();
+    }
 
     /*
      * ************************************************************************* 
@@ -226,7 +236,7 @@ public class ProgramMode extends javax.swing.JFrame implements
             return;
         }
 
-        TaskPanel panel = new TaskPanel(task);
+        TaskPanel panel = new TaskPanel(task, this);
         this.tasksPanel.add(panel);
         this.tasksPanel.validate();
         this.tasksPanel.repaint();
