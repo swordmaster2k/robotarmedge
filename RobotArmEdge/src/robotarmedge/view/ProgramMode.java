@@ -9,6 +9,7 @@
  */
 package robotarmedge.view;
 
+import java.awt.Component;
 import java.awt.GridLayout;
 import java.util.LinkedList;
 import java.util.Timer;
@@ -18,8 +19,11 @@ import javax.swing.JToggleButton;
 import robotarmedge.control.Instruction;
 import robotarmedge.control.Interpreter;
 import robotarmedge.control.Task;
+import robotarmedge.control.TaskList;
 import robotarmedge.control.event.InterpreterFinishedEvent;
 import robotarmedge.control.event.InterpreterFinishedListener;
+import robotarmedge.control.event.TaskListChangeListener;
+import robotarmedge.control.event.TaskListChangedEvent;
 import robotarmedge.device.UsbRobotArm;
 import robotarmedge.event.RobotArmChangedEvent;
 import robotarmedge.event.RobotArmChangeListener;
@@ -34,7 +38,9 @@ import robotarmedge.view.controls.TaskPanel;
  * @version 1.0
  */
 public class ProgramMode extends javax.swing.JFrame implements
-        RobotArmChangeListener, InterpreterFinishedListener
+        RobotArmChangeListener, 
+        InterpreterFinishedListener,
+        TaskListChangeListener
 {
 
     private UsbRobotArm usbRobotArm;
@@ -43,7 +49,7 @@ public class ProgramMode extends javax.swing.JFrame implements
 
     private final ImageResourceBundle imageResourceBundle;
 
-    private final LinkedList<Task> tasksList = new LinkedList<>();
+    private final TaskList tasksList = new TaskList();
 
     private Interpreter interpreter;
 
@@ -65,8 +71,9 @@ public class ProgramMode extends javax.swing.JFrame implements
     private long baseClockwiseTime;
     private long baseAnticlockwiseTime;
 
-    Timer t = new Timer();
-    TimerTask tt;
+    // Unused keyboard implementation.
+    private final Timer t = new Timer();
+    private TimerTask tt;
 
     /*
      * ************************************************************************* 
@@ -89,6 +96,7 @@ public class ProgramMode extends javax.swing.JFrame implements
         this.setIconImage(icon.getImage());
 
         this.tasksPanel.setLayout(new GridLayout(0, 1, 0, 0));
+        this.tasksList.addTaskListChangeListener(this);
     }
 
     /**
@@ -144,13 +152,62 @@ public class ProgramMode extends javax.swing.JFrame implements
         this.rewindButton.setEnabled(true);
     }
     
-    public void deleteTask(TaskPanel panel)
+    @Override
+    public void taskAdded(TaskListChangedEvent evt)
     {
-        this.tasksList.remove(panel.getModel());
-        this.tasksPanel.remove(panel);
+        TaskPanel panel = new TaskPanel(evt.getTask());
+        this.tasksPanel.add(panel);
         this.tasksPanel.validate();
         this.tasksPanel.repaint();
+
+        this.taskScrollPane.getViewport().revalidate();
         
+        if (!(this.runButton.isEnabled() && this.stopButton.isEnabled()))
+        {
+            this.runButton.setEnabled(true);
+            this.rewindButton.setEnabled(true);
+        }
+    }
+
+    @Override
+    public void taskRemoved(TaskListChangedEvent evt)
+    {
+        TaskPanel matchingPanel = null;
+        
+        for (Component component : this.tasksPanel.getComponents())
+        {
+            if (component instanceof TaskPanel)
+            {
+                TaskPanel panel = (TaskPanel)component;
+                
+                if (panel.getModel().equals(evt.getTask()))
+                {
+                    matchingPanel = panel;
+                    break;
+                }
+            }
+        }
+        
+        if (matchingPanel != null)
+        {
+            this.tasksPanel.remove(matchingPanel);
+            this.tasksPanel.validate();
+            this.tasksPanel.repaint(); 
+            this.taskScrollPane.getViewport().revalidate();
+            
+            if (this.tasksPanel.getComponentCount() == 0)
+            {
+                this.runButton.setEnabled(false);
+                this.rewindButton.setEnabled(false);
+            }
+        }
+    }
+
+    @Override
+    public void taskChanged(TaskListChangedEvent evt)
+    {
+        this.tasksPanel.validate();
+        this.tasksPanel.repaint(); 
         this.taskScrollPane.getViewport().revalidate();
     }
 
@@ -236,12 +293,6 @@ public class ProgramMode extends javax.swing.JFrame implements
             return;
         }
 
-        TaskPanel panel = new TaskPanel(task, this);
-        this.tasksPanel.add(panel);
-        this.tasksPanel.validate();
-        this.tasksPanel.repaint();
-
-        this.taskScrollPane.getViewport().revalidate();
         this.tasksList.add(task);
     }
 
@@ -788,6 +839,7 @@ public class ProgramMode extends javax.swing.JFrame implements
         runButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/control.png"))); // NOI18N
         runButton.setText(bundle.getString("control.run")); // NOI18N
         runButton.setToolTipText(bundle.getString("tooltip.control.run")); // NOI18N
+        runButton.setEnabled(false);
         runButton.addActionListener(new java.awt.event.ActionListener()
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
@@ -811,6 +863,7 @@ public class ProgramMode extends javax.swing.JFrame implements
         rewindButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/robotarmedge/resources/control-double-180.png"))); // NOI18N
         rewindButton.setText(bundle.getString("control.rewind")); // NOI18N
         rewindButton.setToolTipText(bundle.getString("tooltip.control.rewind")); // NOI18N
+        rewindButton.setEnabled(false);
         rewindButton.addActionListener(new java.awt.event.ActionListener()
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
@@ -1355,6 +1408,8 @@ public class ProgramMode extends javax.swing.JFrame implements
 
     private void componentKeyPressed(java.awt.event.KeyEvent evt)//GEN-FIRST:event_componentKeyPressed
     {//GEN-HEADEREND:event_componentKeyPressed
+        System.out.println("h");
+        
         if (tt != null)
         {
             return;
@@ -1508,7 +1563,7 @@ public class ProgramMode extends javax.swing.JFrame implements
             this.runButton.setEnabled(false);
             this.stopButton.setEnabled(true);
             
-             LinkedList<Task> reversedList = new LinkedList<>();
+             TaskList reversedList = new TaskList();
             
              for (Task task : this.tasksList)
              {

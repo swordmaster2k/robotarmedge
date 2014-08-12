@@ -32,7 +32,7 @@ public class Interpreter extends Thread
 
     private boolean isShuttingDown;
 
-    private final LinkedList<Task> runningTasks;
+    private final TaskList runningTasks;
     private final UsbRobotArm usbRobotArm;
 
     /*
@@ -40,9 +40,9 @@ public class Interpreter extends Thread
      * Public Constructors
      * *************************************************************************
      */
-    public Interpreter(LinkedList<Task> taskList)
+    public Interpreter(TaskList taskList)
     {
-        this.runningTasks = (LinkedList<Task>) taskList.clone();
+        this.runningTasks = taskList;
         this.usbRobotArm = UsbRobotArm.getInstance();
     }
 
@@ -175,7 +175,7 @@ public class Interpreter extends Thread
         task.addInstruction(instruction4);
         //task.addInstruction(instruction5);
 
-        LinkedList<Task> taskList = new LinkedList<>();
+        TaskList taskList = new TaskList();
         taskList.add(task);
 
         Interpreter interpreter = new Interpreter(taskList);

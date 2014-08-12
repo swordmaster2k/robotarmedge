@@ -37,7 +37,6 @@ public class TaskPanel extends JPanel implements MouseListener,
 {
 
     private final Task model;
-    private final ProgramMode parent;
 
     private final JPopupMenu popupMenu;
     private final JMenuItem deleteMenuItem;
@@ -59,10 +58,9 @@ public class TaskPanel extends JPanel implements MouseListener,
      * Public Constructors
      * *************************************************************************
      */
-    public TaskPanel(Task task, ProgramMode parent)
+    public TaskPanel(Task task)
     {
         this.model = task;
-        this.parent = parent;
 
         for (Instruction instruction : task.getInstructions())
         {
@@ -108,6 +106,12 @@ public class TaskPanel extends JPanel implements MouseListener,
             
             this.paintChildren(g);
         } 
+    }
+    
+    @Override
+    public void taskDeleted(TaskChangedEvent evt)
+    {
+        
     }
     
     @Override
@@ -168,9 +172,10 @@ public class TaskPanel extends JPanel implements MouseListener,
     @Override
     public void actionPerformed(ActionEvent e)
     {
+        // Move into an Action.
         if (e.getSource().equals(this.deleteMenuItem))
         {
-            this.parent.deleteTask(this);
+            this.model.fireTaskDeleted();
         }
     }
 
@@ -194,7 +199,7 @@ public class TaskPanel extends JPanel implements MouseListener,
         task.addInstruction(instruction4);
         task.addInstruction(instruction5);
 
-        TaskPanel panel = new TaskPanel(task, null);
+        TaskPanel panel = new TaskPanel(task);
 
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

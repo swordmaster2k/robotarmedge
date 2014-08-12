@@ -89,6 +89,22 @@ public class Task implements Cloneable
         this.taskChangeListeners.remove(listener);
     }
     
+    public void fireTaskDeleted()
+    {
+        TaskChangedEvent event = null;
+        Iterator iterator = this.taskChangeListeners.iterator();
+
+        while (iterator.hasNext())
+        {
+            if (event == null)
+            {
+                event = new TaskChangedEvent(this);
+            }
+
+            ((TaskChangeListener) iterator.next()).taskDeleted(event);
+        }
+    }
+    
     public void fireTaskChanged()
     {
         TaskChangedEvent event = null;
