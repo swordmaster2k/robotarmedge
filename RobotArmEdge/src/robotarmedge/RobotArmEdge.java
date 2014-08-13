@@ -11,9 +11,7 @@
 package robotarmedge;
 
 import javax.usb.UsbException;
-import robotarmedge.device.UsbRobotArm;
-import robotarmedge.view.BasicMode;
-import robotarmedge.view.ProgramMode;
+import robotarmedge.view.SelectMode;
 
 /**
  * The central driver class which contains the main method, it starts the 
@@ -44,19 +42,19 @@ public class RobotArmEdge
         }
         catch (ClassNotFoundException ex)
         {
-            java.util.logging.Logger.getLogger(BasicMode.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(RobotArmEdge.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         catch (InstantiationException ex)
         {
-            java.util.logging.Logger.getLogger(BasicMode.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(RobotArmEdge.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         catch (IllegalAccessException ex)
         {
-            java.util.logging.Logger.getLogger(BasicMode.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(RobotArmEdge.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         catch (javax.swing.UnsupportedLookAndFeelException ex)
         {
-            java.util.logging.Logger.getLogger(BasicMode.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(RobotArmEdge.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
     }
@@ -71,7 +69,7 @@ public class RobotArmEdge
     {
         setLookAndFeel();
         
-        ProgramMode view = new ProgramMode(UsbRobotArm.getInstance());
+        SelectMode view = new SelectMode();
         view.setLocationRelativeTo(null);
         view.setVisible(true);
     }
