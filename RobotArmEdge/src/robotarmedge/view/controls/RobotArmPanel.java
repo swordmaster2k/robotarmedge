@@ -10,6 +10,8 @@
 
 package robotarmedge.view.controls;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -17,6 +19,7 @@ import javax.swing.JPanel;
 import robotarmedge.device.UsbRobotArm;
 import robotarmedge.utilities.ByteCommand;
 import robotarmedge.utilities.ImageResourceBundle;
+import robotarmedge.view.ProgramMode;
 
 /**
  * 
@@ -46,6 +49,8 @@ public class RobotArmPanel extends JPanel
     private boolean baseHovered;
     
     private final UsbRobotArm usbRobotArm = UsbRobotArm.getInstance();
+    
+    private ProgramMode programMode;
     
     /*
      * ************************************************************************* 
@@ -149,6 +154,12 @@ public class RobotArmPanel extends JPanel
                 imageResourceBundle.getImage("image.highlight_light"));
     }
     
+    public RobotArmPanel(ProgramMode programMode)
+    {
+        this();
+        this.programMode = programMode;
+    }
+    
     /*
      * ************************************************************************* 
      * Public Methods
@@ -240,5 +251,118 @@ public class RobotArmPanel extends JPanel
         {
             g.drawImage(this.arrowCircleAntiImage, 280, 270, this);
         }
+        
+        if (this.programMode != null)
+        {
+            // Draw all the 3D rectangles that contain the motors current
+            // run times.
+            g.setColor(Color.RED);
+            g.fill3DRect(87, 84, 50, 25, true); // Gripper
+            g.fill3DRect(270, 35, 50, 25, true); // Wrist
+            g.fill3DRect(385, 25, 50, 25, true); // Elbow
+            g.fill3DRect(270, 165, 50, 25, true); // Shoulder
+            g.fill3DRect(270, 240, 50, 25, true); // Base
+            
+            // Draw the run times inside of the rectangles.
+            g.setFont(new Font("Ubuntu", Font.PLAIN, 12));
+            g.setColor(Color.WHITE);
+            
+            if (this.programMode.getGripperCloseTime() > 0)
+            {
+                g.drawString(Double.toString(
+                        this.programMode.getGripperCloseTime() / 1000.0) + "s",
+                        87 + ((50 - getStringWidth(g, 
+                                this.programMode.getGripperCloseTime())) / 2),
+                        100);
+            }
+            else
+            {
+                g.drawString(Double.toString(
+                        this.programMode.getGripperOpenTime() / 1000.0) + "s",
+                        87 + ((50 - getStringWidth(g, 
+                                this.programMode.getGripperOpenTime())) / 2),
+                        100);
+            }
+            
+            if (this.programMode.getWristUpTime() > 0)
+            {
+                g.drawString(Double.toString(
+                        this.programMode.getWristUpTime() / 1000.0) + "s",
+                        270 + ((50 - getStringWidth(g, 
+                                this.programMode.getWristUpTime())) / 2),
+                        51);
+            }
+            else
+            {
+                g.drawString(Double.toString(
+                        this.programMode.getWristDownTime() / 1000.0) + "s",
+                        270 + ((50 - getStringWidth(g, 
+                                this.programMode.getWristDownTime())) / 2),
+                        51);
+            }
+            
+            if (this.programMode.getElbowUpTime() > 0)
+            {
+                g.drawString(Double.toString(
+                        this.programMode.getElbowUpTime() / 1000.0) + "s",
+                        385 + ((50 - getStringWidth(g, 
+                                this.programMode.getElbowUpTime())) / 2),
+                        41);
+            }
+            else
+            {
+                g.drawString(Double.toString(
+                        this.programMode.getElbowDownTime() / 1000.0) + "s",
+                        385 + ((50 - getStringWidth(g, 
+                                this.programMode.getElbowDownTime())) / 2),
+                        41);
+            }
+            
+            if (this.programMode.getShoulderUpTime() > 0)
+            {
+                g.drawString(Double.toString(
+                        this.programMode.getShoulderUpTime() / 1000.0) + "s",
+                        270 + ((50 - getStringWidth(g, 
+                                this.programMode.getShoulderUpTime())) / 2),
+                        181);
+            }
+            else
+            {
+                g.drawString(Double.toString(
+                        this.programMode.getShoulderDownTime() / 1000.0) + "s",
+                        270 + ((50 - getStringWidth(g, 
+                                this.programMode.getShoulderDownTime())) / 2),
+                        181);
+            }
+            
+            if (this.programMode.getBaseClockwiseTime() > 0)
+            {
+                g.drawString(Double.toString(
+                        this.programMode.getBaseClockwiseTime() / 1000.0) + "s",
+                        270 + ((50 - getStringWidth(g, 
+                                this.programMode.getBaseClockwiseTime())) / 2),
+                        256);
+            }
+            else
+            {
+                g.drawString(Double.toString(
+                        this.programMode.getBaseAnticlockwiseTime() / 1000.0) + "s",
+                        270 + ((50 - getStringWidth(g, 
+                                this.programMode.getBaseAnticlockwiseTime())) / 2),
+                        256);
+            }
+        }
+    }
+    
+    /*
+     * ************************************************************************* 
+     * Private Methods
+     * *************************************************************************
+     */
+    
+    private static int getStringWidth(Graphics g, long time)
+    {
+        return g.getFontMetrics().stringWidth(Double.toString(
+                    time / 1000.0) + "s");
     }
 }

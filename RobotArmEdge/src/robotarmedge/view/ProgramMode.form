@@ -120,13 +120,15 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="robotArmPanel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="gripperLabel" alignment="1" min="-2" max="-2" attributes="0"/>
                           <Component id="wristLabel" alignment="1" min="-2" max="-2" attributes="0"/>
                           <Component id="elbowLabel" alignment="1" min="-2" max="-2" attributes="0"/>
                           <Component id="shoulderLabel" alignment="1" min="-2" max="-2" attributes="0"/>
-                          <Component id="baseLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="lightLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="baseLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lightLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
@@ -542,6 +544,9 @@
       </Events>
     </Component>
     <Container class="robotarmedge.view.controls.RobotArmPanel" name="robotArmPanel">
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new robotarmedge.view.controls.RobotArmPanel(this);"/>
+      </AuxValues>
 
       <Layout>
         <DimensionLayout dim="0">

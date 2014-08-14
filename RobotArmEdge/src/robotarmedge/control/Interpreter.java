@@ -115,11 +115,17 @@ public class Interpreter extends Thread
                             + " Sending Byte1: " + task.getByte1() + "\n",
                             this);
 
-                    this.usbRobotArm.sendBytes(bytes);
+                    this.usbRobotArm.sendBytes(new byte[] { bytes[0], 
+                        bytes[1],
+                        this.usbRobotArm.getLightState()
+                    });
                 }
             }
             
-            this.usbRobotArm.stopAll();
+            this.usbRobotArm.sendBytes(new byte[] { ByteCommand.STOP_ALL, 
+                        ByteCommand.STOP_ALL,
+                        this.usbRobotArm.getLightState()
+                    });
             this.fireInterpreterFinished();
         }
     }

@@ -2,7 +2,9 @@ package robotarmedge.view;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import javax.swing.ImageIcon;
 import robotarmedge.device.UsbRobotArm;
+import robotarmedge.utilities.ImageResourceBundle;
 
 /**
  * 
@@ -23,6 +25,14 @@ public class SelectMode extends javax.swing.JFrame
     public SelectMode()
     {
         initComponents();
+        
+        ImageResourceBundle imageResourceBundle = ImageResourceBundle.getInstance(
+                ImageResourceBundle.class.getResourceAsStream(
+                        ImageResourceBundle.PROPERTIES_FILE));
+
+        ImageIcon icon = new ImageIcon(imageResourceBundle.
+                getImage("icon.application"));
+        this.setIconImage(icon.getImage());
     }
 
     /*

@@ -11,7 +11,6 @@ package robotarmedge.view;
 
 import java.awt.Component;
 import java.awt.GridLayout;
-import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.ImageIcon;
@@ -75,6 +74,62 @@ public class ProgramMode extends javax.swing.JFrame implements
     private final Timer t = new Timer();
     private TimerTask tt;
 
+    /*
+     * ************************************************************************* 
+     * Public Getters
+     * *************************************************************************
+     */
+    
+    public long getGripperOpenTime()
+    {
+        return gripperOpenTime;
+    }
+
+    public long getGripperCloseTime()
+    {
+        return gripperCloseTime;
+    }
+
+    public long getWristUpTime()
+    {
+        return wristUpTime;
+    }
+
+    public long getWristDownTime()
+    {
+        return wristDownTime;
+    }
+
+    public long getElbowUpTime()
+    {
+        return elbowUpTime;
+    }
+
+    public long getElbowDownTime()
+    {
+        return elbowDownTime;
+    }
+
+    public long getShoulderUpTime()
+    {
+        return shoulderUpTime;
+    }
+
+    public long getShoulderDownTime()
+    {
+        return shoulderDownTime;
+    }
+
+    public long getBaseClockwiseTime()
+    {
+        return baseClockwiseTime;
+    }
+
+    public long getBaseAnticlockwiseTime()
+    {
+        return baseAnticlockwiseTime;
+    }
+    
     /*
      * ************************************************************************* 
      * Public Constructors
@@ -323,7 +378,7 @@ public class ProgramMode extends javax.swing.JFrame implements
         jSeparator4 = new javax.swing.JSeparator();
         jSeparator5 = new javax.swing.JSeparator();
         lightToggleButton = new javax.swing.JToggleButton();
-        robotArmPanel = new robotarmedge.view.controls.RobotArmPanel();
+        robotArmPanel = new robotarmedge.view.controls.RobotArmPanel(this);
         connectionLabel = new javax.swing.JLabel();
         enterButton = new javax.swing.JButton();
         programPanel = new javax.swing.JPanel();
@@ -1030,13 +1085,14 @@ public class ProgramMode extends javax.swing.JFrame implements
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(robotArmPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(gripperLabel)
-                            .addComponent(wristLabel)
-                            .addComponent(elbowLabel)
-                            .addComponent(shoulderLabel)
-                            .addComponent(baseLabel)
-                            .addComponent(lightLabel))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(gripperLabel, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(wristLabel, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(elbowLabel, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(shoulderLabel, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(baseLabel)
+                                .addComponent(lightLabel)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1538,6 +1594,7 @@ public class ProgramMode extends javax.swing.JFrame implements
         this.shoulderDownTime = 0;
         this.baseClockwiseTime = 0;
         this.baseAnticlockwiseTime = 0;
+        this.robotArmPanel.repaint();
         this.addTasks();
     }//GEN-LAST:event_enterButtonActionPerformed
 

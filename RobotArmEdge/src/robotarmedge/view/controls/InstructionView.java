@@ -160,22 +160,22 @@ public class InstructionView extends Component implements MouseListener
     {
         if (this.isHovered)
         {
-            g.setColor(Color.green);
+            g.setColor(Color.GREEN);
         }
         else
         {
-            g.setColor(Color.blue);
+            g.setColor(Color.BLUE);
         }
 
         g.fillRect(0, 0, BACKGROUND_WIDTH, BACKGROUND_HEIGHT);
 
         if (this.isHovered)
         {
-            g.setColor(Color.blue);
+            g.setColor(Color.BLUE);
             g.drawRect(0, 0, BACKGROUND_WIDTH - 1, BACKGROUND_HEIGHT - 1);
         }
 
-        g.setColor(Color.black);
+        g.setColor(Color.BLACK);
         g.setFont(this.drawingFont);
 
         int stringWidth = g.getFontMetrics().stringWidth(this.motor.name());
