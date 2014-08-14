@@ -20,12 +20,13 @@ import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 import robotarmedge.control.Instruction;
 import robotarmedge.control.Task;
 import robotarmedge.control.event.TaskChangeListener;
 import robotarmedge.control.event.TaskChangedEvent;
 import robotarmedge.utilities.ByteCommand;
-import robotarmedge.view.ProgramMode;
 
 /**
  *
@@ -33,7 +34,7 @@ import robotarmedge.view.ProgramMode;
  * @author Joshua Michael Daly
  */
 public class TaskPanel extends JPanel implements MouseListener, 
-        ActionListener, TaskChangeListener
+        ActionListener, TaskChangeListener, PopupMenuListener
 {
 
     private final Task model;
@@ -42,6 +43,7 @@ public class TaskPanel extends JPanel implements MouseListener,
     private final JMenuItem deleteMenuItem;
     
     private boolean isHovered;
+    private boolean isPoppedUp;
 
     /*
      * ************************************************************************* 
@@ -83,6 +85,7 @@ public class TaskPanel extends JPanel implements MouseListener,
         this.add(popupMenu);
         
         this.addMouseListener(this);
+        this.popupMenu.addPopupMenuListener(this);
     }
 
     /*
@@ -140,6 +143,7 @@ public class TaskPanel extends JPanel implements MouseListener,
     {
         if (e.isPopupTrigger())
         {
+            this.isPoppedUp = true;
             this.popupMenu.show(e.getComponent(),
                     e.getX(), e.getY());
         }
@@ -150,6 +154,7 @@ public class TaskPanel extends JPanel implements MouseListener,
     {
         if (e.isPopupTrigger())
         {
+            this.isPoppedUp = true;
             this.popupMenu.show(e.getComponent(),
                     e.getX(), e.getY());
         }
@@ -165,8 +170,11 @@ public class TaskPanel extends JPanel implements MouseListener,
     @Override
     public void mouseExited(MouseEvent e)
     {
-        this.isHovered = false;
-        this.repaint();
+       if (!this.isPoppedUp)
+       {
+            this.isHovered = false;
+            this.repaint();
+       }
     }
     
     @Override
@@ -177,6 +185,26 @@ public class TaskPanel extends JPanel implements MouseListener,
         {
             this.model.fireTaskDeleted();
         }
+    }
+    
+    @Override
+    public void popupMenuWillBecomeVisible(PopupMenuEvent e)
+    {
+        
+    }
+
+    @Override
+    public void popupMenuWillBecomeInvisible(PopupMenuEvent e)
+    {
+        
+    }
+
+    @Override
+    public void popupMenuCanceled(PopupMenuEvent e)
+    {
+        this.isPoppedUp = false;
+        this.isHovered = false;
+        this.repaint();
     }
 
     /*
@@ -206,6 +234,6 @@ public class TaskPanel extends JPanel implements MouseListener,
         frame.setContentPane(panel);
         frame.setVisible(true);
         frame.pack();
-    }
+    } 
 
 }

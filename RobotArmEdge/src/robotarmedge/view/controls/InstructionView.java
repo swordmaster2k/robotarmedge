@@ -30,9 +30,9 @@ import robotarmedge.utilities.ImageResourceBundle;
 public class InstructionView extends Component implements MouseListener
 {
 
-    private final int BACKGROUND_WIDTH = 38;
+    private final int BACKGROUND_WIDTH = 42;
     private final int BACKGROUND_HEIGHT = 60;
-    private final int FONT_SIZE = 12;
+    private final int FONT_SIZE = 10;
 
     private final Instruction model;
     private Motor motor;
@@ -68,7 +68,7 @@ public class InstructionView extends Component implements MouseListener
             if (this.model.getCommand() == ByteCommand.GRIPPER_CLOSE
                     || this.model.getCommand() == ByteCommand.GRIPPER_OPEN)
             {
-                this.motor = Motor.M1;
+                this.motor = Motor.Gripper;
 
                 if (this.model.getCommand() == ByteCommand.GRIPPER_CLOSE)
                 {
@@ -85,7 +85,7 @@ public class InstructionView extends Component implements MouseListener
             if (this.model.getCommand() == ByteCommand.WRIST_UP
                     || this.model.getCommand() == ByteCommand.WRIST_DOWN)
             {
-                this.motor = Motor.M2;
+                this.motor = Motor.Wrist;
 
                 if (this.model.getCommand() == ByteCommand.WRIST_UP)
                 {
@@ -102,7 +102,7 @@ public class InstructionView extends Component implements MouseListener
             if (this.model.getCommand() == ByteCommand.ELBOW_UP
                     || this.model.getCommand() == ByteCommand.ELBOW_DOWN)
             {
-                this.motor = Motor.M3;
+                this.motor = Motor.Elbow;
 
                 if (this.model.getCommand() == ByteCommand.ELBOW_UP)
                 {
@@ -119,7 +119,7 @@ public class InstructionView extends Component implements MouseListener
             if (this.model.getCommand() == ByteCommand.SHOULDER_UP
                     || this.model.getCommand() == ByteCommand.SHOULDER_DOWN)
             {
-                this.motor = Motor.M4;
+                this.motor = Motor.Shoulder;
 
                 if (this.model.getCommand() == ByteCommand.SHOULDER_UP)
                 {
@@ -135,7 +135,7 @@ public class InstructionView extends Component implements MouseListener
         }
         else
         {
-            this.motor = Motor.M5;
+            this.motor = Motor.Base;
 
             if (this.model.getCommand() == ByteCommand.BASE_CLOCKWISE)
             {
@@ -233,5 +233,5 @@ public class InstructionView extends Component implements MouseListener
 enum Motor
 {
 
-    M1, M2, M3, M4, M5
+    Gripper, Wrist, Elbow, Shoulder, Base
 }
