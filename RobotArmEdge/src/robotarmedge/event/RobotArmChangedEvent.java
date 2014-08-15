@@ -7,20 +7,20 @@
  * version 3. See <http://www.gnu.org/licenses/> for more details.
  ********************************************************************
  */
-
 package robotarmedge.event;
 
 import java.util.EventObject;
 import robotarmedge.device.UsbRobotArm;
 
 /**
- * 
- * 
+ *
+ *
  * @author Joshua Michael Daly
  * @version 1.0
  */
 public class RobotArmChangedEvent extends EventObject
 {
+    
     /*
      * ************************************************************************* 
      * Public Constructors
@@ -31,10 +31,9 @@ public class RobotArmChangedEvent extends EventObject
      *
      * @param robotArm
      */
-    
-    
     public RobotArmChangedEvent(UsbRobotArm robotArm)
     {
         super(robotArm);
     }
+    
 }

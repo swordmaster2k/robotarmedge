@@ -30,8 +30,9 @@ import robotarmedge.utilities.ImageResourceBundle;
  *
  *
  * @author Joshua Michael Daly
+ * @version 1.0
  */
-public class InstructionView extends JComponent implements MouseListener, 
+public class InstructionView extends JComponent implements MouseListener,
         ActionListener
 {
 
@@ -45,7 +46,7 @@ public class InstructionView extends JComponent implements MouseListener,
     private final Font drawingFont;
 
     private boolean isHovered;
-    
+
     private final JPopupMenu popupMenu;
     private final JMenuItem deleteMenuItem;
 
@@ -62,22 +63,21 @@ public class InstructionView extends JComponent implements MouseListener,
         this.setMinimumSize(new Dimension(BACKGROUND_WIDTH, BACKGROUND_HEIGHT));
         this.setMaximumSize(new Dimension(BACKGROUND_WIDTH, BACKGROUND_HEIGHT));
         this.setPreferredSize(new Dimension(BACKGROUND_WIDTH, BACKGROUND_HEIGHT));
-        
+
         // Make singleton with this in it...
-        java.util.ResourceBundle bundle = 
-                java.util.ResourceBundle.getBundle("robotarmedge/resources/RobotArmEdge_en"); // NOI18N
-        
+        java.util.ResourceBundle bundle
+                = java.util.ResourceBundle.getBundle("robotarmedge/resources/RobotArmEdge_en"); // NOI18N
+
         // If more commands are added associated actions with them instead.
         this.deleteMenuItem = new JMenuItem(bundle.getString("menu.popup.delete.instruction"));
         this.deleteMenuItem.addActionListener(this);
-        
+
         this.popupMenu = new JPopupMenu();
         this.popupMenu.add(this.deleteMenuItem);
 
         this.add(this.popupMenu);
-        
-        //this.popupMenu.addPopupMenuListener(this);
 
+        //this.popupMenu.addPopupMenuListener(this);
         this.drawingFont = new Font("Ubuntu", Font.PLAIN, FONT_SIZE);
 
         ImageResourceBundle imageResourceBundle = ImageResourceBundle.getInstance(
@@ -219,11 +219,11 @@ public class InstructionView extends JComponent implements MouseListener,
                 (BACKGROUND_WIDTH - stringWidth) / 2,
                 56);
     }
-    
+
     @Override
     public void mouseClicked(MouseEvent e)
     {
-        
+
     }
 
     @Override
@@ -270,9 +270,12 @@ public class InstructionView extends JComponent implements MouseListener,
             this.model.fireInstructionDeleted();
         }
     }
+    
 }
 
 enum Motor
 {
+
     Gripper, Wrist, Elbow, Shoulder, Base
+    
 }

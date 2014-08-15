@@ -7,7 +7,6 @@
  * version 3. See <http://www.gnu.org/licenses/> for more details.
  ********************************************************************
  */
-
 package robotarmedge.event;
 
 import java.util.EventListener;
@@ -26,10 +25,11 @@ public interface RobotArmChangeListener extends EventListener
      * @param race
      */
     public void robotArmAttached(RobotArmChangedEvent race);
-    
+
     /**
      *
      * @param race
      */
     public void robotArmDetached(RobotArmChangedEvent race);
+    
 }

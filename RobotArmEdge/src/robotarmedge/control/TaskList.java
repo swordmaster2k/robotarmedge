@@ -1,3 +1,12 @@
+/*
+ ********************************************************************
+ * Robot Arm Edge Version 1.0
+ * This file copyright (C) 2014 Joshua Michael Daly
+ * 
+ * Robot Arm Edge is licensed under the GNU General Public License
+ * version 3. See <http://www.gnu.org/licenses/> for more details.
+ ********************************************************************
+ */
 package robotarmedge.control;
 
 import java.util.Iterator;
@@ -8,16 +17,17 @@ import robotarmedge.control.event.TaskListChangeListener;
 import robotarmedge.control.event.TaskListChangedEvent;
 
 /**
- * 
- * 
+ *
+ *
  * @author Joshua Michael Daly
+ * @version 1.0
  */
 public class TaskList extends LinkedList<Task> implements TaskChangeListener
 {
-    
+
     private final LinkedList<TaskListChangeListener> 
             taskListChangeListeners = new LinkedList<>();
-    
+
     /*
      * ************************************************************************* 
      * Public Methods
@@ -27,12 +37,12 @@ public class TaskList extends LinkedList<Task> implements TaskChangeListener
     {
         this.taskListChangeListeners.add(listener);
     }
-    
+
     public void removeTaskListChangeListener(TaskListChangeListener listener)
     {
         this.taskListChangeListeners.remove(listener);
     }
-    
+
     public void fireTaskAdded(Task task)
     {
         TaskListChangedEvent event = null;
@@ -48,7 +58,7 @@ public class TaskList extends LinkedList<Task> implements TaskChangeListener
             ((TaskListChangeListener) iterator.next()).taskAdded(event);
         }
     }
-    
+
     public void fireTaskRemoved(Task task)
     {
         TaskListChangedEvent event = null;
@@ -64,7 +74,7 @@ public class TaskList extends LinkedList<Task> implements TaskChangeListener
             ((TaskListChangeListener) iterator.next()).taskRemoved(event);
         }
     }
-    
+
     public void fireTaskChanged(Task task)
     {
         TaskListChangedEvent event = null;
@@ -80,36 +90,36 @@ public class TaskList extends LinkedList<Task> implements TaskChangeListener
             ((TaskListChangeListener) iterator.next()).taskChanged(event);
         }
     }
-    
+
     @Override
     public boolean add(Task e)
     {
-       boolean result = super.add(e);
-       e.addTaskChangeListener(this);
-       this.fireTaskAdded(e);
-       
-       return result;
+        boolean result = super.add(e);
+        e.addTaskChangeListener(this);
+        this.fireTaskAdded(e);
+
+        return result;
     }
-    
+
     public boolean remove(Task e)
     {
-       boolean result = super.remove(e);
-       e.removeTaskChangeListener(this);
-       this.fireTaskRemoved(e);
-       
-       return result;
+        boolean result = super.remove(e);
+        e.removeTaskChangeListener(this);
+        this.fireTaskRemoved(e);
+
+        return result;
     }
 
     @Override
     public void taskDeleted(TaskChangedEvent evt)
     {
-        this.remove((Task)evt.getSource());
+        this.remove((Task) evt.getSource());
     }
-    
+
     @Override
     public void taskChanged(TaskChangedEvent evt)
     {
-        this.fireTaskChanged((Task)evt.getSource());
+        this.fireTaskChanged((Task) evt.getSource());
     }
-    
+
 }

@@ -7,7 +7,6 @@
  * version 3. See <http://www.gnu.org/licenses/> for more details.
  ********************************************************************
  */
-
 package robotarmedge.view;
 
 import java.awt.Graphics;
@@ -16,25 +15,25 @@ import java.awt.Toolkit;
 import java.net.URL;
 
 /**
- * 
- * 
+ *
+ *
  * @author Joshua Michael Daly
  * @version 1.0
  */
 public class AboutDialog extends javax.swing.JDialog
 {
+
     private final String aboutString = "/robotarmedge/resources/about-image.png";
     private final Image aboutImage;
-    
+
     /*
      * ************************************************************************* 
      * Public Constructors
      * *************************************************************************
      */
-    
     /**
      * Creates new form AboutDialog
-     * 
+     *
      * @param parent
      * @param modal
      */
@@ -42,7 +41,7 @@ public class AboutDialog extends javax.swing.JDialog
     {
         super(parent, modal);
         initComponents();
-        
+
         URL imageUrl = this.getClass().getResource(this.aboutString);
         this.aboutImage = Toolkit.getDefaultToolkit().createImage(imageUrl);
     }
@@ -52,15 +51,14 @@ public class AboutDialog extends javax.swing.JDialog
      * Public Methods
      * *************************************************************************
      */
-    
     @Override
     public void paint(Graphics g)
     {
         super.paint(g);
-        
+
         g.drawImage(this.aboutImage, 10, 35, this);
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -168,4 +166,5 @@ public class AboutDialog extends javax.swing.JDialog
     private javax.swing.JTextArea copyrightTextBox;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
+
 }

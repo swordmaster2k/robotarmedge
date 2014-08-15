@@ -7,7 +7,6 @@
  * version 3. See <http://www.gnu.org/licenses/> for more details.
  ********************************************************************
  */
-
 package robotarmedge.utilities;
 
 /**
@@ -17,13 +16,13 @@ package robotarmedge.utilities;
  */
 public final class ByteCommand
 {
+
     /**
      *
      */
     public static final byte STOP_ALL = 0x00;
-    
-    // Byte 0
 
+    // Byte 0
     /**
      *
      */
@@ -53,7 +52,7 @@ public final class ByteCommand
      *
      */
     public static final byte WRIST_DOWN = 0x08;
-    
+
     /**
      *
      */
@@ -68,7 +67,7 @@ public final class ByteCommand
      *
      */
     public static final byte ELBOW_DOWN = 0x20;
-    
+
     /**
      *
      */
@@ -82,10 +81,9 @@ public final class ByteCommand
     /**
      *
      */
-    public static final byte SHOULDER_DOWN = (byte)0x80;
-    
-    // Byte 1
+    public static final byte SHOULDER_DOWN = (byte) 0x80;
 
+    // Byte 1
     /**
      *
      */
@@ -100,9 +98,8 @@ public final class ByteCommand
      *
      */
     public static final byte BASE_ANTI_CLOCKWISE = 0x02;
-    
-    // Byte 2
 
+    // Byte 2
     /**
      *
      */
@@ -112,4 +109,5 @@ public final class ByteCommand
      *
      */
     public static final byte LIGHT_OFF = 0x00;
+    
 }

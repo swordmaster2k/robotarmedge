@@ -29,11 +29,12 @@ import robotarmedge.control.event.TaskChangedEvent;
 import robotarmedge.utilities.ByteCommand;
 
 /**
- * 
- * 
+ *
+ *
  * @author Joshua Michael Daly
+ * @version 1.0
  */
-public class TaskPanel extends JPanel implements MouseListener, 
+public class TaskPanel extends JPanel implements MouseListener,
         ActionListener, TaskChangeListener, PopupMenuListener
 {
 
@@ -41,20 +42,20 @@ public class TaskPanel extends JPanel implements MouseListener,
 
     private final JPopupMenu popupMenu;
     private final JMenuItem deleteMenuItem;
-    
+
     private boolean isHovered;
     private boolean isPoppedUp;
 
     /*
      * ************************************************************************* 
-     * Public Getter
+     * Public Getters
      * *************************************************************************
      */
     public Task getModel()
     {
         return model;
     }
-    
+
     /*
      * ************************************************************************* 
      * Public Constructors
@@ -71,20 +72,20 @@ public class TaskPanel extends JPanel implements MouseListener,
         }
 
         this.setLayout(new FlowLayout());
-        
+
         // Make singleton with this in it...
-        java.util.ResourceBundle bundle = 
-                java.util.ResourceBundle.getBundle("robotarmedge/resources/RobotArmEdge_en"); // NOI18N
-        
+        java.util.ResourceBundle bundle
+                = java.util.ResourceBundle.getBundle("robotarmedge/resources/RobotArmEdge_en"); // NOI18N
+
         // If more commands are added associated actions with them instead.
         this.deleteMenuItem = new JMenuItem(bundle.getString("menu.popup.delete.task"));
         this.deleteMenuItem.addActionListener(this);
-        
+
         this.popupMenu = new JPopupMenu();
         this.popupMenu.add(this.deleteMenuItem);
 
         this.add(popupMenu);
-        
+
         this.addMouseListener(this);
         this.popupMenu.addPopupMenuListener(this);
     }
@@ -98,26 +99,26 @@ public class TaskPanel extends JPanel implements MouseListener,
     public void paint(Graphics g)
     {
         super.paint(g);
-        
+
         if (this.isHovered)
         {
             g.setColor(Color.red);
             g.fillRect(0, 0, this.getParent().getWidth(), this.getHeight());
 
             g.setColor(Color.blue);
-            g.drawRect(0, 0, this.getParent().getWidth() - 1, 
-                this.getHeight() - 1);
-            
+            g.drawRect(0, 0, this.getParent().getWidth() - 1,
+                    this.getHeight() - 1);
+
             this.paintChildren(g);
-        } 
+        }
     }
-    
+
     @Override
     public void taskDeleted(TaskChangedEvent evt)
     {
-        
+
     }
-    
+
     @Override
     public void taskChanged(TaskChangedEvent e)
     {
@@ -171,13 +172,13 @@ public class TaskPanel extends JPanel implements MouseListener,
     @Override
     public void mouseExited(MouseEvent e)
     {
-       if (!this.isPoppedUp)
-       {
+        if (!this.isPoppedUp)
+        {
             this.isHovered = false;
             this.repaint();
-       }
+        }
     }
-    
+
     @Override
     public void actionPerformed(ActionEvent e)
     {
@@ -187,17 +188,17 @@ public class TaskPanel extends JPanel implements MouseListener,
             this.model.fireTaskDeleted();
         }
     }
-    
+
     @Override
     public void popupMenuWillBecomeVisible(PopupMenuEvent e)
     {
-        
+
     }
 
     @Override
     public void popupMenuWillBecomeInvisible(PopupMenuEvent e)
     {
-        
+
     }
 
     @Override
@@ -235,6 +236,6 @@ public class TaskPanel extends JPanel implements MouseListener,
         frame.setContentPane(panel);
         frame.setVisible(true);
         frame.pack();
-    } 
+    }
 
 }

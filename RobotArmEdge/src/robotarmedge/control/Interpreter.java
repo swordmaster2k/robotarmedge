@@ -26,7 +26,7 @@ import robotarmedge.utilities.ByteCommand;
  */
 public class Interpreter extends Thread
 {
-    
+
     private final LinkedList<InterpreterFinishedListener> 
             interpreterFinishedListeners = new LinkedList<>();
 
@@ -94,7 +94,7 @@ public class Interpreter extends Thread
                         {
                             break;
                         }
-                        
+
                         Logger.getLogger(Interpreter.class.getName())
                                 .log(Level.SEVERE, null, ex);
                     }
@@ -115,17 +115,21 @@ public class Interpreter extends Thread
                             + " Sending Byte1: " + task.getByte1() + "\n",
                             this);
 
-                    this.usbRobotArm.sendBytes(new byte[] { bytes[0], 
+                    this.usbRobotArm.sendBytes(new byte[]
+                    {
+                        bytes[0],
                         bytes[1],
                         this.usbRobotArm.getLightState()
                     });
                 }
             }
-            
-            this.usbRobotArm.sendBytes(new byte[] { ByteCommand.STOP_ALL, 
-                        ByteCommand.STOP_ALL,
-                        this.usbRobotArm.getLightState()
-                    });
+
+            this.usbRobotArm.sendBytes(new byte[]
+            {
+                ByteCommand.STOP_ALL,
+                ByteCommand.STOP_ALL,
+                this.usbRobotArm.getLightState()
+            });
             this.fireInterpreterFinished();
         }
     }
@@ -134,17 +138,17 @@ public class Interpreter extends Thread
     {
         this.isShuttingDown = true;
     }
-    
+
     public void addInterpreterFinishedListener(InterpreterFinishedListener listener)
     {
         this.interpreterFinishedListeners.add(listener);
     }
-    
+
     public void removeInterpreterFinishedListener(InterpreterFinishedListener listener)
     {
         this.interpreterFinishedListeners.remove(listener);
     }
-    
+
     public void fireInterpreterFinished()
     {
         InterpreterFinishedEvent event = null;
@@ -189,4 +193,5 @@ public class Interpreter extends Thread
 
         UsbRobotArm.getInstance().toggleLight(true);
     }
+    
 }

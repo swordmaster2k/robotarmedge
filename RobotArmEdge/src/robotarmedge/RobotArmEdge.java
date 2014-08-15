@@ -7,21 +7,21 @@
  * version 3. See <http://www.gnu.org/licenses/> for more details.
  ********************************************************************
  */
-
 package robotarmedge;
 
 import javax.usb.UsbException;
 import robotarmedge.view.SelectMode;
 
 /**
- * The central driver class which contains the main method, it starts the 
+ * The central driver class which contains the main method, it starts the
  * applications GUI.
- * 
+ *
  * @author Joshua Michael Daly
  * @version 1.0
  */
 public class RobotArmEdge
 {
+
     public static void setLookAndFeel()
     {
         /* Set the Nimbus look and feel */
@@ -58,19 +58,20 @@ public class RobotArmEdge
         }
         //</editor-fold>
     }
-    
+
     /**
      * Main entry point, creates the initial GUI which takes over from there on.
-     * 
+     *
      * @param args the command line arguments
      * @throws javax.usb.UsbException
      */
     public static void main(String[] args) throws UsbException
     {
         setLookAndFeel();
-        
+
         SelectMode view = new SelectMode();
         view.setLocationRelativeTo(null);
         view.setVisible(true);
     }
+    
 }

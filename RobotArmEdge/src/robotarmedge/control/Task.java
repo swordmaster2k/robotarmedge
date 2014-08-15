@@ -20,16 +20,17 @@ import robotarmedge.control.event.TaskChangeListener;
 import robotarmedge.control.event.TaskChangedEvent;
 
 /**
- * 
- * 
+ *
+ *
  * @author Joshua Michael Daly
  * @version 1.0
  */
 public class Task implements Cloneable, InstructionChangeListener
 {
 
-    private final LinkedList<TaskChangeListener> taskChangeListeners = new LinkedList<>();
-    
+    private final LinkedList<TaskChangeListener> 
+            taskChangeListeners = new LinkedList<>();
+
     private byte byte0;
     private byte byte1;
 
@@ -85,12 +86,12 @@ public class Task implements Cloneable, InstructionChangeListener
     {
         this.taskChangeListeners.add(listener);
     }
-    
+
     public void removeTaskChangeListener(TaskChangeListener listener)
     {
         this.taskChangeListeners.remove(listener);
     }
-    
+
     public void fireTaskDeleted()
     {
         TaskChangedEvent event = null;
@@ -106,7 +107,7 @@ public class Task implements Cloneable, InstructionChangeListener
             ((TaskChangeListener) iterator.next()).taskDeleted(event);
         }
     }
-    
+
     public void fireTaskChanged()
     {
         TaskChangedEvent event = null;
@@ -122,7 +123,7 @@ public class Task implements Cloneable, InstructionChangeListener
             ((TaskChangeListener) iterator.next()).taskChanged(event);
         }
     }
-    
+
     public void addInstruction(Instruction instruction)
     {
         boolean didAdd = this.instructions.add(instruction);
@@ -137,7 +138,7 @@ public class Task implements Cloneable, InstructionChangeListener
             {
                 this.byte1 = (byte) (this.byte1 + instruction.getCommand());
             }
-            
+
             instruction.addInstructionChangeListener(this);
             this.fireTaskChanged();
         }
@@ -157,9 +158,9 @@ public class Task implements Cloneable, InstructionChangeListener
             {
                 this.byte1 = (byte) (this.byte1 - instruction.getCommand());
             }
-            
+
             instruction.removeInstructionChangeListener(this);
-            
+
             // We don't contain any instructions so delete us.
             if (this.instructions.isEmpty())
             {
@@ -181,7 +182,7 @@ public class Task implements Cloneable, InstructionChangeListener
     {
         this.byte1 -= amount;
     }
-     
+
     @Override
     public Object clone()
     {
@@ -200,7 +201,7 @@ public class Task implements Cloneable, InstructionChangeListener
     @Override
     public void instructionDeleted(InstructionChangedEvent evt)
     {
-        this.removeInstruction((Instruction)evt.getSource());
+        this.removeInstruction((Instruction) evt.getSource());
     }
 
     @Override
@@ -208,4 +209,5 @@ public class Task implements Cloneable, InstructionChangeListener
     {
         this.fireTaskChanged();
     }
+    
 }

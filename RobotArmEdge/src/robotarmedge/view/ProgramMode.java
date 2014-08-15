@@ -37,7 +37,7 @@ import robotarmedge.view.controls.TaskPanel;
  * @version 1.0
  */
 public class ProgramMode extends javax.swing.JFrame implements
-        RobotArmChangeListener, 
+        RobotArmChangeListener,
         InterpreterFinishedListener,
         TaskListChangeListener
 {
@@ -57,7 +57,7 @@ public class ProgramMode extends javax.swing.JFrame implements
     private Instruction elbowInstruction;
     private Instruction shoulderInstruction;
     private Instruction baseInstruction;
-    
+
     private long pressedTime;
     private long gripperOpenTime;
     private long gripperCloseTime;
@@ -79,7 +79,6 @@ public class ProgramMode extends javax.swing.JFrame implements
      * Public Getters
      * *************************************************************************
      */
-    
     public long getGripperOpenTime()
     {
         return gripperOpenTime;
@@ -129,7 +128,7 @@ public class ProgramMode extends javax.swing.JFrame implements
     {
         return baseAnticlockwiseTime;
     }
-    
+
     /*
      * ************************************************************************* 
      * Public Constructors
@@ -198,7 +197,7 @@ public class ProgramMode extends javax.swing.JFrame implements
         this.connectionLabel.setIcon(new javax.swing.ImageIcon(
                 this.imageResourceBundle.getImage("icon.plug_exclamation")));
     }
-    
+
     @Override
     public void interpreterFinished(InterpreterFinishedEvent e)
     {
@@ -207,7 +206,7 @@ public class ProgramMode extends javax.swing.JFrame implements
         this.rewindButton.setEnabled(true);
         this.toggleButttons(true);
     }
-    
+
     @Override
     public void taskAdded(TaskListChangedEvent evt)
     {
@@ -217,7 +216,7 @@ public class ProgramMode extends javax.swing.JFrame implements
         this.tasksPanel.repaint();
 
         this.taskScrollPane.getViewport().revalidate();
-        
+
         if (!(this.runButton.isEnabled() && this.stopButton.isEnabled()))
         {
             this.runButton.setEnabled(true);
@@ -229,13 +228,13 @@ public class ProgramMode extends javax.swing.JFrame implements
     public void taskRemoved(TaskListChangedEvent evt)
     {
         TaskPanel matchingPanel = null;
-        
+
         for (Component component : this.tasksPanel.getComponents())
         {
             if (component instanceof TaskPanel)
             {
-                TaskPanel panel = (TaskPanel)component;
-                
+                TaskPanel panel = (TaskPanel) component;
+
                 if (panel.getModel().equals(evt.getTask()))
                 {
                     matchingPanel = panel;
@@ -243,14 +242,14 @@ public class ProgramMode extends javax.swing.JFrame implements
                 }
             }
         }
-        
+
         if (matchingPanel != null)
         {
             this.tasksPanel.remove(matchingPanel);
             this.tasksPanel.validate();
-            this.tasksPanel.repaint(); 
+            this.tasksPanel.repaint();
             this.taskScrollPane.getViewport().revalidate();
-            
+
             if (this.tasksPanel.getComponentCount() == 0)
             {
                 this.runButton.setEnabled(false);
@@ -263,7 +262,7 @@ public class ProgramMode extends javax.swing.JFrame implements
     public void taskChanged(TaskListChangedEvent evt)
     {
         this.tasksPanel.validate();
-        this.tasksPanel.repaint(); 
+        this.tasksPanel.repaint();
         this.taskScrollPane.getViewport().revalidate();
     }
 
@@ -1188,7 +1187,7 @@ public class ProgramMode extends javax.swing.JFrame implements
         if (this.shoulderDownButton.isEnabled())
         {
             this.shoulderDownTime += System.currentTimeMillis() - this.pressedTime;
-            
+
             this.shoulderInstruction = new Instruction(ByteCommand.SHOULDER_DOWN,
                     (int) (this.shoulderDownTime),
                     0);
@@ -1223,7 +1222,7 @@ public class ProgramMode extends javax.swing.JFrame implements
         if (this.baseClockwiseButton.isEnabled())
         {
             this.baseClockwiseTime += System.currentTimeMillis() - this.pressedTime;
-            
+
             this.baseInstruction = new Instruction(ByteCommand.BASE_CLOCKWISE,
                     (int) (this.baseClockwiseTime),
                     1);
@@ -1258,7 +1257,7 @@ public class ProgramMode extends javax.swing.JFrame implements
         if (this.baseAntiClockwiseButton.isEnabled())
         {
             this.baseAnticlockwiseTime += System.currentTimeMillis() - this.pressedTime;
-            
+
             this.baseInstruction = new Instruction(ByteCommand.BASE_ANTI_CLOCKWISE,
                     (int) (this.baseAnticlockwiseTime),
                     1);
@@ -1304,7 +1303,7 @@ public class ProgramMode extends javax.swing.JFrame implements
         if (this.shoulderUpButton.isEnabled())
         {
             this.shoulderUpTime += System.currentTimeMillis() - this.pressedTime;
-            
+
             this.shoulderInstruction = new Instruction(ByteCommand.SHOULDER_UP,
                     (int) (this.shoulderUpTime),
                     0);
@@ -1339,7 +1338,7 @@ public class ProgramMode extends javax.swing.JFrame implements
         if (this.elbowDownButton.isEnabled())
         {
             this.elbowDownTime += System.currentTimeMillis() - this.pressedTime;
-            
+
             this.elbowInstruction = new Instruction(ByteCommand.ELBOW_DOWN,
                     (int) (this.elbowDownTime),
                     0);
@@ -1374,7 +1373,7 @@ public class ProgramMode extends javax.swing.JFrame implements
         if (this.elbowUpButton.isEnabled())
         {
             this.elbowUpTime += System.currentTimeMillis() - this.pressedTime;
-            
+
             this.elbowInstruction = new Instruction(ByteCommand.ELBOW_UP,
                     (int) (this.elbowUpTime),
                     0);
@@ -1409,7 +1408,7 @@ public class ProgramMode extends javax.swing.JFrame implements
         if (this.wristDownButton.isEnabled())
         {
             this.wristDownTime += System.currentTimeMillis() - this.pressedTime;
-            
+
             this.wristInstruction = new Instruction(ByteCommand.WRIST_DOWN,
                     (int) (this.wristDownTime),
                     0);
@@ -1444,7 +1443,7 @@ public class ProgramMode extends javax.swing.JFrame implements
         if (this.wristUpButton.isEnabled())
         {
             this.wristUpTime += System.currentTimeMillis() - this.pressedTime;
-            
+
             this.wristInstruction = new Instruction(ByteCommand.WRIST_UP,
                     (int) (this.wristUpTime),
                     0);
@@ -1479,7 +1478,7 @@ public class ProgramMode extends javax.swing.JFrame implements
         if (this.openGripperButton.isEnabled())
         {
             this.gripperOpenTime += System.currentTimeMillis() - this.pressedTime;
-            
+
             this.gripperInstruction = new Instruction(ByteCommand.GRIPPER_OPEN,
                     (int) (this.gripperOpenTime),
                     0);
@@ -1514,7 +1513,7 @@ public class ProgramMode extends javax.swing.JFrame implements
         if (this.closeGripperButton.isEnabled())
         {
             this.gripperCloseTime += System.currentTimeMillis() - this.pressedTime;
-            
+
             this.gripperInstruction = new Instruction(ByteCommand.GRIPPER_CLOSE,
                     (int) (this.gripperCloseTime),
                     0);
@@ -1547,7 +1546,7 @@ public class ProgramMode extends javax.swing.JFrame implements
     private void componentKeyPressed(java.awt.event.KeyEvent evt)//GEN-FIRST:event_componentKeyPressed
     {//GEN-HEADEREND:event_componentKeyPressed
         System.out.println("h");
-        
+
         if (tt != null)
         {
             return;
@@ -1662,7 +1661,7 @@ public class ProgramMode extends javax.swing.JFrame implements
             this.rewindButton.setEnabled(false);
             this.stopButton.setEnabled(true);
             this.toggleButttons(false);
-            
+
             this.interpreter = new Interpreter(this.tasksList);
             this.interpreter.addInterpreterFinishedListener(this);
             this.interpreter.start();
@@ -1679,7 +1678,7 @@ public class ProgramMode extends javax.swing.JFrame implements
             {
                 this.interpreter.interrupt();
             }
-            
+
             this.stopButton.setEnabled(false);
             this.runButton.setEnabled(true);
             this.rewindButton.setEnabled(true);
@@ -1695,24 +1694,24 @@ public class ProgramMode extends javax.swing.JFrame implements
             this.runButton.setEnabled(false);
             this.stopButton.setEnabled(true);
             this.toggleButttons(false);
-            
-             TaskList reversedList = new TaskList();
-            
-             for (Task task : this.tasksList)
-             {
-                 Task clonedTask = new Task();
-                 
-                 for (Instruction instruction : task.getInstructions())
-                 {
-                     Instruction clonedInstruction = (Instruction)instruction.clone();
-                     clonedInstruction.reverseCommand();
-                     
-                     clonedTask.addInstruction(clonedInstruction);
-                 }
-                 
-                 reversedList.addFirst(clonedTask);
-             }
-             
+
+            TaskList reversedList = new TaskList();
+
+            for (Task task : this.tasksList)
+            {
+                Task clonedTask = new Task();
+
+                for (Instruction instruction : task.getInstructions())
+                {
+                    Instruction clonedInstruction = (Instruction) instruction.clone();
+                    clonedInstruction.reverseCommand();
+
+                    clonedTask.addInstruction(clonedInstruction);
+                }
+
+                reversedList.addFirst(clonedTask);
+            }
+
             this.interpreter = new Interpreter(reversedList);
             this.interpreter.addInterpreterFinishedListener(this);
             this.interpreter.start();

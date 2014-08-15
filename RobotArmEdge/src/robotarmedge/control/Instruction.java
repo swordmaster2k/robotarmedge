@@ -1,3 +1,12 @@
+/*
+ ********************************************************************
+ * Robot Arm Edge Version 1.0
+ * This file copyright (C) 2014 Joshua Michael Daly
+ * 
+ * Robot Arm Edge is licensed under the GNU General Public License
+ * version 3. See <http://www.gnu.org/licenses/> for more details.
+ ********************************************************************
+ */
 package robotarmedge.control;
 
 import java.util.Iterator;
@@ -12,12 +21,13 @@ import robotarmedge.utilities.ByteCommand;
  *
  *
  * @author Joshua Michael Daly
+ * @version 1.0
  */
 public class Instruction implements Comparable<Instruction>, Cloneable
 {
 
     private final LinkedList<InstructionChangeListener> instructionChangeListeners = new LinkedList<>();
-    
+
     private byte command;
     private final int runTime;
     private final int byteType;
@@ -63,12 +73,12 @@ public class Instruction implements Comparable<Instruction>, Cloneable
     {
         this.instructionChangeListeners.add(listener);
     }
-    
+
     public void removeInstructionChangeListener(InstructionChangeListener listener)
     {
         this.instructionChangeListeners.remove(listener);
     }
-    
+
     public void fireInstructionDeleted()
     {
         InstructionChangedEvent event = null;
@@ -84,7 +94,7 @@ public class Instruction implements Comparable<Instruction>, Cloneable
             ((InstructionChangeListener) iterator.next()).instructionDeleted(event);
         }
     }
-    
+
     public void fireInstructionChanged()
     {
         InstructionChangedEvent event = null;
@@ -100,7 +110,7 @@ public class Instruction implements Comparable<Instruction>, Cloneable
             ((InstructionChangeListener) iterator.next()).instructionChanged(event);
         }
     }
-    
+
     @Override
     public Object clone()
     {
@@ -132,7 +142,7 @@ public class Instruction implements Comparable<Instruction>, Cloneable
             return 0;
         }
     }
-    
+
     public void reverseCommand()
     {
         if (this.byteType == 0)
@@ -176,4 +186,5 @@ public class Instruction implements Comparable<Instruction>, Cloneable
             }
         }
     }
+    
 }

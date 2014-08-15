@@ -7,7 +7,6 @@
  * version 3. See <http://www.gnu.org/licenses/> for more details.
  ********************************************************************
  */
-
 package robotarmedge.view;
 
 /**
@@ -17,5 +16,7 @@ package robotarmedge.view;
  */
 public enum Mode
 {
+
     Mouse, Keyboard
+    
 }

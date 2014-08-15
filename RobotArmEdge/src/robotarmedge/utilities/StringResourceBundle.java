@@ -1,9 +1,12 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ ********************************************************************
+ * Robot Arm Edge Version 1.0
+ * This file copyright (C) 2014 Joshua Michael Daly
+ * 
+ * Robot Arm Edge is licensed under the GNU General Public License
+ * version 3. See <http://www.gnu.org/licenses/> for more details.
+ ********************************************************************
  */
-
 package robotarmedge.utilities;
 
 import java.util.Enumeration;
@@ -11,19 +14,21 @@ import java.util.ResourceBundle;
 
 /**
  * Unimplemented.
- * 
+ *
  * @author Joshua Michael Daly
+ * @version 1.0
  */
 public class StringResourceBundle extends ResourceBundle
 {
+
     public static final String RESOURCES_PREFIX = "/robotarmedge/resources/";
-    
-    public static final String PROPERTIES_FILE = RESOURCES_PREFIX + 
-            "RobotArmEdge_en.properties";
-    
-    private static final StringResourceBundle instance = 
-            (StringResourceBundle)java.util.ResourceBundle.getBundle("robotarmedge/resources/RobotArmEdge_en"); // NOI18N
-    
+
+    public static final String PROPERTIES_FILE = RESOURCES_PREFIX
+            + "RobotArmEdge_en.properties";
+
+    private static final StringResourceBundle instance
+            = (StringResourceBundle) java.util.ResourceBundle.getBundle("robotarmedge/resources/RobotArmEdge_en"); // NOI18N
+
     /*
      * ************************************************************************* 
      * Public Getters
@@ -45,4 +50,5 @@ public class StringResourceBundle extends ResourceBundle
     {
         return null;
     }
+    
 }

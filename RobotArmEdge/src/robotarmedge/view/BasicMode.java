@@ -7,7 +7,6 @@
  * version 3. See <http://www.gnu.org/licenses/> for more details.
  ********************************************************************
  */
-
 package robotarmedge.view;
 
 import java.util.Timer;
@@ -28,12 +27,13 @@ import robotarmedge.utilities.ImageResourceBundle;
 public class BasicMode extends javax.swing.JFrame implements
         RobotArmChangeListener
 {
+
     private UsbRobotArm usbRobotArm;
 
     private Mode currentMode;
-    
+
     private final ImageResourceBundle imageResourceBundle;
-    
+
     Timer t = new Timer();
     TimerTask tt;
 
@@ -42,18 +42,17 @@ public class BasicMode extends javax.swing.JFrame implements
      * Public Constructors
      * *************************************************************************
      */
-    
     /**
      * Creates new form BasicMode
      */
     public BasicMode()
     {
         initComponents();
-        
+
         this.imageResourceBundle = ImageResourceBundle.getInstance(
                 ImageResourceBundle.class.getResourceAsStream(
                         ImageResourceBundle.PROPERTIES_FILE));
-        
+
         ImageIcon icon = new ImageIcon(this.imageResourceBundle.
                 getImage("icon.application"));
         this.setIconImage(icon.getImage());
@@ -71,7 +70,7 @@ public class BasicMode extends javax.swing.JFrame implements
         this.usbRobotArm.addRobotArmChangeListener(this);
 
         this.currentMode = Mode.Mouse;
-        
+
         if (this.usbRobotArm.isAttached())
         {
             this.toggleButttons(true);
@@ -86,7 +85,6 @@ public class BasicMode extends javax.swing.JFrame implements
      * Public Methods
      * *************************************************************************
      */
-    
     @Override
     public void robotArmAttached(RobotArmChangedEvent race)
     {
@@ -110,9 +108,8 @@ public class BasicMode extends javax.swing.JFrame implements
      * Private Methods
      * *************************************************************************
      */
-    
     /**
-     * 
+     *
      */
     private void changeMode()
     {
@@ -125,11 +122,11 @@ public class BasicMode extends javax.swing.JFrame implements
 
         this.toggleButttons(buttonState);
     }
-    
+
     /**
-     * 
-     * 
-     * @param buttonState 
+     *
+     *
+     * @param buttonState
      */
     private void toggleButttons(boolean buttonState)
     {
@@ -840,7 +837,7 @@ public class BasicMode extends javax.swing.JFrame implements
     private void lightToggleButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_lightToggleButtonActionPerformed
     {//GEN-HEADEREND:event_lightToggleButtonActionPerformed
         JToggleButton toggleButton = (JToggleButton) evt.getSource();
-        
+
         if (this.usbRobotArm.isAttached())
         {
             this.usbRobotArm.toggleLight(toggleButton.isSelected());
@@ -1030,12 +1027,16 @@ public class BasicMode extends javax.swing.JFrame implements
 
     private void componentKeyPressed(java.awt.event.KeyEvent evt)//GEN-FIRST:event_componentKeyPressed
     {//GEN-HEADEREND:event_componentKeyPressed
-         if (tt != null)
+        if (tt != null)
+        {
             return;
+        }
 
-        tt = new TimerTask() {
+        tt = new TimerTask()
+        {
             @Override
-            public void run() {
+            public void run()
+            {
                 System.out.println(System.currentTimeMillis() % 1000);
             }
         };
