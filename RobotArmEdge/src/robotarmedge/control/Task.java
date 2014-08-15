@@ -14,16 +14,18 @@ import java.util.LinkedList;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import robotarmedge.control.event.InstructionChangeListener;
+import robotarmedge.control.event.InstructionChangedEvent;
 import robotarmedge.control.event.TaskChangeListener;
 import robotarmedge.control.event.TaskChangedEvent;
 
 /**
- *
- *
+ * 
+ * 
  * @author Joshua Michael Daly
  * @version 1.0
  */
-public class Task implements Cloneable
+public class Task implements Cloneable, InstructionChangeListener
 {
 
     private final LinkedList<TaskChangeListener> taskChangeListeners = new LinkedList<>();
@@ -136,6 +138,7 @@ public class Task implements Cloneable
                 this.byte1 = (byte) (this.byte1 + instruction.getCommand());
             }
             
+            instruction.addInstructionChangeListener(this);
             this.fireTaskChanged();
         }
     }
@@ -155,7 +158,17 @@ public class Task implements Cloneable
                 this.byte1 = (byte) (this.byte1 - instruction.getCommand());
             }
             
-            this.fireTaskChanged();
+            instruction.removeInstructionChangeListener(this);
+            
+            // We don't contain any instructions so delete us.
+            if (this.instructions.isEmpty())
+            {
+                this.fireTaskDeleted();
+            }
+            else
+            {
+                this.fireTaskChanged();
+            }
         }
     }
 
@@ -182,5 +195,17 @@ public class Task implements Cloneable
             return this;
         }
 
+    }
+
+    @Override
+    public void instructionDeleted(InstructionChangedEvent evt)
+    {
+        this.removeInstruction((Instruction)evt.getSource());
+    }
+
+    @Override
+    public void instructionChanged(InstructionChangedEvent evt)
+    {
+        this.fireTaskChanged();
     }
 }

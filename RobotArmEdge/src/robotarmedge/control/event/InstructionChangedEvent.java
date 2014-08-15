@@ -7,7 +7,7 @@ import java.util.EventObject;
  * 
  * @author Joshua Michael Daly
  */
-public class TaskChangedEvent extends EventObject
+public class InstructionChangedEvent extends EventObject
 {
 
     /*
@@ -15,10 +15,9 @@ public class TaskChangedEvent extends EventObject
      * Public Constructors
      * *************************************************************************
      */
-    public TaskChangedEvent(Object source)
+    public InstructionChangedEvent(Object source)
     {
         super(source);
     }
     
 }
-

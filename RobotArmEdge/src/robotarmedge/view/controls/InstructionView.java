@@ -10,14 +10,18 @@
 package robotarmedge.view.controls;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import javax.swing.JComponent;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 import robotarmedge.control.Instruction;
 import robotarmedge.utilities.ByteCommand;
 import robotarmedge.utilities.ImageResourceBundle;
@@ -27,7 +31,8 @@ import robotarmedge.utilities.ImageResourceBundle;
  *
  * @author Joshua Michael Daly
  */
-public class InstructionView extends Component implements MouseListener
+public class InstructionView extends JComponent implements MouseListener, 
+        ActionListener
 {
 
     private final int BACKGROUND_WIDTH = 42;
@@ -40,6 +45,9 @@ public class InstructionView extends Component implements MouseListener
     private final Font drawingFont;
 
     private boolean isHovered;
+    
+    private final JPopupMenu popupMenu;
+    private final JMenuItem deleteMenuItem;
 
     /*
      * ************************************************************************* 
@@ -54,6 +62,21 @@ public class InstructionView extends Component implements MouseListener
         this.setMinimumSize(new Dimension(BACKGROUND_WIDTH, BACKGROUND_HEIGHT));
         this.setMaximumSize(new Dimension(BACKGROUND_WIDTH, BACKGROUND_HEIGHT));
         this.setPreferredSize(new Dimension(BACKGROUND_WIDTH, BACKGROUND_HEIGHT));
+        
+        // Make singleton with this in it...
+        java.util.ResourceBundle bundle = 
+                java.util.ResourceBundle.getBundle("robotarmedge/resources/RobotArmEdge_en"); // NOI18N
+        
+        // If more commands are added associated actions with them instead.
+        this.deleteMenuItem = new JMenuItem(bundle.getString("menu.popup.delete.instruction"));
+        this.deleteMenuItem.addActionListener(this);
+        
+        this.popupMenu = new JPopupMenu();
+        this.popupMenu.add(this.deleteMenuItem);
+
+        this.add(this.popupMenu);
+        
+        //this.popupMenu.addPopupMenuListener(this);
 
         this.drawingFont = new Font("Ubuntu", Font.PLAIN, FONT_SIZE);
 
@@ -206,13 +229,23 @@ public class InstructionView extends Component implements MouseListener
     @Override
     public void mousePressed(MouseEvent e)
     {
-
+        if (e.isPopupTrigger())
+        {
+            //this.isPoppedUp = true;
+            this.popupMenu.show(e.getComponent(),
+                    e.getX(), e.getY());
+        }
     }
 
     @Override
     public void mouseReleased(MouseEvent e)
     {
-
+        if (e.isPopupTrigger())
+        {
+            //this.isPoppedUp = true;
+            this.popupMenu.show(e.getComponent(),
+                    e.getX(), e.getY());
+        }
     }
 
     @Override
@@ -228,10 +261,18 @@ public class InstructionView extends Component implements MouseListener
         this.isHovered = false;
         this.repaint();
     }
+
+    @Override
+    public void actionPerformed(ActionEvent e)
+    {
+        if (e.getSource().equals(this.deleteMenuItem))
+        {
+            this.model.fireInstructionDeleted();
+        }
+    }
 }
 
 enum Motor
 {
-
     Gripper, Wrist, Elbow, Shoulder, Base
 }

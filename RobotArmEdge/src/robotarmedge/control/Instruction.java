@@ -1,7 +1,11 @@
 package robotarmedge.control;
 
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import robotarmedge.control.event.InstructionChangeListener;
+import robotarmedge.control.event.InstructionChangedEvent;
 import robotarmedge.utilities.ByteCommand;
 
 /**
@@ -12,6 +16,8 @@ import robotarmedge.utilities.ByteCommand;
 public class Instruction implements Comparable<Instruction>, Cloneable
 {
 
+    private final LinkedList<InstructionChangeListener> instructionChangeListeners = new LinkedList<>();
+    
     private byte command;
     private final int runTime;
     private final int byteType;
@@ -53,6 +59,48 @@ public class Instruction implements Comparable<Instruction>, Cloneable
      * Public Methods
      * *************************************************************************
      */
+    public void addInstructionChangeListener(InstructionChangeListener listener)
+    {
+        this.instructionChangeListeners.add(listener);
+    }
+    
+    public void removeInstructionChangeListener(InstructionChangeListener listener)
+    {
+        this.instructionChangeListeners.remove(listener);
+    }
+    
+    public void fireInstructionDeleted()
+    {
+        InstructionChangedEvent event = null;
+        Iterator iterator = this.instructionChangeListeners.iterator();
+
+        while (iterator.hasNext())
+        {
+            if (event == null)
+            {
+                event = new InstructionChangedEvent(this);
+            }
+
+            ((InstructionChangeListener) iterator.next()).instructionDeleted(event);
+        }
+    }
+    
+    public void fireInstructionChanged()
+    {
+        InstructionChangedEvent event = null;
+        Iterator iterator = this.instructionChangeListeners.iterator();
+
+        while (iterator.hasNext())
+        {
+            if (event == null)
+            {
+                event = new InstructionChangedEvent(this);
+            }
+
+            ((InstructionChangeListener) iterator.next()).instructionChanged(event);
+        }
+    }
+    
     @Override
     public Object clone()
     {

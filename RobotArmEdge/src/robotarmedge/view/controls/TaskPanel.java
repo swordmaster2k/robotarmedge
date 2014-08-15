@@ -29,8 +29,8 @@ import robotarmedge.control.event.TaskChangedEvent;
 import robotarmedge.utilities.ByteCommand;
 
 /**
- *
- *
+ * 
+ * 
  * @author Joshua Michael Daly
  */
 public class TaskPanel extends JPanel implements MouseListener, 
@@ -63,6 +63,7 @@ public class TaskPanel extends JPanel implements MouseListener,
     public TaskPanel(Task task)
     {
         this.model = task;
+        this.model.addTaskChangeListener(this);
 
         for (Instruction instruction : task.getInstructions())
         {
@@ -76,7 +77,7 @@ public class TaskPanel extends JPanel implements MouseListener,
                 java.util.ResourceBundle.getBundle("robotarmedge/resources/RobotArmEdge_en"); // NOI18N
         
         // If more commands are added associated actions with them instead.
-        this.deleteMenuItem = new JMenuItem(bundle.getString("menu.popup.delete"));
+        this.deleteMenuItem = new JMenuItem(bundle.getString("menu.popup.delete.task"));
         this.deleteMenuItem.addActionListener(this);
         
         this.popupMenu = new JPopupMenu();
